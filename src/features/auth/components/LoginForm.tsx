@@ -22,18 +22,18 @@ export function LoginForm() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { username: "", password: "", loginOTP: "" },
+    defaultValues: { userid: "", password: "", loginOTP: "" },
   });
 
   const login = useLogin();
   const sendOtp = useSendOtp();
 
   const handleSendOtp = async () => {
-    const username = form.getValues("username");
+    const userid = form.getValues("userid");
     const password = form.getValues("password");
     
-    if (!username) {
-      form.setError("username", { message: "Username is required to send OTP" });
+    if (!userid) {
+      form.setError("userid", { message: "userid is required to send OTP" });
       return;
     }
     if (!password) {
@@ -41,8 +41,8 @@ export function LoginForm() {
       return;
     }
     
-    setEmailForOtp(username);
-    await sendOtp.mutateAsync({ loginID: username, password });
+    setEmailForOtp(userid);
+    await sendOtp.mutateAsync({ userid, password });
     setShowOtpField(true);
   };
 
@@ -169,21 +169,21 @@ export function LoginForm() {
                         <div className="relative">
                           <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm" />
                           <input
-                            {...form.register("username")}
+                            {...form.register("userid")}
                             type="text"
-                            autoComplete="username"
-                            placeholder="Enter your username"
+                            autoComplete="userid"
+                            placeholder="Enter your userid"
                             className={cn(
                               inputBase,
-                              form.formState.errors.username
+                              form.formState.errors.userid
                                 ? "border-red-500/60 bg-red-500/5"
                                 : "border-[#d4a017]/20"
                             )}
                           />
                         </div>
-                        {form.formState.errors.username && (
+                        {form.formState.errors.userid && (
                           <p className="mt-1.5 text-xs text-red-400">
-                            {form.formState.errors.username.message}
+                            {form.formState.errors.userid.message}
                           </p>
                         )}
                       </div>

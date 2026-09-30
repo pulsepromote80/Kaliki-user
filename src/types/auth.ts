@@ -1,5 +1,5 @@
 export interface LoginCredentials {
-  username: string;
+  userid: string;
   password: string;
   loginOTP?: string;
 }

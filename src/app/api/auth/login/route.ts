@@ -6,35 +6,35 @@ export async function POST(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const body = await request.json().catch(() => null);
 
-  if (!body?.username || !body?.password) {
+  if (!body?.userid || !body?.password) {
     return NextResponse.json(
-      { success: false, message: "Username and password are required" },
+      { success: false, message: "userid and password are required" },
       { status: 400 },
     );
   }
 
   try {
     const backend = createBackendClient();
-    const { data } = await backend.post("/Authentication/appLogin", {
-      username: body.username,
+    const backendResponse = await backend.post("/Authentication/appLogin", {
+      userid: body.userid,
       password: body.password,
       loginOTP: body.loginOTP,
     });
 
-    // Backend returns: { statusCode, message, token, data: { role, authLogin } }
-    const { token, data: userData, statusCode, message } = data;
+    // Backend returns: { statusCode, message, accessToken, refreshToken, expiresIn }
+    const { accessToken, statusCode, message } = backendResponse.data;
 
     const response = NextResponse.json({
       statusCode,
       message,
-      token,
-      data: userData,
+      accessToken,
+      
     });
     
     // Store both token and userData in the cookie
     const sessionData = JSON.stringify({
-      token,
-      userData,
+      accessToken,
+      
     });
     
     response.cookies.set(SESSION_COOKIE_NAME, sessionData, {

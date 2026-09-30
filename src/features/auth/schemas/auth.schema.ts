@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  userid: z.string().min(1, "Userid is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   loginOTP: z.string().optional(),
 });
@@ -9,7 +9,7 @@ export const loginSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  userid: z.string().min(1, "Userid is required"),
 });
 
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
