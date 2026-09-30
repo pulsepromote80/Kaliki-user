@@ -1,0 +1,85 @@
+import Link from "next/link";
+
+export function Footer() {
+  return (
+    <footer className="relative bg-[#050505] pt-20 pb-8 overflow-hidden text-[#F5F3EE]">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16">
+        
+        {/* Top Section: Links & Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          
+          {/* Column 1: Logo & Description */}
+          <div className="max-w-xs">
+            <Link href="/" className="flex items-center gap-2 mb-6">
+              {/* CSS Logo mimicking the Kalkii icon */}
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                <div className="absolute w-3 h-5 bg-blue-600 rotate-[-20deg] rounded-sm"></div>
+                <div className="absolute w-3 h-5 bg-orange-500 rotate-[20deg] rounded-sm translate-x-1"></div>
+              </div>
+              <span className="text-white font-bold text-xl tracking-wide">Kalkii</span>
+            </Link>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              A structured forex trading education ecosystem — mentor-led, market-grounded, built on process over promises.
+            </p>
+          </div>
+
+          {/* Column 2: Explore */}
+          <div>
+            <h4 className="text-[#3B82F6] font-semibold text-sm tracking-wider uppercase mb-6">Explore</h4>
+            <ul className="space-y-4">
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">About Kalkii</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Markets</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Curriculum</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Mentors</Link></li>
+            </ul>
+          </div>
+
+          {/* Column 3: Program */}
+          <div>
+            <h4 className="text-[#3B82F6] font-semibold text-sm tracking-wider uppercase mb-6">Program</h4>
+            <ul className="space-y-4">
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Forex curriculum</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">FAQ</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Enroll now</Link></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Reach Us */}
+          <div>
+            <h4 className="text-[#3B82F6] font-semibold text-sm tracking-wider uppercase mb-6">Reach Us</h4>
+            <ul className="space-y-4">
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Contact us</Link></li>
+              <li><a href="mailto:support@kalkii.com" className="text-gray-400 hover:text-white text-sm transition-colors">support@kalkii.com</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Middle Section: Disclaimer Box */}
+        <div className="border border-white/10 rounded-2xl p-6 md:p-8 mb-20 bg-white/[0.02]">
+          <p className="text-gray-400 text-sm leading-relaxed">
+            Trading forex involves substantial risk of loss. Kalkii provides education only — nothing on this site is investment advice, a recommendation, or a promise of returns. Trade only with capital you can afford to lose.
+          </p>
+        </div>
+
+        {/* Bottom Section: Giant Watermark & Copyright */}
+        <div className="relative pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-end md:items-center gap-6">
+          
+          {/* Watermark Text (Positioned absolutely to overlap nicely) */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none select-none opacity-[0.03]">
+            <span className="font-serif text-[120px] md:text-[180px] leading-none font-bold whitespace-nowrap">
+              Kalkii
+            </span>
+          </div>
+
+          <div className="relative z-10 text-gray-500 text-sm">
+            © 2026 Kalkii
+          </div>
+          <div className="relative z-10 text-gray-500 text-sm">
+            Education · Not investment advice
+          </div>
+        </div>
+
+      </div>
+    </footer>
+  );
+}

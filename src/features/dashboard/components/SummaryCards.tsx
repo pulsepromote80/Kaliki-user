@@ -11,40 +11,59 @@ export function SummaryCards() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, index) => (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
           <Skeleton key={index} className="h-28 w-full" />
         ))}
       </div>
     );
   }
 
-  if (isError || !data) {
+  if (isError || !data || !data.data || data.data.length === 0) {
     return <ErrorState onRetry={() => refetch()} />;
   }
 
+  const dashboardData = data.data[0]!;
+ 
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <Card>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* <Card>
         <CardHeader>
-          <CardTitle>Total users</CardTitle>
+          <CardTitle>Active Licensee</CardTitle>
         </CardHeader>
-        <CardContent className="text-2xl font-semibold">{data.TotalTeam}</CardContent>
+        <CardContent className="text-2xl font-semibold">{dashboardData.ActiveLicensee || 0}</CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Total transactions</CardTitle>
+          <CardTitle>Total Team</CardTitle>
         </CardHeader>
-        <CardContent className="text-2xl font-semibold">{data.DirectBusiness}</CardContent>
+        <CardContent className="text-2xl font-semibold">{dashboardData.TotalTeam || 0}</CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Revenue this month</CardTitle>
+          <CardTitle>Yield Wallet</CardTitle>
         </CardHeader>
-        <CardContent className="text-2xl font-semibold">
-          {formatCurrency(data.TodayIncome)}
-        </CardContent>
+        <CardContent className="text-2xl font-semibold">{formatCurrency(dashboardData.YieldWallet || 0)}</CardContent>
       </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Performance Wallet</CardTitle>
+        </CardHeader>
+        <CardContent className="text-2xl font-semibold">{formatCurrency(dashboardData.PerformanceWallet || 0)}</CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Deposit Wallet</CardTitle>
+        </CardHeader>
+        <CardContent className="text-2xl font-semibold">{formatCurrency(dashboardData.DepositWallet || 0)}</CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Legacy Wallet</CardTitle>
+        </CardHeader>
+        <CardContent className="text-2xl font-semibold">{formatCurrency(dashboardData.LegacyWallet || 0)}</CardContent>
+      </Card> */}
     </div>
   );
 }

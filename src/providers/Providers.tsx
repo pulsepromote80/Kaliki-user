@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 /**
  * Single composition root for all client-side providers.
@@ -9,5 +10,9 @@ import { QueryProvider } from "@/providers/QueryProvider";
  * Add new global providers (theme, toast, etc.) here, not in layout.tsx.
  */
 export function Providers({ children }: { children: ReactNode }) {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <QueryProvider>{children}</QueryProvider>
+    </ThemeProvider>
+  );
 }
