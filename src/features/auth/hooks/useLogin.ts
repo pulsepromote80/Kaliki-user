@@ -25,7 +25,7 @@ export function useLogin() {
       router.refresh();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Invalid username or password");
+      toast.error(error?.response?.data?.message || "Invalid userid or password");
     },
   });
 }

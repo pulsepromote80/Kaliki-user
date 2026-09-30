@@ -5,16 +5,16 @@ import { createBackendClient } from "@/lib/backend-client";
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
-  if (!body?.loginID || !body?.password) {
+  if (!body?.userid || !body?.password) {
     return NextResponse.json(
-      { success: false, message: "Email and password are required" },
+      { success: false, message: "userid and password are required" },
       { status: 400 },
     );
   }
 
   try {
     const backend = createBackendClient();
-    const { data } = await backend.post("/SMTPServices/sendOtpLoginEmail", body);
+    const { data } = await backend.post("/SMTP/sendOtpLoginEmail", body);
 
     return NextResponse.json(data);
   } catch (error) {

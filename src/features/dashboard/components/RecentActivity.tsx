@@ -1,8 +1,10 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { useTheme } from "next-themes";
 
 export function RecentActivity() {
+  const { theme } = useTheme();
   const activities = [
     { action: "Agent deployed", time: "2 minutes ago", status: "success" },
     { action: "Wallet withdrawal", time: "15 minutes ago", status: "success" },
@@ -22,7 +24,7 @@ export function RecentActivity() {
               <div className="w-2 h-2 rounded-full bg-green-500" />
               <div className="flex-1">
                 <p className="text-sm font-medium">{activity.action}</p>
-                <p className="text-xs text-gray-500">{activity.time}</p>
+                <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{activity.time}</p>
               </div>
             </div>
           ))}

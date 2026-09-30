@@ -47,10 +47,10 @@ export function useValidateReferral() {
 
 export function useSendOtp() {
   return useMutation({
-    mutationFn: ({ loginID, password }: { loginID: string; password: string }) => 
-      authService.sendOtp(loginID, password),
-    onSuccess: () => {
-      toast.success("OTP sent successfully!");
+    mutationFn: ({ userid, password }: { userid: string; password: string }) =>
+      authService.sendOtp(userid, password),
+    onSuccess: (response) => {
+      toast.success(response.message || "OTP sent successfully!");
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to send OTP. Please try again.");

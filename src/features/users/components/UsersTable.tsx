@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/common/DataTable";
 import { useUsers } from "@/features/users/hooks/useUsers";
@@ -29,8 +28,12 @@ const columns: TableColumn<User>[] = [
   { key: "createdAt", header: "Joined", render: (user) => formatDate(user.createdAt) },
 ];
 
-export function UsersTable() {
-  const [page, setPage] = useState(1);
+interface UsersTableProps {
+  page?: number;
+  onPageChange?: (page: number) => void;
+}
+
+export function UsersTable({ page = 1, onPageChange }: UsersTableProps = {}) {
   const { data, isLoading, isError, refetch } = useUsers({ page, pageSize: DEFAULT_PAGE_SIZE });
 
   return (
@@ -43,7 +46,7 @@ export function UsersTable() {
       onRetry={() => refetch()}
       page={data?.page ?? page}
       totalPages={data?.totalPages ?? 1}
-      onPageChange={setPage}
+      onPageChange={onPageChange}
       emptyTitle="No users yet"
     />
   );

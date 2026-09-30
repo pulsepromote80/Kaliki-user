@@ -47,9 +47,9 @@ export const authService = {
   validateReferral: (referralId: string) =>
     apiClient.get<ReferralData>(`/auth/referral?referralId=${referralId}`),
 
-  sendOtp: (loginID: string, password: string) =>
-    apiClient.post<{ success: true }, { loginID: string, password: string }>(
+  sendOtp: (userid: string, password: string) =>
+    apiClient.post<{ statusCode: number; message: string; data: null }, { userid: string, password: string }>(
       "/auth/send-otp",
-      { loginID, password },
+      { userid, password },
     ),
 };

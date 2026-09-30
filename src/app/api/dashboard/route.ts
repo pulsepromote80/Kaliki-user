@@ -14,8 +14,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const sessionData = JSON.parse(sessionCookie);
-    const token = sessionData.token;
+    // Decode URL-encoded cookie value
+    const decodedCookie = decodeURIComponent(sessionCookie);
+    const sessionData = JSON.parse(decodedCookie);
+    const token = sessionData.accessToken;
 
     if (!token) {
       return NextResponse.json({ success: false, message: "No token in session" }, { status: 401 });
