@@ -9,6 +9,7 @@ export function createBackendClient(accessToken?: string) {
     baseURL: BACKEND_API_URL,
     headers: {
       "Content-Type": "application/json",
+      "Accept": "application/json",
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   });
