@@ -25,6 +25,9 @@ export interface DashboardData {
   RankIcon: string;
   WalletAdd: string;
   ActiveLicensee: number;
+  IncomeWalletbal: number;
+  DepositWalletBal: number;
+  RentWalletBal: number;
 }
 
 export interface DashboardSummary {

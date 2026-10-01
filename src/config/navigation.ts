@@ -13,8 +13,8 @@ export const primaryNav: NavItem[] = [
     href: "/",
     isDropdown: true,
     dropdownItems: [
-      { label: "Investment Fund ", href: "/package-1" },
-      { label: "Booster", href: "/package-3" },
+      { label: "Investment Fund ", href: "/investment-amount" },
+      { label: "Booster", href: "/booster" },
       
     ],
    

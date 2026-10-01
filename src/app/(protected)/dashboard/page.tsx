@@ -18,7 +18,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" />
       <Banner />
       <SummaryCards />
       <QuickActions />

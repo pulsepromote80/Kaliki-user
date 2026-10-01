@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut, X } from "lucide-react";
+import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut, X, Briefcase, TrendingUp, BarChart3, ShieldCheck } from "lucide-react";
 import { useAuthStore } from "@/store/auth.store";
 import { primaryNav } from "@/config/navigation";
 import { usePathname } from "next/navigation";
@@ -10,16 +10,21 @@ import { useState, useRef, useEffect } from "react";
 import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSummary";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 export function Navbar() {
   const user = useAuthStore((state) => state.user);
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false); 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
   const [authLoginCopied, setAuthLoginCopied] = useState(false);
+  
   const accountMenuRef = useRef<HTMLDivElement>(null);
+  const walletRef = useRef<HTMLDivElement>(null);
+  
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const logout = useLogout();
@@ -30,6 +35,7 @@ export function Navbar() {
 
   const { data: dashboardData } = useDashboardSummary();
   const displayAuthLogin = dashboardData?.data?.[0]?.AuthLogin || user?.name || 'Account';
+  const walletData = dashboardData?.data?.[0];
 
   const handleLogout = () => {
     logout.mutate();
@@ -43,21 +49,61 @@ export function Navbar() {
     }
   };
 
+  // Click Outside Logic (Account Menu + Wallet Menu)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
         setAccountMenuOpen(false);
       }
+      if (walletRef.current && !walletRef.current.contains(event.target as Node)) {
+        setWalletOpen(false);
+      }
     };
 
-    if (accountMenuOpen) {
+    if (accountMenuOpen || walletOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [accountMenuOpen]);
+  }, [accountMenuOpen, walletOpen]);
+
+  // Wallet Data (Screenshot ke hisaab se)
+ const wallets = [
+  { 
+    id: 'deposit', 
+    name: 'Deposit Wallet', 
+    balance: walletData?.DepositWalletBal ? `$${Number(walletData.DepositWalletBal).toFixed(4)}` : '$0.0000', 
+    icon: Briefcase, 
+    color: '#0ea5e9', 
+    bg: '#e0f2fe' 
+  },
+  { 
+    id: 'performance', 
+    name: 'Performance Wallet', 
+    balance: walletData?.IncomeWalletbal ? `$${Number(walletData.IncomeWalletbal).toFixed(4)}` : '$0.0000', 
+    icon: TrendingUp, 
+    color: '#8b5cf6', 
+    bg: '#ede9fe' 
+  },
+  { 
+    id: 'yield', 
+    name: 'Yield Wallet', 
+    balance: walletData?.RentWalletBal ? `$${Number(walletData.RentWalletBal).toFixed(4)}` : '$0.0000', 
+    icon: BarChart3, 
+    color: '#10b981', 
+    bg: '#d1fae5' 
+  },
+  { 
+    id: 'legacy', 
+    name: 'Legacy Wallet', 
+    balance: walletData?.LegacyWallet ? `$${Number(walletData.LegacyWallet).toFixed(4)}` : '$0.0000', 
+    icon: ShieldCheck, 
+    color: '#f59e0b', 
+    bg: '#fef3c7' 
+  },
+];
 
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
@@ -72,10 +118,13 @@ export function Navbar() {
 
       <div className="flex items-center gap-4 sm:gap-8 flex-1">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
-            <div className="h-4 w-4 rounded-full" style={{ background: '#f5c451' }} />
-          </div>
-          <span className="text-lg sm:text-xl font-bold" style={{ color: '#f5c451' }}>KALKII</span>
+          <Image
+            src="/logos/kalki-horizontal-logo.png"
+            alt="KALKII Logo"
+            width={120}
+            height={32}
+            className="h-8 w-auto object-contain"
+          />
         </div>
 
         <nav className="hidden lg:flex items-center gap-6 sm:gap-10 flex-1 justify-center">
@@ -162,9 +211,69 @@ export function Navbar() {
           {mounted && theme === 'dark' ? <Sun className="h-4 sm:h-5 w-4 sm:w-5" /> : <Moon className="h-4 sm:h-5 w-4 sm:w-5" />}
         </button>
 
-        <button className="hidden sm:block rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Wallet" style={{ color: '#f5c451' }}>
-          <Wallet className="h-5 w-5" />
-        </button>
+        {/* ================= WALLET DROPDOWN START ================= */}
+        <div ref={walletRef} className="relative hidden sm:block">
+          <button 
+            onClick={() => setWalletOpen((open) => !open)}
+            className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" 
+            aria-label="Wallet" 
+            style={{ color: '#f5c451' }}
+          >
+            <Wallet className="h-5 w-5" />
+          </button>
+
+          {walletOpen && (
+            <div className="absolute right-0 top-full z-50 mt-3 w-[320px] rounded-2xl border shadow-2xl bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B] dark:shadow-black/50 overflow-hidden">
+              
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-[#1E293B]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
+                    <Wallet size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">Wallet Balance</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Your current balances</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setWalletOpen(false)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Wallet List */}
+              <div className="p-4 space-y-3">
+                {wallets.map((wallet) => (
+                  <div 
+                    key={wallet.id}
+                    className="flex items-center justify-between p-3 rounded-xl transition-colors hover:opacity-90"
+                    style={{ backgroundColor: wallet.bg }}
+                  >
+                    <div className="flex items-center gap-3">
+                      {/* Colored Dot */}
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: wallet.color }} />
+                      
+                      {/* Icon & Name */}
+                      <wallet.icon size={18} style={{ color: wallet.color }} />
+                      <span className="text-sm font-semibold" style={{ color: wallet.color }}>
+                        {wallet.name}
+                      </span>
+                    </div>
+                    
+                    {/* Balance */}
+                    <span className="text-sm font-bold" style={{ color: wallet.color }}>
+                      {wallet.balance}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        {/* ================= WALLET DROPDOWN END ================= */}
 
         <button className="relative rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Notifications" style={{ color: '#f5c451' }}>
           <Bell className="h-4 sm:h-5 w-4 sm:w-5" />
@@ -188,6 +297,7 @@ export function Navbar() {
             <span className="hidden sm:block max-w-[96px] truncate font-semibold ">{displayAuthLogin || 'Account'}</span>
             {accountMenuOpen ? <ChevronUp size={15} strokeWidth={2} /> : <ChevronDown size={15} strokeWidth={2} />}
           </button>
+          
           {accountMenuOpen && (
             <div className="absolute right-0 top-full z-20 mt-3 w-[min(280px,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border shadow-2xl bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B] dark:shadow-black/50">
               <div className="p-4 sm:p-5">

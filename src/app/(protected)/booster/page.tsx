@@ -1,0 +1,249 @@
+"use client";
+import React, { useState } from 'react';
+
+// ==========================================
+// TYPES
+// ==========================================
+interface BoosterFeature {
+  text: string;
+}
+
+interface Booster {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: string;
+  price: string;
+  features: BoosterFeature[];
+  theme: {
+    text: string;
+    bg: string;
+    border: string;
+    glow: string;
+    button: string;
+    buttonHover: string;
+    iconBg: string;
+  };
+  isPopular?: boolean;
+}
+
+// ==========================================
+// MODAL COMPONENT (Popup)
+// ==========================================
+interface ActivateBoosterModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  booster: Booster | null;
+  userId?: string;
+}
+
+const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
+  isOpen,
+  onClose,
+  booster,
+  userId = "2643158",
+}) => {
+  if (!isOpen || !booster) return null;
+
+  const getModalTheme = () => {
+    if (booster.id === "withdrawal-booster") {
+      return { btn: "bg-blue-500 hover:bg-blue-600 text-white", text: "text-blue-600", iconBg: "bg-blue-100" };
+    }
+    return { btn: "bg-purple-500 hover:bg-purple-600 text-white", text: "text-purple-600", iconBg: "bg-purple-100" };
+  };
+
+  const modalTheme = getModalTheme();
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="relative w-full max-w-[480px] bg-white dark:bg-[#11111a] rounded-3xl shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200 border border-gray-100 dark:border-white/10">
+        
+        {/* Header */}
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <p className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-1">
+              Activate Booster
+            </p>
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+              {booster.title}
+            </h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-2 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors border border-gray-100 dark:border-white/10"
+          >
+            <span className="text-gray-500 dark:text-gray-400 font-bold text-lg leading-none">&times;</span>
+          </button>
+        </div>
+
+        {/* Wallet Info Box */}
+        <div className="flex justify-between items-center bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30 rounded-2xl p-5 mb-6">
+          <div>
+            <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
+            <p className="text-green-600 dark:text-green-400 text-2xl font-bold">$0</p>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Booster Price</p>
+            <p className="text-gray-900 dark:text-white text-lg font-semibold">{booster.price}</p>
+          </div>
+        </div>
+
+        {/* Form */}
+        <div className="space-y-5">
+          <div>
+            <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
+              USER ID <span className="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              value={userId}
+              readOnly
+              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-gray-200 text-lg font-medium px-4 py-3.5 rounded-xl border-none outline-none cursor-not-allowed"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED BOOSTER</label>
+            <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
+              <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{booster.icon}</span>
+              <span className={modalTheme.text}>{booster.title}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Button */}
+        <button className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn}`}>
+          <span className="text-xl">⚡</span>
+          Activate {booster.title}
+        </button>
+
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// MAIN BOOSTER PAGE COMPONENT
+// ==========================================
+export default function BoosterPage() {
+  const [selectedBooster, setSelectedBooster] = useState<Booster | null>(null);
+
+  const boosters: Booster[] = [
+    {
+      id: "withdrawal-booster",
+      title: "Withdrawal Booster",
+      subtitle: "Daily Withdrawal Allowed",
+      icon: "💸",
+      price: "$100",
+      features: [
+        { text: "Validity: 30 Days" },
+        { text: "Daily Withdrawal Allowed" },
+        { text: "Instant Withdrawal Access" },
+        { text: "Boost Your Daily Earnings" },
+      ],
+      theme: {
+        text: "text-blue-600 dark:text-blue-400",
+        bg: "bg-blue-50 dark:bg-blue-500/10",
+        border: "border-blue-200 dark:border-blue-500/30",
+        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
+        button: "bg-blue-500 text-white border-transparent dark:bg-transparent dark:border-2 dark:border-blue-500 dark:text-blue-400",
+        buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
+        iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
+      },
+    },
+    {
+      id: "level-booster",
+      title: "Level Booster",
+      subtitle: "Double Your Level ROI",
+      icon: "🚀",
+      price: "$100",
+      isPopular: true, // Isko highlight karne ke liye
+      features: [
+        { text: "30% Get from 15 Levels" },
+        { text: "After Booster: 60% (Double Level ROI)" },
+        { text: "Validity: Lifetime" },
+        { text: "Just Double Level ROI" },
+      ],
+      theme: {
+        text: "text-purple-600 dark:text-purple-400",
+        bg: "bg-purple-50 dark:bg-purple-500/10",
+        border: "border-purple-200 dark:border-purple-500/30",
+        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+        button: "bg-purple-500 text-white border-transparent dark:bg-gradient-to-r dark:from-purple-500 dark:to-fuchsia-500 font-bold",
+        buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
+        iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
+      },
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4 sm:p-8 font-sans relative transition-colors duration-300">
+      
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full mx-auto ">
+        {boosters.map((booster) => (
+          <div
+            key={booster.id}
+            className={`relative flex flex-col p-8 rounded-3xl bg-white dark:bg-[#11111a] border ${booster.theme.border} ${booster.theme.glow} transition-all duration-300 hover:-translate-y-2`}
+          >
+            {booster.isPopular && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                ★ Best Value ★
+              </div>
+            )}
+
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 text-3xl ${booster.theme.iconBg} shadow-lg`}>
+              {booster.icon}
+            </div>
+
+            <h2 className={`text-3xl font-bold mb-3 ${booster.theme.text}`}>
+              {booster.title}
+            </h2>
+
+            <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-8 ${booster.theme.bg} ${booster.theme.text} border ${booster.theme.border}`}>
+              {booster.subtitle}
+            </div>
+
+            {/* Price Box */}
+            <div className="bg-gray-50 dark:bg-[#1a1a24] border border-gray-100 dark:border-white/5 rounded-2xl p-6 mb-8">
+              <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold tracking-widest uppercase mb-2">
+                Booster Price
+              </p>
+              <p className="text-gray-900 dark:text-white text-3xl font-bold">
+                {booster.price}
+              </p>
+            </div>
+
+            <ul className="flex-1 space-y-4 mb-8">
+              {booster.features.map((feature, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center border ${booster.theme.border} ${booster.theme.bg}`}>
+                    <span className={`text-[10px] font-bold ${booster.theme.text}`}>✓</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm font-medium">
+                    {feature.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => setSelectedBooster(booster)}
+              className={`w-full py-4 rounded-xl text-sm font-bold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 ${booster.theme.button} ${booster.theme.buttonHover}`}
+            >
+              Activate Booster
+              <span className="text-lg">→</span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* MODAL RENDER */}
+      <ActivateBoosterModal
+        isOpen={!!selectedBooster}
+        onClose={() => setSelectedBooster(null)}
+        booster={selectedBooster}
+      />
+    </div>
+  );
+}
