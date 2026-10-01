@@ -5,8 +5,8 @@ import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
 /**
- * POST /api/auth/update-profile
- * Updates the user's profile information
+ * POST /api/auth/change-password
+ * Changes the user's password
  */
 export async function POST(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
@@ -41,26 +41,22 @@ export async function POST(request: NextRequest) {
 
     const payload = {
       userid: userId,
-      fName: body.fName,
-      lName: body.lName,
-      address: body.address,
-      mobile: body.mobile,
-      countryid: body.countryid,
-      walletBep20: body.walletBep20,
-      updateprofileotp: body.updateprofileotp,
+      oldPassword: body.oldPassword,
+      newPass: body.newPass,
+      otp: body.otp,
     };
 
-    // Call backend API to update profile
+    // Call backend API to change password
     const backend = createBackendClient(token);
-    const { data } = await backend.post("/Authentication/updateUserProfile", payload);
+    const { data } = await backend.post("/Authentication/changePassword", payload);
 
     return NextResponse.json({
       success: true,
       data: data,
-      message: data.message || "Profile updated successfully",
+      message: "Password changed successfully",
     });
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("Change password error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -71,7 +67,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: error.response?.data?.message || "Failed to update profile",
+          message: error.response?.data?.message || "Failed to change password",
         },
         { status: error.response?.status || 500 },
       );
@@ -79,7 +75,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to update profile",
+        message: "Failed to change password",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

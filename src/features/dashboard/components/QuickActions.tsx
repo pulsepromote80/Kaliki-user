@@ -33,16 +33,16 @@ export function QuickActions() {
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 sm:gap-3">
           {actions.map((action) => (
             <Button
               key={action.label}
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center gap-2 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-300 dark:hover:border-green-700"
+              className="h-16 sm:h-20 flex flex-col items-center justify-center gap-1 sm:gap-2 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-300 dark:hover:border-green-700"
               onClick={action.action}
             >
-              <span className="text-2xl">{action.icon}</span>
-              <span className="text-xs">{action.label}</span>
+              <span className="text-xl sm:text-2xl">{action.icon}</span>
+              <span className="text-[10px] sm:text-xs">{action.label}</span>
             </Button>
           ))}
         </div>

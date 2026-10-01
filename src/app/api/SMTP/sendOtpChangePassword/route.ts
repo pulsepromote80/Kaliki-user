@@ -4,10 +4,7 @@ import { createBackendClient } from "@/lib/backend-client";
 import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
-/**
- * POST /api/auth/update-profile
- * Updates the user's profile information
- */
+
 export async function POST(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -26,7 +23,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "No token in session" }, { status: 401 });
     }
 
-    // Check if token is expired
     if (isTokenExpired(token)) {
       return NextResponse.json(
         { success: false, message: "Token expired. Please login again." },
@@ -41,26 +37,19 @@ export async function POST(request: NextRequest) {
 
     const payload = {
       userid: userId,
-      fName: body.fName,
-      lName: body.lName,
-      address: body.address,
-      mobile: body.mobile,
-      countryid: body.countryid,
-      walletBep20: body.walletBep20,
-      updateprofileotp: body.updateprofileotp,
     };
 
-    // Call backend API to update profile
+    // Call backend API to send OTP
     const backend = createBackendClient(token);
-    const { data } = await backend.post("/Authentication/updateUserProfile", payload);
+    const { data } = await backend.post("/SMTP/sendOtpChangePassword", payload);
 
     return NextResponse.json({
       success: true,
       data: data,
-      message: data.message || "Profile updated successfully",
+      message: "OTP sent successfully",
     });
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("Send OTP error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -71,7 +60,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: error.response?.data?.message || "Failed to update profile",
+          message: error.response?.data?.message || "Failed to send OTP",
         },
         { status: error.response?.status || 500 },
       );
@@ -79,7 +68,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to update profile",
+        message: "Failed to send OTP",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

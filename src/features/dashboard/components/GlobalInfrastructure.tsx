@@ -22,16 +22,16 @@ export function GlobalInfrastructure() {
           {regions.map((region) => (
             <div
               key={region.name}
-              className={`flex items-center justify-between p-3 rounded-lg ${
+              className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg gap-2 ${
                 theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'
               }`}
             >
               <div>
-                <p className="font-medium">{region.name}</p>
-                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{region.nodes} Active Nodes</p>
+                <p className="font-medium text-sm">{region.name}</p>
+                <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{region.nodes} Active Nodes</p>
               </div>
               <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                className={`px-2 py-1 rounded-full text-[10px] sm:text-xs font-medium w-fit ${
                   region.status === "Active"
                     ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                     : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"

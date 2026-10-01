@@ -31,7 +31,7 @@ export function LoginForm() {
   const handleSendOtp = async () => {
     const userid = form.getValues("userid");
     const password = form.getValues("password");
-    
+
     if (!userid) {
       form.setError("userid", { message: "userid is required to send OTP" });
       return;
@@ -40,10 +40,14 @@ export function LoginForm() {
       form.setError("password", { message: "Password is required to send OTP" });
       return;
     }
-    
+
     setEmailForOtp(userid);
-    await sendOtp.mutateAsync({ userid, password });
-    setShowOtpField(true);
+    try {
+      await sendOtp.mutateAsync({ userid, password });
+      setShowOtpField(true);
+    } catch (error) {
+     
+    }
   };
 
   const onSubmit = form.handleSubmit((values) => {

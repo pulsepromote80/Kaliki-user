@@ -5,10 +5,10 @@ import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
 /**
- * POST /api/auth/update-profile
- * Updates the user's profile information
+ * GET /api/Authentication/userAffiliateDashboard
+ * Fetches the user's affiliate dashboard data from the backend
  */
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
@@ -34,33 +34,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-
-    // Get userId from session or from the user data
-    const userId = sessionData.userData?.UserId || body.userid;
-
-    const payload = {
-      userid: userId,
-      fName: body.fName,
-      lName: body.lName,
-      address: body.address,
-      mobile: body.mobile,
-      countryid: body.countryid,
-      walletBep20: body.walletBep20,
-      updateprofileotp: body.updateprofileotp,
-    };
-
-    // Call backend API to update profile
+    // Fetch affiliate dashboard data from backend
     const backend = createBackendClient(token);
-    const { data } = await backend.post("/Authentication/updateUserProfile", payload);
-
-    return NextResponse.json({
-      success: true,
-      data: data,
-      message: data.message || "Profile updated successfully",
-    });
+    const { data } = await backend.get("/Authentication/userAffiliateDashboard");
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("Affiliate dashboard error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -68,18 +47,11 @@ export async function POST(request: NextRequest) {
           { status: 401 },
         );
       }
-      return NextResponse.json(
-        {
-          success: false,
-          message: error.response?.data?.message || "Failed to update profile",
-        },
-        { status: error.response?.status || 500 },
-      );
     }
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to update profile",
+        message: "Failed to fetch affiliate dashboard data",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

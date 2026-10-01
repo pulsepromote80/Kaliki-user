@@ -44,7 +44,7 @@ export function Manage2FAForm() {
 
   const check2FAStatus = async () => {
     try {
-      const response = await fetch("/api/TwoFacAuth/generateUser", {
+      const response = await fetch("/api/auth/generate-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: "" }),
@@ -122,7 +122,7 @@ export function Manage2FAForm() {
     setError(null);
 
     try {
-      const response = await fetch("/api/TwoFacAuth/generateUser", {
+      const response = await fetch("/api/auth/generate-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: "" }),
@@ -238,7 +238,7 @@ export function Manage2FAForm() {
     setIsEnabling(true);
 
     try {
-      const response = await fetch("/api/TwoFacAuth/enableUser", {
+      const response = await fetch("/api/auth/enable-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: otp }),
@@ -265,7 +265,7 @@ export function Manage2FAForm() {
     setIsValidating(true);
     
     try {
-      const response = await fetch("/api/TwoFacAuth/validateUser", {
+      const response = await fetch("/api/auth/validate-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: otp }),

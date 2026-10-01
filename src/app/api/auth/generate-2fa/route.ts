@@ -4,10 +4,6 @@ import { createBackendClient } from "@/lib/backend-client";
 import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
-/**
- * POST /api/auth/update-profile
- * Updates the user's profile information
- */
 export async function POST(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -17,7 +13,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Decode URL-encoded cookie value
     const decodedCookie = decodeURIComponent(sessionCookie);
     const sessionData = JSON.parse(decodedCookie);
     const token = sessionData.accessToken;
@@ -26,7 +21,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "No token in session" }, { status: 401 });
     }
 
-    // Check if token is expired
     if (isTokenExpired(token)) {
       return NextResponse.json(
         { success: false, message: "Token expired. Please login again." },
@@ -36,31 +30,20 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // Get userId from session or from the user data
-    const userId = sessionData.userData?.UserId || body.userid;
-
     const payload = {
-      userid: userId,
-      fName: body.fName,
-      lName: body.lName,
-      address: body.address,
-      mobile: body.mobile,
-      countryid: body.countryid,
-      walletBep20: body.walletBep20,
-      updateprofileotp: body.updateprofileotp,
+      code: body.code || "",
     };
 
-    // Call backend API to update profile
     const backend = createBackendClient(token);
-    const { data } = await backend.post("/Authentication/updateUserProfile", payload);
+    const { data } = await backend.post("/TwoFacAuth/generateUser", payload);
 
     return NextResponse.json({
       success: true,
       data: data,
-      message: data.message || "Profile updated successfully",
+      message: data.message || "QR code generated successfully",
     });
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("Generate 2FA error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -71,7 +54,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: error.response?.data?.message || "Failed to update profile",
+          message: error.response?.data?.message || "Failed to generate QR code",
         },
         { status: error.response?.status || 500 },
       );
@@ -79,7 +62,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to update profile",
+        message: "Failed to generate QR code",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

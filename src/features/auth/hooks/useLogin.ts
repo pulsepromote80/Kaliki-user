@@ -25,7 +25,11 @@ export function useLogin() {
       router.refresh();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Invalid userid or password");
+      const errorMessage = error?.response?.data?.message;
+      // Suppress the specific 401 error message about incorrect credentials
+      if (errorMessage !== "Details are incorrect, please enter correct credentials.") {
+        toast.error(errorMessage || "Invalid userid or password");
+      }
     },
   });
 }

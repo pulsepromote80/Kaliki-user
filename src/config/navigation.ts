@@ -13,28 +13,13 @@ export const primaryNav: NavItem[] = [
     href: "/",
     isDropdown: true,
     dropdownItems: [
-      { label: "Trading Fund ", href: "/package-1" },
-      { label: "MIP", href: "/package-2" },
+      { label: "Investment Fund ", href: "/package-1" },
       { label: "Booster", href: "/package-3" },
-      { label: "Legacy Reborn", href: "/package-4" },
-      { label: "Purchase History", href: "/package-5" },
       
     ],
    
   },
-  // {
-  //   label: "Agents",
-  //   href: "/agents",
-    
-  //   isDropdown: true,
-  //   dropdownItems: [
-  //     { label: "Buy Agent License", href: "/buy-agent-license" },
-  //     { label: "Purchase Compute Credits", href: "/purchase-credits" },
-  //     { label: "Deploy AI Agents", href: "/deploy-agents" },
-  //     { label: "License Purchase History", href: "/license-purchase-history" },
-  //     { label: "Agent Deployment Report", href: "/my-deployments" },
-  //   ]
-  // },
+  
   {
     label: "Fund Director",
     href: "/fund-director",
