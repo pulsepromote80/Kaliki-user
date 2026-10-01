@@ -13,7 +13,7 @@ const ReferralLink = () => {
   const { data: dashboardData } = useDashboardSummary();
   const authLogin = dashboardData?.data?.[0]?.AuthLogin || user?.email || "user123";
   const [position, setPosition] = useState("L");
-  const referralLink = `https://rvtor.abrixlabs.live/register?RefID=${authLogin}&Position=${position}`;
+  const referralLink = `https://Kalkii.io/register?RefID=${authLogin}&Position=${position}`;
 
   const handleCopyClick = () => {
     const fullMessage = `🚀 𝐉𝐨𝐢𝐧 Kalikii – 𝐓𝐡𝐞 𝐅𝐮𝐭𝐮𝐫𝐞 𝐨𝐟 𝐀𝐈 𝐋𝐞𝐚𝐬𝐢𝐧𝐠!
