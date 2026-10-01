@@ -6,10 +6,10 @@ import { useTheme } from "next-themes";
 export function RecentActivity() {
   const { theme } = useTheme();
   const activities = [
-    { action: "Agent deployed", time: "2 minutes ago", status: "success" },
+    { action: "Subscription Activated", time: "2 minutes ago", status: "success" },
     { action: "Wallet withdrawal", time: "15 minutes ago", status: "success" },
     { action: "Team member joined", time: "1 hour ago", status: "success" },
-    { action: "License purchased", time: "3 hours ago", status: "success" },
+    { action: "Recent Withdrawal", time: "3 hours ago", status: "success" },
   ];
 
   return (

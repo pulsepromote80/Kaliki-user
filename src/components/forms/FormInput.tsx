@@ -8,6 +8,7 @@ export interface FormInputProps<TFormValues extends FieldValues>
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "name"> {
   name: Path<TFormValues>;
   label?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -17,6 +18,7 @@ export interface FormInputProps<TFormValues extends FieldValues>
 export function FormInput<TFormValues extends FieldValues>({
   name,
   label,
+  onChange,
   ...props
 }: FormInputProps<TFormValues>) {
   const {
@@ -33,7 +35,18 @@ export function FormInput<TFormValues extends FieldValues>({
           {label}
         </label>
       )}
-      <Input id={name} error={Boolean(error)} {...register(name)} {...props} />
+      <Input
+        id={name}
+        error={Boolean(error)}
+        {...register(name, {
+          onChange: (e) => {
+            if (onChange) {
+              onChange(e);
+            }
+          },
+        })}
+        {...props}
+      />
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );

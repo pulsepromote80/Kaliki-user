@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { createBackendClient } from "@/lib/backend-client";
 
-/**
- * GET /api/auth/countries
- *
- * Fetches list of countries from the .NET backend
- */
+
 export async function GET() {
   try {
     const backend = createBackendClient();

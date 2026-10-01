@@ -43,35 +43,33 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <div className="max-w-2xl">
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-          <FormInput
-            label="Current Password"
-            name="currentPassword"
-            type="password"
-            placeholder="Enter your current password"
-          />
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+        <FormInput
+          label="Current Password"
+          name="currentPassword"
+          type="password"
+          placeholder="Enter your current password"
+        />
 
-          <FormInput
-            label="New Password"
-            name="newPassword"
-            type="password"
-            placeholder="Enter your new password"
-          />
+        <FormInput
+          label="New Password"
+          name="newPassword"
+          type="password"
+          placeholder="Enter your new password"
+        />
 
-          <FormInput
-            label="Confirm New Password"
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm your new password"
-          />
+        <FormInput
+          label="Confirm New Password"
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm your new password"
+        />
 
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Changing..." : "Change Password"}
-          </Button>
-        </form>
-      </FormProvider>
-    </div>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Changing..." : "Change Password"}
+        </Button>
+      </form>
+    </FormProvider>
   );
 }

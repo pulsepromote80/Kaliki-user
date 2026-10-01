@@ -28,7 +28,7 @@ export default function ProfilePage() {
   return (
     <div>
       <PageHeader title="Profile" description="Manage your personal information." />
-      <Tabs tabs={tabs} defaultTab="edit-profile" />
+      <Tabs tabs={tabs} defaultTab="edit-profile" card />
     </div>
   );
 }
