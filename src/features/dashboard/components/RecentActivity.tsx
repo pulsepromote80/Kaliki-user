@@ -20,10 +20,10 @@ export function RecentActivity() {
       <CardContent>
         <div className="space-y-3">
           {activities.map((activity, index) => (
-            <div key={index} className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">{activity.action}</p>
+            <div key={index} className="flex items-start gap-3">
+              <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5 sm:mt-2 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{activity.action}</p>
                 <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{activity.time}</p>
               </div>
             </div>

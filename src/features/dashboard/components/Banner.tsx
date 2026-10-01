@@ -196,7 +196,7 @@ export function Banner() {
 
   return (
     <div
-      className="relative rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center gap-7 p-8"
+      className="relative rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center gap-4 sm:gap-7 p-4 sm:p-6 lg:p-8"
       style={{
         background: theme === 'dark'
           ? "linear-gradient(120deg, #0b1220 0%, #101a2e 55%, #0f2a1e 100%)"
@@ -218,7 +218,7 @@ export function Banner() {
         </div>
 
         <h1
-          className={`font-bold text-[30px] leading-[1.2] mb-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+          className={`font-bold text-[22px] sm:text-[26px] lg:text-[30px] leading-[1.2] mb-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
           style={{ fontFamily: '"Space Grotesk", sans-serif' }}
         >
           Your financial command center, powered by{" "}
@@ -227,36 +227,36 @@ export function Banner() {
           </span>
         </h1>
 
-        <p className={`text-sm max-w-[440px] leading-[1.7] ${theme === 'dark' ? 'text-[#a8b5cc]' : 'text-gray-600'}`}>
+        <p className={`text-xs sm:text-sm max-w-[440px] leading-[1.7] ${theme === 'dark' ? 'text-[#a8b5cc]' : 'text-gray-600'}`}>
           Learn smarter. Trade with intelligence. Track every rupee of progress
           and grow your wealth with strategies built for real market conditions.
         </p>
 
-        <div className={`text-[11px] mt-3.5 ${theme === 'dark' ? 'text-[#7a8699]' : 'text-gray-500'}`}>
+        <div className={`text-[10px] sm:text-[11px] mt-3.5 ${theme === 'dark' ? 'text-[#7a8699]' : 'text-gray-500'}`}>
           Figures shown are demo / historical placeholders and update once your
           live account is connected.
         </div>
 
         {/* Pair tiles */}
-        <div className="flex flex-wrap gap-2.5 mt-5">
+        <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-5">
           {pairsData.map((p) => (
             <div
               key={p.pair}
-              className={`rounded-xl px-3 py-2 min-w-[98px] border transition-colors duration-300 ${
+              className={`rounded-xl px-2.5 py-2 sm:px-3 sm:py-2 min-w-[85px] sm:min-w-[98px] border transition-colors duration-300 ${
                 theme === 'dark'
                   ? "bg-white/[.04] border-white/10 hover:bg-white/[.07]"
                   : "bg-white border-gray-200 hover:bg-gray-50"
               }`}
             >
-              <div className={`text-[10.5px] ${theme === 'dark' ? 'text-[#8a97ad]' : 'text-gray-500'}`}>{p.pair}</div>
+              <div className={`text-[9.5px] sm:text-[10.5px] ${theme === 'dark' ? 'text-[#8a97ad]' : 'text-gray-500'}`}>{p.pair}</div>
               <div
-                className={`font-semibold text-[13px] mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                className={`font-semibold text-[11px] sm:text-[13px] mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
                 style={{ fontFamily: '"Space Grotesk", sans-serif' }}
               >
                 {p.price.toFixed(p.decimals)}
               </div>
               <div
-                className={`text-[10.5px] mt-0.5 transition-colors duration-300 ${
+                className={`text-[9.5px] sm:text-[10.5px] mt-0.5 transition-colors duration-300 ${
                   p.change >= 0 ? "text-[#4ade9a]" : "text-[#ff8b96]"
                 }`}
               >
@@ -270,12 +270,12 @@ export function Banner() {
       </div>
 
       {/* ================= RIGHT SIDE — LIVE MARKET FEED ================= */}
-      <div className={`relative z-10 rounded-2xl p-[18px] backdrop-blur-sm border flex flex-col ${
+      <div className={`relative z-10 rounded-2xl p-3 sm:p-[18px] backdrop-blur-sm border flex flex-col ${
         theme === 'dark'
           ? "bg-black/30 border-white/10"
           : "bg-white/80 border-gray-200"
       }`}>
-        <div className={`flex justify-between text-[10px] tracking-[.08em] mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+        <div className={`flex justify-between text-[9px] sm:text-[10px] tracking-[.08em] mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           <span>Live Market Feed</span>
           <b className="text-[#e0ac2e] font-semibold flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#e0ac2e] animate-ping" />
@@ -286,13 +286,13 @@ export function Banner() {
         <div className="flex justify-between items-start mb-2">
           <div>
             <div
-              className={`text-[18px] font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+              className={`text-[16px] sm:text-[18px] font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: '"Space Grotesk", sans-serif' }}
             >
               ${currentPrice !== undefined ? currentPrice.toFixed(2) : "0.00"}
             </div>
             <div
-              className={`text-[11px] ${
+              className={`text-[10px] sm:text-[11px] ${
                 isUp ? "text-[#4ade9a]" : "text-[#ff6b7d]"
               }`}
             >
@@ -300,14 +300,14 @@ export function Banner() {
               {priceChange.toFixed(2)} ({priceChangePct.toFixed(2)}%)
             </div>
           </div>
-          <div className={`text-[10px] ${theme === 'dark' ? 'text-white/80' : 'text-gray-600'}`}>BTC/USDT</div>
+          <div className={`text-[9px] sm:text-[10px] ${theme === 'dark' ? 'text-white/80' : 'text-gray-600'}`}>BTC/USDT</div>
         </div>
 
         {/* Chart + axes */}
         <div className="flex gap-2">
           {/* Y-axis labels */}
           <div
-            className={`flex flex-col justify-between text-[9px] py-1 shrink-0 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`}
+            className={`hidden sm:flex flex-col justify-between text-[9px] py-1 shrink-0 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`}
             style={{ fontFamily: '"Space Grotesk", sans-serif' }}
           >
             {yLabels.map((label, i) => (
@@ -317,7 +317,7 @@ export function Banner() {
 
           {/* Chart */}
           <div className="flex-1 min-w-0">
-            <div className="w-full h-[130px] relative">
+            <div className="w-full h-[100px] sm:h-[130px] relative">
               <svg
                 viewBox={`0 0 ${W} ${H}`}
                 preserveAspectRatio="none"
@@ -396,7 +396,7 @@ export function Banner() {
             </div>
 
             <div
-              className={`flex justify-between text-[9px] mt-1 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`}
+              className={`flex justify-between text-[8px] sm:text-[9px] mt-1 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`}
               style={{ fontFamily: '"Space Grotesk", sans-serif' }}
             >
               {timeLabels.map((t, i) => (
@@ -407,33 +407,33 @@ export function Banner() {
         </div>
 
         {/* Bottom stats */}
-        <div className="flex justify-between mt-3">
-          <div className="text-center">
+        <div className="flex justify-between mt-3 gap-2">
+          <div className="text-center flex-1">
             <div
-              className="font-semibold text-[15px] text-[#4ade9a]"
+              className="font-semibold text-[13px] sm:text-[15px] text-[#4ade9a]"
               style={{ fontFamily: '"Space Grotesk", sans-serif' }}
             >
               Bearish
             </div>
-            <div className={`text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>TREND</div>
+            <div className={`text-[8.5px] sm:text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>TREND</div>
           </div>
-          <div className="text-center">
+          <div className="text-center flex-1">
             <div
-              className={`font-semibold text-[15px] ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+              className={`font-semibold text-[13px] sm:text-[15px] ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: '"Space Grotesk", sans-serif' }}
             >
               76%
             </div>
-            <div className={`text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>AI CONFIDENCE</div>
+            <div className={`text-[8.5px] sm:text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>AI CONFIDENCE</div>
           </div>
-          <div className="text-center">
+          <div className="text-center flex-1">
             <div
-              className="font-semibold text-[15px] text-[#e0ac2e]"
+              className="font-semibold text-[13px] sm:text-[15px] text-[#e0ac2e]"
               style={{ fontFamily: '"Space Grotesk", sans-serif' }}
             >
               Low
             </div>
-            <div className={`text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>RISK LEVEL</div>
+            <div className={`text-[8.5px] sm:text-[9.5px] ${theme === 'dark' ? 'text-white/50' : 'text-gray-500'}`}>RISK LEVEL</div>
           </div>
         </div>
       </div>

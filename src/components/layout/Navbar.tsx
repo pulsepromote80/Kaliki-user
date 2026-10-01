@@ -1,7 +1,6 @@
 "use client";
 
-import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut } from "lucide-react";
-import { useSidebarStore } from "@/store/sidebar.store";
+import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut, X } from "lucide-react";
 import { useAuthStore } from "@/store/auth.store";
 import { primaryNav } from "@/config/navigation";
 import { usePathname } from "next/navigation";
@@ -13,11 +12,12 @@ import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useTheme } from "next-themes";
 
 export function Navbar() {
-  const setMobileOpen = useSidebarStore((state) => state.setMobileOpen);
   const user = useAuthStore((state) => state.user);
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
   const [authLoginCopied, setAuthLoginCopied] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const { theme, setTheme } = useTheme();
@@ -60,25 +60,25 @@ export function Navbar() {
   }, [accountMenuOpen]);
 
   return (
-    <header className="flex h-16 items-center justify-between border-b px-6 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
+    <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
       <button
         className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5 lg:hidden"
-        onClick={() => setMobileOpen(true)}
+        onClick={() => setMobileNavOpen(true)}
         aria-label="Open menu"
         style={{ color: '#f5c451' }}
       >
         <Menu className="h-5 w-5" />
       </button>
 
-      <div className="flex items-center gap-8 flex-1">
+      <div className="flex items-center gap-4 sm:gap-8 flex-1">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
             <div className="h-4 w-4 rounded-full" style={{ background: '#f5c451' }} />
           </div>
-          <span className="text-xl font-bold" style={{ color: '#f5c451' }}>KALKII</span>
+          <span className="text-lg sm:text-xl font-bold" style={{ color: '#f5c451' }}>KALKII</span>
         </div>
 
-        <nav className="hidden lg:flex items-center gap-10 flex-1 justify-center">
+        <nav className="hidden lg:flex items-center gap-6 sm:gap-10 flex-1 justify-center">
           {primaryNav.map((item) => {
             const isActive = pathname.startsWith(item.href);
 
@@ -152,23 +152,23 @@ export function Navbar() {
         </nav>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button
           className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5"
           aria-label="Toggle theme"
           style={{ color: '#f5c451' }}
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
-          {mounted && theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          {mounted && theme === 'dark' ? <Sun className="h-4 sm:h-5 w-4 sm:w-5" /> : <Moon className="h-4 sm:h-5 w-4 sm:w-5" />}
         </button>
 
-        <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Wallet" style={{ color: '#f5c451' }}>
+        <button className="hidden sm:block rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Wallet" style={{ color: '#f5c451' }}>
           <Wallet className="h-5 w-5" />
         </button>
 
         <button className="relative rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Notifications" style={{ color: '#f5c451' }}>
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-medium text-white" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
+          <Bell className="h-4 sm:h-5 w-4 sm:w-5" />
+          <span className="absolute right-0 top-0 flex h-3 w-3 sm:h-4 sm:w-4 items-center justify-center rounded-full text-[10px] font-medium text-white" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
             1
           </span>
         </button>
@@ -185,7 +185,7 @@ export function Navbar() {
             <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: 'linear-gradient(145deg, #f5c451, #d4a017)', color: '#0B1021' }}>
               <UserRound size={17} strokeWidth={2} />
             </span>
-            <span className="max-w-[96px] truncate font-semibold ">{displayAuthLogin || 'Account'}</span>
+            <span className="hidden sm:block max-w-[96px] truncate font-semibold ">{displayAuthLogin || 'Account'}</span>
             {accountMenuOpen ? <ChevronUp size={15} strokeWidth={2} /> : <ChevronDown size={15} strokeWidth={2} />}
           </button>
           {accountMenuOpen && (
@@ -237,6 +237,97 @@ export function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileNavOpen(false)} />
+          <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-[#0B1021] shadow-xl overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#1E293B]">
+              <span className="font-bold" style={{ color: '#f5c451' }}>Menu</span>
+              <button
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-md"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <nav className="p-4 space-y-2">
+              {primaryNav.map((item) => {
+                const isActive = pathname.startsWith(item.href);
+                const isDropdownOpen = mobileDropdownOpen === item.label;
+
+                if (item.isDropdown && item.dropdownItems) {
+                  return (
+                    <div key={item.label}>
+                      <button
+                        onClick={() => setMobileDropdownOpen(isDropdownOpen ? null : item.label)}
+                        className={cn(
+                          "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                          isActive ? "bg-[#f5c451]/10 text-[#f5c451]" : "hover:bg-gray-100 dark:hover:bg-white/5"
+                        )}
+                        style={{ color: isActive ? '#f5c451' : (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          {item.img && (
+                            <img
+                              src={item.img}
+                              alt={item.label}
+                              className="h-5 w-5"
+                            />
+                          )}
+                          {item.label}
+                        </div>
+                        <ChevronDown className={cn("h-4 w-4 transition-transform", isDropdownOpen ? "rotate-180" : "")} />
+                      </button>
+                      {isDropdownOpen && (
+                        <div className="ml-4 mt-2 space-y-1">
+                          {item.dropdownItems.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.href}
+                              href={dropdownItem.href}
+                              onClick={() => {
+                                setMobileNavOpen(false);
+                                setMobileDropdownOpen(null);
+                              }}
+                              className="block px-4 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-white/5"
+                              style={{ color: (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
+                            >
+                              {dropdownItem.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileNavOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                      isActive ? "bg-[#f5c451]/10 text-[#f5c451]" : "hover:bg-gray-100 dark:hover:bg-white/5"
+                    )}
+                    style={{ color: isActive ? '#f5c451' : (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
+                  >
+                    {item.img && (
+                      <img
+                        src={item.img}
+                        alt={item.label}
+                        className="h-5 w-5"
+                      />
+                    )}
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

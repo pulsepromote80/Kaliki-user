@@ -53,7 +53,11 @@ export function useSendOtp() {
       toast.success(response.message || "OTP sent successfully!");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to send OTP. Please try again.");
+      const errorMessage = error?.response?.data?.message;
+      // Suppress the specific 401 error message about incorrect credentials
+      if (errorMessage !== "Details are incorrect, please enter correct credentials.") {
+        toast.error(errorMessage || "Failed to send OTP. Please try again.");
+      }
     },
   });
 }

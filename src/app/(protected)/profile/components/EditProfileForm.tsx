@@ -65,13 +65,13 @@ export function EditProfileForm() {
 
       if (result.success && result.data?.data?.[0]) {
         const data = result.data.data[0];
-        setValue("fName", data.FName || "");
-        setValue("lName", data.LName || "");
-        setValue("email", data.Email || "");
-        setValue("mobile", data.Mobile || "");
-        setValue("countryid", data.CountryId?.toString() || "");
-        setValue("address", data.Address || "");
-        setValue("walletBep20", data.WalletBep20 || "");
+        setValue("fName", data.fName || "");
+        setValue("lName", data.lName || "");
+        setValue("email", data.email || "");
+        setValue("mobile", data.mobile || "");
+        setValue("countryid", data.countryId?.toString() || "");
+        setValue("address", data.address || "");
+        setValue("walletBep20", data.walletBep20 || "");
       }
     } catch (error) {
       console.error("Error fetching profile details:", error);
@@ -102,7 +102,7 @@ export function EditProfileForm() {
   const handleSendOtp = async () => {
     try {
       setSendingOtp(true);
-      const response = await fetch("/api/SMTP/sendOtpUpdateProfile", {
+      const response = await fetch("/api/auth/send-otp-update-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
@@ -112,7 +112,7 @@ export function EditProfileForm() {
 
       if (result.success) {
         setOtpSent(true);
-        toast.success("OTP sent to your email");
+        toast.success(result.message || "OTP sent to your email");
       } else {
         toast.error(result.message || "Failed to send OTP");
       }
@@ -182,7 +182,7 @@ export function EditProfileForm() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <FaUser className="w-4 h-4 text-blue-400" />
@@ -230,7 +230,7 @@ export function EditProfileForm() {
           </div>
 
           <div className="grid grid-cols-12 gap-3 mt-4">
-            <div className="col-span-3">
+            <div className="col-span-3 sm:col-span-2">
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <FaGlobe className="w-4 h-4 text-emerald-400" />
                 Code
@@ -240,10 +240,10 @@ export function EditProfileForm() {
                 value="+91"
                 readOnly
                 disabled
-                className="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 text-sm focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-3 sm:px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 text-sm focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
-            <div className="col-span-9">
+            <div className="col-span-9 sm:col-span-10">
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <FaPhone className="w-4 h-4 text-emerald-400" />
                 Mobile
@@ -326,7 +326,7 @@ export function EditProfileForm() {
             </h3>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 Enter OTP <span className="text-red-500">*</span>
@@ -337,12 +337,12 @@ export function EditProfileForm() {
                 type="text"
               />
             </div>
-            <div className="flex items-end">
+            <div className="flex items-end sm:items-center">
               <Button
                 type="button"
                 onClick={handleSendOtp}
                 disabled={sendingOtp || otpSent}
-                className="px-4 py-2.5 font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                className="w-full sm:w-auto px-4 py-2.5 font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 {sendingOtp ? "Sending..." : otpSent ? "OTP Sent" : "Send OTP"}
               </Button>

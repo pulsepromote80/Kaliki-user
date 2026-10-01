@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProtectedContent } from "@/components/layout/ProtectedContent";
+import { WelcomeBanner } from "@/components/common/WelcomeBanner";
 
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
@@ -8,6 +9,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex-1 p-6">
+        <WelcomeBanner />
         <ProtectedContent>{children}</ProtectedContent>
       </main>
       <Footer />
