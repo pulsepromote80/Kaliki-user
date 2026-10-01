@@ -9,8 +9,17 @@ export const primaryNav: NavItem[] = [
   },
 
   {
-    label: "AI Strategy",
-    href: "/ai-strategy",
+    label: "Packages",
+    href: "/",
+    isDropdown: true,
+    dropdownItems: [
+      { label: "Trading Fund ", href: "/package-1" },
+      { label: "MIP", href: "/package-2" },
+      { label: "Booster", href: "/package-3" },
+      { label: "Legacy Reborn", href: "/package-4" },
+      { label: "Purchase History", href: "/package-5" },
+      
+    ],
    
   },
   // {
@@ -32,7 +41,7 @@ export const primaryNav: NavItem[] = [
    
   },
   {
-    label: "Events",
+    label: "AI Engine",
     href: "/event-booking",
       
     },
@@ -47,12 +56,12 @@ export const primaryNav: NavItem[] = [
    
     isDropdown: true,
     dropdownItems: [
-      { label: "AI Business Hub", href: "/ai-business-hub" },
+      { label: "Business Dashboard", href: "/ai-business-hub" },
       { label: "Direct Partners", href: "/direct-partners" },
-      { label: "Team Growth Matrix", href: "/team-growth-matrix" },
-      { label: "Intelligent Partner View", href: "/intelligent-partner-view" },
-      { label: "Community Partners", href: "/community-partners" },
-      { label: "Community Team", href: "/community-team" },
+      { label: "Level Partners", href: "/level-partners" },
+      { label: "Level Partners Tree", href: "/intelligent-partner-view" },
+      { label: "Downline Partners", href: "/community-partners" },
+      { label: "Downline Tree", href: "/community-team" },
     ],
   },
   {
