@@ -3,10 +3,10 @@ import Link from "next/link";
 export function Hero() {
   return (
     // 1. Outer section is now full width with dark background
-    <section className="relative w-full bg-[#050505] text-[#F5F3EE] overflow-hidden">
+    <section className="relative w-full bg-[#050505] text-[#F5F3EE] overflow-hidden  pt-14 sm:pt-20">
       
       {/* 2. Inner container limits the width and centers the content */}
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-16 pt-32 pb-24">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-16 pt-28 pb-24">
         
         {/* Background Blobs (Glow Effects) */}
         <div className="absolute w-[420px] h-[420px] -top-32 -left-40 rounded-full blur-[100px] opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(47,111,255,0.8), transparent 65%)' }}></div>

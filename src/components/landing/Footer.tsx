@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -11,12 +12,13 @@ export function Footer() {
           {/* Column 1: Logo & Description */}
           <div className="max-w-xs">
             <Link href="/" className="flex items-center gap-2 mb-6">
-              {/* CSS Logo mimicking the Kalkii icon */}
-              <div className="relative w-6 h-6 flex items-center justify-center">
-                <div className="absolute w-3 h-5 bg-blue-600 rotate-[-20deg] rounded-sm"></div>
-                <div className="absolute w-3 h-5 bg-orange-500 rotate-[20deg] rounded-sm translate-x-1"></div>
-              </div>
-              <span className="text-white font-bold text-xl tracking-wide">Kalkii</span>
+              <Image
+                src="/logos/kalki-horizontal-logo.png"
+                alt="Kalkii Forex Education"
+                width={180}
+                height={72}
+                className="h-14 w-auto object-contain"
+              />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
               A structured forex trading education ecosystem — mentor-led, market-grounded, built on process over promises.

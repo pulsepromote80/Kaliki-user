@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const backend = createBackendClient();
-    const { data } = await backend.get(`/Authentication/getByReferralId?loginId=${referralId}`);
+    const { data } = await backend.get(`/Authentication/getByReferralId?userid=${referralId}`);
 
     return NextResponse.json(data);
   } catch (error) {
