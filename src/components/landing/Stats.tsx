@@ -66,7 +66,7 @@ export function Stats() {
               ref={index === 0 ? ref : null}
             >
               <span className="block text-5xl font-extrabold text-white mb-2">
-                {counts[index]?.toLocaleString()}
+                {counts[index]?.toLocaleString() ?? "0"}
                 {stat.suffix}
               </span>
               <span className="text-white/90 text-base">{stat.label}</span>
