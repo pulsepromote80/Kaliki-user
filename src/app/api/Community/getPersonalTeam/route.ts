@@ -5,7 +5,7 @@ import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
@@ -31,21 +31,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Return user data from session if available
-    if (sessionData.userData) {
-      return NextResponse.json({
-        success: true,
-        data: sessionData.userData,
-      });
-    }
+    // Get request body
+    const body = await request.json();
 
-    // No fallback API call - backend endpoint doesn't exist
-    return NextResponse.json(
-      { success: false, message: "User data not found in session" },
-      { status: 401 }
-    );
+    // Fetch personal team data from backend
+    const backend = createBackendClient(token);
+    const { data } = await backend.post("/Community/getPersonalTeam", body);
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Auth me error:", error);
+    console.error("Personal team error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -57,7 +51,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch user data",
+        message: "Failed to fetch personal team data",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

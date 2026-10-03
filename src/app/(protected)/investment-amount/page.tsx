@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 
-// ==========================================
-// TYPES
-// ==========================================
 interface PlanFeature {
   text: string;
 }
@@ -27,9 +25,6 @@ interface Plan {
   isPopular?: boolean;
 }
 
-// ==========================================
-// MODAL COMPONENT (Popup)
-// ==========================================
 interface ActivatePlanModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -41,11 +36,178 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
   isOpen,
   onClose,
   plan,
-  userId = "2643158",
+  userId = "",
 }) => {
   const [amount, setAmount] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [amountError, setAmountError] = useState("");
+  const [quantityError, setQuantityError] = useState("");
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
+  const [isActivating, setIsActivating] = useState(false);
+  const [activationError, setActivationError] = useState("");
+  const [userIdInput, setUserIdInput] = useState(userId);
+  const [userName, setUserName] = useState("");
+  const [isLoadingUserName, setIsLoadingUserName] = useState(false);
+
+  // Fetch wallet details when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setUserIdInput(userId);
+      setUserName("");
+      fetchWalletDetails();
+    }
+  }, [isOpen, userId]);
+
+  const fetchUserName = useCallback(async () => {
+    setIsLoadingUserName(true);
+    try {
+      const response = await fetch(`/api/FundManager?authLogin=${userIdInput}`);
+      const data = await response.json();
+
+      if (data.statusCode === 200 && data.data) {
+        setUserName(data.data.Name || "");
+      } else {
+        setUserName("");
+      }
+    } catch (error) {
+      console.error('Failed to fetch user name:', error);
+      setUserName("");
+    } finally {
+      setIsLoadingUserName(false);
+    }
+  }, [userIdInput]);
+
+  // Fetch user name when userId changes (debounced)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (userIdInput && userIdInput.length > 0) {
+        fetchUserName();
+      } else {
+        setUserName("");
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [userIdInput, fetchUserName]);
+
+  const fetchWalletDetails = async () => {
+    setIsLoadingWallet(true);
+    try {
+      const response = await fetch('/api/FundManager');
+      const data = await response.json();
+
+      if (data.statusCode === 200 && data.data) {
+        setWalletBalance(data.data.IncomeWallet || 0);
+      } else {
+        setWalletBalance(0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch wallet details:', error);
+      setWalletBalance(0);
+    } finally {
+      setIsLoadingWallet(false);
+    }
+  };
+
+  const handleActivate = async () => {
+    setIsActivating(true);
+    setActivationError("");
+
+    try {
+      const response = await fetch('/api/FundManager', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: "418EC52E-DF10-4BA2-8258-156BA13F7506",
+          rkprice: Number(amount) || 0,
+          byAuthlogin: userIdInput,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.statusCode === 200) {
+        // Success - close modal and refresh wallet
+        toast.success(data.message || "Plan activated successfully!");
+        onClose();
+        // Optionally show success message or redirect
+      } else {
+        setActivationError(data.message || "Failed to activate plan");
+        toast.error(data.message || "Failed to activate plan");
+      }
+    } catch (error) {
+      console.error('Failed to activate plan:', error);
+      setActivationError("An error occurred while activating the plan");
+      toast.error("An error occurred while activating the plan");
+    } finally {
+      setIsActivating(false);
+    }
+  };
 
   if (!isOpen || !plan) return null;
+
+  const isQuantityPlan = plan.id === "legacy-2";
+
+  // ✅ Quantity change — hamesha update karo, error bhi handle karo
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const qty = e.target.value;
+    setQuantity(qty);
+
+    const numQty = Number(qty);
+    if (qty === "" || numQty <= 0) {
+      setQuantityError("Please enter a valid quantity");
+      setAmount("");
+    } else {
+      const calculatedAmount = numQty * 660;
+      setAmount(calculatedAmount.toString());
+
+      if (calculatedAmount > walletBalance) {
+        setQuantityError("Insufficient balance");
+      } else {
+        setQuantityError("");
+      }
+    }
+  };
+
+  // ✅ Amount change — hamesha update karo, sirf error message dikhao
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAmount(value);
+
+    if (value === "") {
+      setAmountError("");
+      return;
+    }
+
+    const numValue = Number(value);
+
+    if (plan.id === "trading-fund") {
+      if (numValue < 100 || numValue > 2999) {
+        setAmountError("Amount must be between $100 and $2,999");
+      } else if (numValue > walletBalance) {
+        setAmountError("Insufficient balance");
+      } else {
+        setAmountError("");
+      }
+    } else if (plan.id === "legacy-1") {
+      if (numValue < 3000) {
+        setAmountError("Minimum investment is $3,000");
+      } else if (numValue > walletBalance) {
+        setAmountError("Insufficient balance");
+      } else {
+        setAmountError("");
+      }
+    } else {
+      if (numValue > walletBalance) {
+        setAmountError("Insufficient balance");
+      } else {
+        setAmountError("");
+      }
+    }
+  };
 
   const getModalTheme = () => {
     if (plan.id === "trading-fund") {
@@ -59,11 +221,40 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
 
   const modalTheme = getModalTheme();
 
+
+  const isSubmitDisabled =
+    !amount ||
+    !userIdInput ||
+    !!amountError ||
+    (isQuantityPlan && (!!quantityError || !quantity)) ||
+    isActivating;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      {/* Modal Container - Light mode white, Dark mode dark */}
+    <>
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #334155;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #475569;
+        }
+      `}</style>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="relative w-full max-w-[480px] bg-white dark:bg-[#11111a] rounded-3xl shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200 border border-gray-100 dark:border-white/10">
-        
+
         {/* Header */}
         <div className="flex justify-between items-start mb-6">
           <div>
@@ -74,7 +265,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
               Activate <span className={modalTheme.text}>{plan.title}</span>
             </h2>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors border border-gray-100 dark:border-white/10"
           >
@@ -86,7 +277,9 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
         <div className="flex justify-between items-center bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30 rounded-2xl p-5 mb-6">
           <div>
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
-            <p className="text-green-600 dark:text-green-400 text-2xl font-bold">$0</p>
+            <p className="text-green-600 dark:text-green-400 text-2xl font-bold">
+              {isLoadingWallet ? "Loading..." : `$${walletBalance}`}
+            </p>
           </div>
           <div className="text-right">
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Investment Range</p>
@@ -100,53 +293,109 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
             <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
               USER ID <span className="text-red-500">*</span>
             </label>
-            <input 
-              type="text" 
-              value={userId}
-              readOnly
-              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-gray-200 text-lg font-medium px-4 py-3.5 rounded-xl border-none outline-none cursor-not-allowed"
+            <input
+              type="text"
+              value={userIdInput}
+              placeholder="Enter UserID"
+              onChange={(e) => setUserIdInput(e.target.value)}
+              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border border-transparent focus:border-blue-300 dark:focus:border-blue-500 outline-none transition-all"
             />
+            {userName && (
+              <span className="text-green-600 dark:text-green-400 text-sm font-medium mt-2 block">
+                {userName}
+              </span>
+            )}
+            {isLoadingUserName && (
+              <span className="text-gray-500 dark:text-gray-400 text-sm font-medium mt-2 block">
+                Loading user name...
+              </span>
+            )}
           </div>
 
-          <div>
-            <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED PLAN</label>
-            <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
-              <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{plan.icon}</span>
-              <span className={modalTheme.text}>{plan.title}</span>
+          {isQuantityPlan ? (
+            <div>
+              <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
+                QUANTITY <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                placeholder="Enter quantity"
+                value={quantity}
+                onChange={handleQuantityChange}
+                className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${
+                  quantityError
+                    ? "border-red-400 dark:border-red-500"
+                    : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
+                }`}
+              />
+              {quantityError ? (
+                <p className="text-red-500 text-xs font-medium mt-2">⚠️ {quantityError}</p>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
+                  💡 1 Quantity = $660
+                </p>
+              )}
             </div>
-          </div>
+          ) : (
+            <div>
+              <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED PLAN</label>
+              <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
+                <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{plan.icon}</span>
+                <span className={modalTheme.text}>{plan.title}</span>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
               INVESTMENT AMOUNT (USD) <span className="text-red-500">*</span>
             </label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               placeholder="Enter amount"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border border-transparent focus:border-blue-300 dark:focus:border-blue-500 outline-none transition-all"
+              onChange={handleAmountChange}
+              readOnly={isQuantityPlan}
+              className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${
+                isQuantityPlan ? "cursor-not-allowed" : ""
+              } ${
+                amountError
+                  ? "border-red-400 dark:border-red-500"
+                  : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
+              }`}
             />
-            <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
-              💡 Investment range: <span className="text-gray-900 dark:text-white font-bold">{plan.investmentRange}</span>
-            </p>
+            {amountError ? (
+              <p className="text-red-500 text-xs font-medium mt-2">⚠️ {amountError}</p>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
+                💡 Investment range: <span className="text-gray-900 dark:text-white font-bold">{plan.investmentRange}</span>
+              </p>
+            )}
           </div>
         </div>
 
         {/* Button */}
-        <button className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn}`}>
-          <span className="text-xl">🚀</span>
-          Activate {plan.title}
+        <button
+          onClick={handleActivate}
+          disabled={isSubmitDisabled || isActivating}
+          className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn} ${
+            isSubmitDisabled || isActivating ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <span className="text-xl">{isActivating ? "⏳" : "🚀"}</span>
+          {isActivating ? "Activating..." : `Activate ${plan.title}`}
         </button>
+
+        {activationError && (
+          <p className="text-red-500 text-xs font-medium mt-3 text-center">⚠️ {activationError}</p>
+        )}
 
       </div>
     </div>
+    </>
   );
 };
 
-// ==========================================
-// MAIN PAGE COMPONENT
-// ==========================================
 export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
@@ -156,7 +405,7 @@ export default function PricingPage() {
       title: "Trading Fund",
       subtitle: "Perfect for New Investors",
       icon: "🚀",
-      investmentRange: "$100+",
+      investmentRange: "$100 - $2,999",
       features: [
         { text: "ROI 8% on 90%" },
         { text: "10% for Direct Rewards" },
@@ -221,14 +470,12 @@ export default function PricingPage() {
   ];
 
   return (
-    // Main Page Background - Light mode gray, Dark mode dark
     <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4 sm:p-8 font-sans relative transition-colors duration-300">
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl w-full mx-auto">
         {plans.map((plan) => (
           <div
             key={plan.id}
-            // Card Background - Light mode white, Dark mode dark
             className={`relative flex flex-col p-8 rounded-3xl bg-white dark:bg-[#11111a] border ${plan.theme.border} ${plan.theme.glow} transition-all duration-300 hover:-translate-y-2`}
           >
             {plan.isPopular && (
@@ -249,7 +496,6 @@ export default function PricingPage() {
               {plan.subtitle}
             </div>
 
-            {/* Investment Box - Light mode light gray, Dark mode dark */}
             <div className="bg-gray-50 dark:bg-[#1a1a24] border border-gray-100 dark:border-white/5 rounded-2xl p-6 mb-8">
               <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold tracking-widest uppercase mb-2">
                 Investment Range
@@ -265,7 +511,6 @@ export default function PricingPage() {
                   <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center border ${plan.theme.border} ${plan.theme.bg}`}>
                     <span className={`text-[10px] font-bold ${plan.theme.text}`}>✓</span>
                   </div>
-                  {/* Feature Text - Light mode dark gray, Dark mode light gray */}
                   <span className="text-gray-700 dark:text-gray-300 text-sm font-medium">
                     {feature.text}
                   </span>

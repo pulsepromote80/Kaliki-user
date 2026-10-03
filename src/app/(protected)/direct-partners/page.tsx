@@ -21,7 +21,7 @@ export default function DirectPartners() {
   } = useCommunityStore();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedStatus, setSelectedStatus] = useState("Member");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 10;
 
@@ -52,19 +52,27 @@ export default function DirectPartners() {
 
   useEffect(() => {
     const fetchDirectMembers = async () => {
-      if (!user?.id) return;
+      console.log("fetchDirectMembers called", { user: user?.id, selectedStatus });
 
       setLoading(true);
       setError(null);
 
       try {
+        // Map status to statusId
+        let statusId = "";
+        if (selectedStatus === "Left Team") {
+          statusId = "L";
+        } else if (selectedStatus === "Right Team") {
+          statusId = "R";
+        }
+
         const data = {
-          urid: user.id,
-          statusId: "",
-          loginid: "",
+          statusId: statusId,
         };
 
+        console.log("Calling API with data:", data);
         const response = await communityService.getDirectMember(data);
+        console.log("API response:", response);
 
         if (response.data) {
           setDirectMemberData(response.data);
@@ -81,7 +89,7 @@ export default function DirectPartners() {
     };
 
     fetchDirectMembers();
-  }, [user?.id, setLoading, setError, setDirectMemberData]);
+  }, [selectedStatus, setLoading, setError, setDirectMemberData]);
 
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
@@ -104,42 +112,15 @@ export default function DirectPartners() {
 
   const filteredMembers =
     directMemberData?.filter((member) => {
-      // Filter by selected category
-      if (
-        [
-          "Customer",
-          "AI License Holder",
-          "AI Capacity Owner",
-          "AI Deployment Partner",
-        ].includes(selectedStatus) &&
-        member.topupStatus !== selectedStatus
-      ) {
-        return false;
-      }
-
-      if (
-        selectedStatus === "Left Team" &&
-        member.position !== "L"
-      ) {
-        return false;
-      }
-
-      if (
-        selectedStatus === "Right Team" &&
-        member.position !== "R"
-      ) {
-        return false;
-      }
-
-      // Search filter
+      // Search filter only
       if (searchTerm.trim()) {
         const search = searchTerm.toLowerCase();
 
         return (
-          member.name?.toLowerCase().includes(search) ||
-          member.loginid?.toLowerCase().includes(search) ||
-          member.mobile?.toLowerCase().includes(search) ||
-          member.email?.toLowerCase().includes(search)
+          member.Name?.toLowerCase().includes(search) ||
+          member.Loginid?.toLowerCase().includes(search) ||
+          member.Mobile?.toLowerCase().includes(search) ||
+          member.Email?.toLowerCase().includes(search)
         );
       }
 
@@ -204,13 +185,13 @@ export default function DirectPartners() {
                   >
                     <span
                       className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                        selectedStatus === "Member"
+                        selectedStatus === ""
                           ? "text-gray-500 dark:text-gray-400"
                           : "text-blue-700 dark:text-blue-300"
                       }`}
                     >
-                      {selectedStatus === "Member"
-                        ? "Team Status"
+                      {selectedStatus === ""
+                        ? "Position"
                         : selectedStatus}
                     </span>
 
@@ -233,20 +214,16 @@ export default function DirectPartners() {
 
                   {isOpen && (
                     <div
-                      className="absolute right-0 z-10 h-[150px] max-w-xs min-w-full mt-1 bg-white border-2 border-blue-200 shadow-lg w-max rounded-xl"
+                      className="absolute right-0 z-10 h-[80px] max-w-xs min-w-full mt-1 bg-white border-2 border-yellow-200 shadow-lg w-max rounded-xl"
                       style={{ overflow: "auto" }}
                     >
                       {[
-                        "Customer",
-                        "AI License Holder",
-                        "AI Capacity Owner",
-                        "AI Deployment Partner",
                         "Left Team",
                         "Right Team",
                       ].map((option) => (
                         <div
                           key={option}
-                          className="px-3 py-2 text-xs font-medium text-blue-700 border-b border-gray-100 cursor-pointer sm:text-sm whitespace-nowrap hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-50 last:border-b-0"
+                          className="px-3 py-2 text-xs font-medium text-yellow-700 border-b border-gray-100 cursor-pointer sm:text-sm whitespace-nowrap hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-50 last:border-b-0"
                           onClick={() =>
                             handleStatusChange(option)
                           }
@@ -315,6 +292,14 @@ export default function DirectPartners() {
                           </th>
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Mobile
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Email
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Reg. Date
                           </th>
 
@@ -322,24 +307,44 @@ export default function DirectPartners() {
                             Position
                           </th>
 
-                          <th className="hidden px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase whitespace-nowrap lg:table-cell">
-                            License Amount
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Subscription Amt
                           </th>
 
-                          <th className="hidden px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300 lg:table-cell">
-                            Deploy Amount
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Subscribe Date
                           </th>
 
-                          <th className="hidden px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300 md:table-cell">
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Pending Credit
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Deploy Date
                           </th>
 
-                          <th className="hidden px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300 lg:table-cell">
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Team Business
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Urank
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Left Business
                           </th>
 
-                          <th className="hidden px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300 lg:table-cell">
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Right Business
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Total Team
+                          </th>
+
+                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
+                            Active Team
                           </th>
                         </tr>
                       </thead>
@@ -362,71 +367,104 @@ export default function DirectPartners() {
 
                                 <td className="px-4 py-3 text-sm font-medium whitespace-nowrap">
                                   <div className="inline-block px-3 py-1 text-xs font-bold text-blue-700 bg-blue-100 border border-blue-200 rounded-full dark:text-blue-300 dark:bg-blue-900/40 dark:border-blue-700/50">
-                                    {member.topupStatus ||
+                                    {member.TopupStatus ||
                                       ""}
                                   </div>
                                 </td>
 
                                 <td className="px-4 py-3 text-sm font-medium whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/40 rounded-full border border-emerald-200 dark:border-emerald-700/50">
-                                    {member.name || ""}
+                                    {member.Name || ""}
                                   </div>
                                 </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40 rounded-full border border-red-200 dark:border-red-700/50">
-                                    {member.loginid || ""}
-                                  </div>
-                                </td>
-
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/40 rounded-full border border-yellow-200 dark:border-yellow-700/50">
-                                    {member.regDate || ""}
+                                    {member.Loginid || ""}
                                   </div>
                                 </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/40 rounded-full border border-purple-200 dark:border-purple-700/50">
-                                    {member.position || ""}
-                                  </div>
-                                </td>
-
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-pink-700 dark:text-pink-300 bg-pink-100 dark:bg-pink-900/40 rounded-full border border-pink-200 dark:border-pink-700/50">
-                                    $
-                                    {member.subscriptionAmount ||
-                                      "0"}
+                                    {member.Mobile || ""}
                                   </div>
                                 </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-900/40 rounded-full border border-orange-200 dark:border-orange-700/50">
-                                    $
-                                    {member.leaseAmount ||
-                                      "0"}
+                                    {member.Email || ""}
                                   </div>
                                 </td>
 
-                                <td className="hidden px-4 py-3 text-sm whitespace-nowrap md:table-cell">
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/40 rounded-full border border-yellow-200 dark:border-yellow-700/50">
+                                    {member.RegDate || ""}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-pink-700 dark:text-pink-300 bg-pink-100 dark:bg-pink-900/40 rounded-full border border-pink-200 dark:border-pink-700/50">
+                                    {member.Position || ""}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 rounded-full border border-indigo-200 dark:border-indigo-700/50">
+                                    ${member.SubscriptionAmount || "0"}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700/50 rounded-full border border-gray-200 dark:border-gray-600">
-                                    {member.topupDate ||
-                                      "null"}
+                                    {member.SubscribeDate || ""}
                                   </div>
                                 </td>
 
-                                <td className="hidden px-4 py-3 text-sm whitespace-nowrap lg:table-cell">
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-100 dark:bg-teal-900/40 rounded-full border border-teal-200 dark:border-teal-700/50">
+                                    {member.PendingCredit || "0"}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-900/40 rounded-full border border-cyan-200 dark:border-cyan-700/50">
+                                    {member.DeployDate || ""}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/40 rounded-full border border-rose-200 dark:border-rose-700/50">
+                                    ${member.TeamBusiness || "0"}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/40 rounded-full border border-amber-200 dark:border-amber-700/50">
+                                    {member.Urank || ""}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40 rounded-full border border-red-200 dark:border-red-700/50">
-                                    $
-                                    {member.binaryLBuss ||
-                                      "0"}
+                                    ${member.BinaryLbuss || "0"}
                                   </div>
                                 </td>
 
-                                <td className="hidden px-4 py-3 text-sm whitespace-nowrap lg:table-cell">
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 rounded-full border border-green-200 dark:border-green-700/50">
-                                    $
-                                    {member.binaryRBuss ||
-                                      "0"}
+                                    ${member.BinaryRbuss || "0"}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-violet-700 dark:text-violet-300 bg-violet-100 dark:bg-violet-900/40 rounded-full border border-violet-200 dark:border-violet-700/50">
+                                    ${member.BinaryTotTeam || "0"}
+                                  </div>
+                                </td>
+
+                                <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-fuchsia-700 dark:text-fuchsia-300 bg-fuchsia-100 dark:bg-fuchsia-900/40 rounded-full border border-fuchsia-200 dark:border-fuchsia-700/50">
+                                    ${member.BinaryActiveTeam || "0"}
                                   </div>
                                 </td>
                               </tr>
@@ -435,12 +473,12 @@ export default function DirectPartners() {
                         ) : (
                           <tr>
                             <td
-                              colSpan={11}
+                              colSpan={19}
                               className="px-4 py-8 text-center text-gray-600 dark:text-gray-400"
                             >
                               {searchTerm
                                 ? `No results found for "${searchTerm}"`
-                                : `No team members found for ${selectedStatus} status`}
+                                : `No team members found`}
                             </td>
                           </tr>
                         )}

@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
       loginOTP: body.loginOTP,
     });
 
-    // Backend returns: { statusCode, message, accessToken, refreshToken, expiresIn }
     const { accessToken, statusCode, message } = backendResponse.data;
 
     const response = NextResponse.json({
