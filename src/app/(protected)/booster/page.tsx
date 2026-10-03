@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 
-// ==========================================
-// TYPES
-// ==========================================
+
 interface BoosterFeature {
   text: string;
 }
@@ -41,8 +40,121 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   isOpen,
   onClose,
   booster,
-  userId = "2643158",
+  userId = "",
 }) => {
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
+  const [isActivating, setIsActivating] = useState(false);
+  const [activationError, setActivationError] = useState("");
+  const [userIdInput, setUserIdInput] = useState(userId);
+  const [userName, setUserName] = useState("");
+  const [isLoadingUserName, setIsLoadingUserName] = useState(false);
+
+  // Fetch wallet details when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setUserIdInput(userId);
+      setUserName("");
+      fetchWalletDetails();
+    }
+  }, [isOpen, userId]);
+
+  const fetchUserName = useCallback(async () => {
+    setIsLoadingUserName(true);
+    try {
+      const response = await fetch(`/api/FundManager?authLogin=${userIdInput}`);
+      const data = await response.json();
+
+      if (data.statusCode === 200 && data.data) {
+        setUserName(data.data.Name || "");
+      } else {
+        setUserName("");
+      }
+    } catch (error) {
+      console.error('Failed to fetch user name:', error);
+      setUserName("");
+    } finally {
+      setIsLoadingUserName(false);
+    }
+  }, [userIdInput]);
+
+  // Fetch user name when userId changes (debounced)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (userIdInput && userIdInput.length > 0) {
+        fetchUserName();
+      } else {
+        setUserName("");
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [userIdInput, fetchUserName]);
+
+  const fetchWalletDetails = async () => {
+    setIsLoadingWallet(true);
+    try {
+      const response = await fetch('/api/FundManager');
+      const data = await response.json();
+
+      if (data.statusCode === 200 && data.data) {
+        setWalletBalance(data.data.IncomeWallet || 0);
+      } else {
+        setWalletBalance(0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch wallet details:', error);
+      setWalletBalance(0);
+    } finally {
+      setIsLoadingWallet(false);
+    }
+  };
+
+  const handleActivate = async () => {
+    if (!booster) return;
+
+    const boosterPrice = Number(booster.price.replace('$', ''));
+
+    if (boosterPrice > walletBalance) {
+      setActivationError("Insufficient balance");
+      toast.error("Insufficient balance");
+      return;
+    }
+
+    setIsActivating(true);
+    setActivationError("");
+
+    try {
+      const response = await fetch('/api/FundManager', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: "418EC52E-DF10-4BA2-8258-156BA13F7506",
+          rkprice: boosterPrice,
+          byAuthlogin: userIdInput,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.statusCode === 200) {
+        toast.success(data.message || "Booster activated successfully!");
+        onClose();
+      } else {
+        setActivationError(data.message || "Failed to activate booster");
+        toast.error(data.message || "Failed to activate booster");
+      }
+    } catch (error) {
+      console.error('Failed to activate booster:', error);
+      setActivationError("An error occurred while activating the booster");
+      toast.error("An error occurred while activating the booster");
+    } finally {
+      setIsActivating(false);
+    }
+  };
+
   if (!isOpen || !booster) return null;
 
   const getModalTheme = () => {
@@ -53,11 +165,35 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   };
 
   const modalTheme = getModalTheme();
+  const boosterPrice = Number(booster.price.replace('$', ''));
+  const isSubmitDisabled = !userIdInput || isActivating || boosterPrice > walletBalance;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <>
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #334155;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #475569;
+        }
+      `}</style>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto custom-scrollbar">
       <div className="relative w-full max-w-[480px] bg-white dark:bg-[#11111a] rounded-3xl shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200 border border-gray-100 dark:border-white/10">
-        
+
         {/* Header */}
         <div className="flex justify-between items-start mb-6">
           <div>
@@ -68,7 +204,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
               {booster.title}
             </h2>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors border border-gray-100 dark:border-white/10"
           >
@@ -77,10 +213,16 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
         </div>
 
         {/* Wallet Info Box */}
-        <div className="flex justify-between items-center bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30 rounded-2xl p-5 mb-6">
+        <div className={`flex justify-between items-center rounded-2xl p-5 mb-6 ${
+          boosterPrice > walletBalance
+            ? "bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-500/30"
+            : "bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30"
+        }`}>
           <div>
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
-            <p className="text-green-600 dark:text-green-400 text-2xl font-bold">$0</p>
+            <p className={`${boosterPrice > walletBalance ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"} text-2xl font-bold`}>
+              {isLoadingWallet ? "Loading..." : `$${walletBalance}`}
+            </p>
           </div>
           <div className="text-right">
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Booster Price</p>
@@ -94,12 +236,23 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
             <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
               USER ID <span className="text-red-500">*</span>
             </label>
-            <input 
-              type="text" 
-              value={userId}
-              readOnly
-              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-gray-200 text-lg font-medium px-4 py-3.5 rounded-xl border-none outline-none cursor-not-allowed"
+            <input
+              type="text"
+              value={userIdInput}
+              placeholder="Enter UserID"
+              onChange={(e) => setUserIdInput(e.target.value)}
+              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border border-transparent focus:border-blue-300 dark:focus:border-blue-500 outline-none transition-all"
             />
+            {userName && (
+              <span className="text-green-600 dark:text-green-400 text-sm font-medium mt-2 block">
+                {userName}
+              </span>
+            )}
+            {isLoadingUserName && (
+              <span className="text-gray-500 dark:text-gray-400 text-sm font-medium mt-2 block">
+                Loading user name...
+              </span>
+            )}
           </div>
 
           <div>
@@ -112,13 +265,24 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
         </div>
 
         {/* Button */}
-        <button className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn}`}>
-          <span className="text-xl">⚡</span>
-          Activate {booster.title}
+        <button
+          onClick={handleActivate}
+          disabled={isSubmitDisabled || isActivating}
+          className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn} ${
+            isSubmitDisabled || isActivating ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <span className="text-xl">{isActivating ? "⏳" : "⚡"}</span>
+          {isActivating ? "Activating..." : `Activate ${booster.title}`}
         </button>
+
+        {activationError && (
+          <p className="text-red-500 text-xs font-medium mt-3 text-center">⚠️ {activationError}</p>
+        )}
 
       </div>
     </div>
+    </>
   );
 };
 
@@ -243,6 +407,7 @@ export default function BoosterPage() {
         isOpen={!!selectedBooster}
         onClose={() => setSelectedBooster(null)}
         booster={selectedBooster}
+        userId=""
       />
     </div>
   );

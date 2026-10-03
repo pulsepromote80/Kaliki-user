@@ -15,6 +15,7 @@ export const primaryNav: NavItem[] = [
     dropdownItems: [
       { label: "Investment Fund ", href: "/investment-amount" },
       { label: "Booster", href: "/booster" },
+      { label: "Order History", href: "/order-history" },
       
     ],
    
