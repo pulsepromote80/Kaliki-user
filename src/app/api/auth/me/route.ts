@@ -1,9 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getServerEnv } from "@/lib/env";
-import { createBackendClient } from "@/lib/backend-client";
 import { isTokenExpired } from "@/lib/jwt";
-import axios from "axios";
-
+import { unauthorizedSessionResponse } from "@/lib/session-response";
 
 export async function GET(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
@@ -20,47 +18,29 @@ export async function GET(request: NextRequest) {
     const token = sessionData.accessToken;
 
     if (!token) {
-      return NextResponse.json({ success: false, message: "No token in session" }, { status: 401 });
+      return unauthorizedSessionResponse(
+        SESSION_COOKIE_NAME,
+        "No token in session",
+      );
     }
 
     // Check if token is expired
     if (isTokenExpired(token)) {
-      return NextResponse.json(
-        { success: false, message: "Token expired. Please login again." },
-        { status: 401 }
+      return unauthorizedSessionResponse(
+        SESSION_COOKIE_NAME,
+        "Token expired. Please login again.",
       );
     }
 
-    // Return user data from session if available
-    if (sessionData.userData) {
-      return NextResponse.json({
-        success: true,
-        data: sessionData.userData,
-      });
-    }
-
-    // No fallback API call - backend endpoint doesn't exist
-    return NextResponse.json(
-      { success: false, message: "User data not found in session" },
-      { status: 401 }
-    );
+    return NextResponse.json({
+      success: true,
+      data: sessionData.userData ?? null,
+    });
   } catch (error) {
     console.error("Auth me error:", error);
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        return NextResponse.json(
-          { success: false, message: "Session expired or invalid. Please login again." },
-          { status: 401 },
-        );
-      }
-    }
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch user data",
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
+    return unauthorizedSessionResponse(
+      SESSION_COOKIE_NAME,
+      "Session is invalid. Please login again.",
     );
   }
 }

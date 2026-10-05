@@ -22,7 +22,10 @@ export const authService = {
 
   logout: () => apiClient.post<{ success: true }>("/auth/logout"),
 
-  me: () => apiClient.get<AuthenticatedUser>("/auth/me"),
+  me: () =>
+    apiClient.get<{ success: boolean; data: AuthenticatedUser | null }>(
+      "/auth/me",
+    ),
 
   forgotPassword: (payload: ForgotPasswordPayload) =>
     apiClient.post<{ success: true }, ForgotPasswordPayload>(
