@@ -114,11 +114,11 @@ export function LoginForm() {
               <div className="flex flex-col items-center text-center mb-8">
                 <Link href="/" className="mb-5">
                   <Image
-                    src="/logos/icon.jpg"
+                    src="/logos/kalki-horizontal-logo.png"
                     alt="KALKII"
                     width={150}
-                    height={150}
-                    className="w-36 sm:w-44"
+                    height={64}
+                    className="h-auto w-36 sm:w-44"
                   />
                 </Link>
 

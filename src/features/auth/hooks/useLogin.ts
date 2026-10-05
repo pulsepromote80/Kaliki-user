@@ -22,7 +22,6 @@ export function useLogin() {
       // Redirect to the page the user was trying to access, or dashboard
       const from = searchParams.get("from");
       router.push(from || "/dashboard");
-      router.refresh();
     },
     onError: (error: any) => {
       const errorMessage = error?.response?.data?.message;
