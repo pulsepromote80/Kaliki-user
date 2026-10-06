@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="text-sm text-muted-foreground">
         The page you are looking for does not exist or has moved.
       </p>
-      <Link href={APP_ROUTES.home} className="text-sm font-medium text-primary underline">
+      <Link href={APP_ROUTES.dashboard} className="text-sm font-medium text-primary underline">
         Go back home
       </Link>
     </div>

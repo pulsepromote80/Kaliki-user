@@ -195,103 +195,171 @@ export function RegistrationForm() {
                   autoComplete="off"
                 >
                   {/* ─── Referral & Placement Section ─── */}
-                  <div className="rounded-xl bg-[#0d0d20]/60 border border-[#d4a017]/15 p-5">
-                    <div className="flex items-center gap-2.5 mb-4">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f5c451] to-[#b8860b] flex items-center justify-center shadow-[0_0_15px_rgba(212,160,23,0.4)]">
-                        <FaHashtag className="text-black text-xs" />
-                      </div>
-                      <h3 className="text-xs font-semibold tracking-[0.15em] text-[#f5c451] uppercase">
-                        Referral & Placement
-                      </h3>
-                    </div>
+                  <div className="rounded-xl bg-gradient-to-br from-[#0d0d20]/80 to-[#0a0a1a]/80 border border-[#d4a017]/20 p-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4a017]/5 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl pointer-events-none" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-slate-300 mb-2">
-                          Referral ID <span className="text-[#f5c451]">*</span>
-                        </label>
-                        <div className="relative">
-                          <FaHashtag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm" />
-                          <input
-                            {...form.register("referralId")}
-                            type="text"
-                            maxLength={9}
-                            placeholder="Enter Referral ID"
-                            className={cn(
-                              inputBase,
-                              form.formState.errors.referralId
-                                ? "border-red-500/60 bg-red-500/5"
-                                : "border-[#d4a017]/20"
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f5c451] to-[#b8860b] flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.5)]">
+                          <FaHashtag className="text-black text-sm" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold tracking-[0.15em] text-[#f5c451] uppercase">
+                            Referral & Placement
+                          </h3>
+                          <p className="text-[10px] text-slate-500 tracking-wide">Connect with your sponsor</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-300 mb-2.5 flex items-center gap-1.5">
+                            <span className="w-1 h-1 rounded-full bg-[#f5c451]" />
+                            Referral ID <span className="text-[#f5c451]">*</span>
+                          </label>
+                          <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#d4a017]/20 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <FaHashtag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm z-10" />
+                            <input
+                              {...form.register("referralId")}
+                              type="text"
+                              maxLength={9}
+                              placeholder="Enter Referral ID"
+                              className={cn(
+                                inputBase,
+                                "relative z-10",
+                                form.formState.errors.referralId
+                                  ? "border-red-500/60 bg-red-500/5"
+                                  : "border-[#d4a017]/30"
+                              )}
+                              onBlur={(e) => {
+                                form.trigger("referralId");
+                                if (e.target.value)
+                                  handleReferralValidation(e.target.value);
+                              }}
+                            />
+                            {validateReferral.isPending && (
+                              <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-[#f5c451] z-10" />
                             )}
-                            onBlur={(e) => {
-                              form.trigger("referralId");
-                              if (e.target.value)
-                                handleReferralValidation(e.target.value);
-                            }}
-                          />
-                          {validateReferral.isPending && (
-                            <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-[#f5c451]" />
+                            {referralName &&
+                              !referralError &&
+                              !validateReferral.isPending && (
+                                <FaCheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-400 text-sm z-10" />
+                              )}
+                            {referralError && (
+                              <FaTimesCircle className="absolute right-4 top-1/2 -translate-y-1/2 text-red-400 text-sm z-10" />
+                            )}
+                          </div>
+                          {form.formState.errors.referralId && (
+                            <p className="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                              <FaTimesCircle className="text-[10px]" />
+                              {form.formState.errors.referralId.message}
+                            </p>
                           )}
-                          {referralName &&
-                            !referralError &&
-                            !validateReferral.isPending && (
-                              <FaCheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-400 text-sm" />
-                            )}
-                          {referralError && (
-                            <FaTimesCircle className="absolute right-4 top-1/2 -translate-y-1/2 text-red-400 text-sm" />
+                          {referralError && !form.formState.errors.referralId && (
+                            <p className="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                              <FaTimesCircle className="text-[10px]" />
+                              {referralError}
+                            </p>
+                          )}
+                          {referralName && !referralError && (
+                            <p className="mt-1.5 text-xs font-medium text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                              <FaCheckCircle className="text-[10px]" />{" "}
+                              {referralName}
+                            </p>
                           )}
                         </div>
-                        {form.formState.errors.referralId && (
-                          <p className="mt-1.5 text-xs text-red-400">
-                            {form.formState.errors.referralId.message}
-                          </p>
-                        )}
-                        {referralError && !form.formState.errors.referralId && (
-                          <p className="mt-1.5 text-xs text-red-400">
-                            {referralError}
-                          </p>
-                        )}
-                        {referralName && !referralError && (
-                          <p className="mt-1.5 text-xs font-medium text-emerald-400 flex items-center gap-1">
-                            <FaCheckCircle className="text-[10px]" />{" "}
-                            {referralName}
-                          </p>
-                        )}
-                      </div>
 
-                      <div>
-                        <label className="block text-xs font-medium text-slate-300 mb-2">
-                          Placement Side{" "}
-                          <span className="text-[#f5c451]">*</span>
-                        </label>
-                        <select
-                          {...form.register("teamPosition")}
-                          disabled={isPositionLocked}
-                          className={cn(
-                            "w-full px-4 py-3 text-sm rounded-lg bg-[#0d0d20]/80 border text-white outline-none transition-all appearance-none cursor-pointer",
-                            "focus:border-[#d4a017]/70 focus:bg-[#12122b] focus:ring-2 focus:ring-[#d4a017]/20",
-                            "[&>option]:bg-[#0d0d20] [&>option]:text-white",
-                            form.formState.errors.teamPosition
-                              ? "border-red-500/60 bg-red-500/5"
-                              : "border-[#d4a017]/20",
-                            isPositionLocked && "cursor-not-allowed opacity-60"
+                        <div>
+                          <label className="block text-xs font-medium text-slate-300 mb-2.5 flex items-center gap-1.5">
+                            <span className="w-1 h-1 rounded-full bg-[#f5c451]" />
+                            Placement Side <span className="text-[#f5c451]">*</span>
+                          </label>
+                          <div className="flex gap-3">
+                            <label
+                              className={cn(
+                                "flex-1 flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden group",
+                                "hover:scale-[1.02]",
+                                form.watch("teamPosition") === "L"
+                                  ? "bg-gradient-to-br from-[#d4a017]/20 to-[#b8860b]/10 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
+                                  : "bg-[#0d0d20]/70 hover:bg-[#0d0d20]/90",
+                                isPositionLocked && "cursor-not-allowed opacity-50"
+                              )}
+                            >
+                              {form.watch("teamPosition") === "L" && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#d4a017]/10 to-transparent animate-pulse" />
+                              )}
+                              <input
+                                {...form.register("teamPosition")}
+                                type="radio"
+                                value="L"
+                                disabled={isPositionLocked}
+                                className="hidden"
+                              />
+                              <div
+                                className={cn(
+                                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative z-10",
+                                  form.watch("teamPosition") === "L"
+                                    ? "border-[#f5c451] bg-[#f5c451] shadow-[0_0_10px_rgba(245,196,81,0.5)]"
+                                    : "border-[#d4a017]/40"
+                                )}
+                              >
+                                {form.watch("teamPosition") === "L" && (
+                                  <div className="w-2.5 h-2.5 rounded-full bg-black" />
+                                )}
+                              </div>
+                              <span className="text-sm text-white font-medium relative z-10">Left Team</span>
+                            </label>
+
+                            <label
+                              className={cn(
+                                "flex-1 flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden group",
+                                "hover:scale-[1.02]",
+                                form.watch("teamPosition") === "R"
+                                  ? "bg-gradient-to-br from-[#d4a017]/20 to-[#b8860b]/10 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
+                                  : "bg-[#0d0d20]/70 hover:bg-[#0d0d20]/90",
+                                isPositionLocked && "cursor-not-allowed opacity-50"
+                              )}
+                            >
+                              {form.watch("teamPosition") === "R" && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#d4a017]/10 to-transparent animate-pulse" />
+                              )}
+                              <input
+                                {...form.register("teamPosition")}
+                                type="radio"
+                                value="R"
+                                disabled={isPositionLocked}
+                                className="hidden"
+                              />
+                              <div
+                                className={cn(
+                                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative z-10",
+                                  form.watch("teamPosition") === "R"
+                                    ? "border-[#f5c451] bg-[#f5c451] shadow-[0_0_10px_rgba(245,196,81,0.5)]"
+                                    : "border-[#d4a017]/40"
+                                )}
+                              >
+                                {form.watch("teamPosition") === "R" && (
+                                  <div className="w-2.5 h-2.5 rounded-full bg-black" />
+                                )}
+                              </div>
+                              <span className="text-sm text-white font-medium relative z-10">Right Team</span>
+                            </label>
+                          </div>
+                          {isPositionLocked && (
+                            <p className="mt-2 text-xs text-[#f5c451] flex items-center gap-1.5 bg-[#d4a017]/10 px-3 py-1.5 rounded-lg border border-[#d4a017]/20">
+                              <ShieldCheck className="w-3 h-3" /> Locked via
+                              referral link
+                            </p>
                           )}
-                        >
-                          <option value="">Select side</option>
-                          <option value="L">Left Team</option>
-                          <option value="R">Right Team</option>
-                        </select>
-                        {isPositionLocked && (
-                          <p className="mt-1.5 text-xs text-[#f5c451] flex items-center gap-1">
-                            <ShieldCheck className="w-3 h-3" /> Locked via
-                            referral link
-                          </p>
-                        )}
-                        {form.formState.errors.teamPosition && (
-                          <p className="mt-1.5 text-xs text-red-400">
-                            {form.formState.errors.teamPosition.message}
-                          </p>
-                        )}
+                          {form.formState.errors.teamPosition && (
+                            <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
+                              <FaTimesCircle className="text-[10px]" />
+                              {form.formState.errors.teamPosition.message}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

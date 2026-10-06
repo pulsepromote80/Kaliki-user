@@ -46,8 +46,8 @@ export const primaryNav: NavItem[] = [
       { label: "Direct Partners", href: "/direct-partners" },
       { label: "Level Partners", href: "/level-partners" },
       { label: "Level Partners Tree", href: "/intelligent-partner-view" },
-      { label: "Downline Partners", href: "/community-partners" },
-      { label: "Downline Tree", href: "/community-team" },
+      { label: "Downline Partners", href: "/binary-tree" },
+      { label: "Downline Tree", href: "/network-tree" },
     ],
   },
   {
