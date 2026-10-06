@@ -98,7 +98,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
       const data = await response.json();
 
       if (data.statusCode === 200 && data.data) {
-        setWalletBalance(data.data.IncomeWallet || 0);
+        setWalletBalance(data.data.DepositWallet || 0);
       } else {
         setWalletBalance(0);
       }
@@ -111,8 +111,22 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
   };
 
   const handleActivate = async () => {
+    if (!plan) return;
+
     setIsActivating(true);
     setActivationError("");
+
+    // Determine type based on plan title
+    let type: number;
+    if (plan.title === "Normal") {
+      type = 1;
+    } else if (plan.title === "Legacy Reborn") {
+      type = 2;
+    } else if (plan.title === "Legacy Reborn 2.0") {
+      type = 3;
+    } else {
+      type = 1; // default
+    }
 
     try {
       const response = await fetch('/api/FundManager', {
@@ -121,9 +135,10 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: "418EC52E-DF10-4BA2-8258-156BA13F7506",
+          productId: plan.id,
           rkprice: Number(amount) || 0,
           byAuthlogin: userIdInput,
+          RechargeType: type,
         }),
       });
 
@@ -149,7 +164,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
 
   if (!isOpen || !plan) return null;
 
-  const isQuantityPlan = plan.id === "legacy-2";
+  const isQuantityPlan = plan.title === "Legacy Reborn 2.0";
 
   // ✅ Quantity change — hamesha update karo, error bhi handle karo
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,15 +199,15 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
 
     const numValue = Number(value);
 
-    if (plan.id === "trading-fund") {
-      if (numValue < 100 || numValue > 2999) {
-        setAmountError("Amount must be between $100 and $2,999");
+    if (plan.title === "Normal") {
+      if (numValue < 100) {
+        setAmountError("Minimum investment is $100");
       } else if (numValue > walletBalance) {
         setAmountError("Insufficient balance");
       } else {
         setAmountError("");
       }
-    } else if (plan.id === "legacy-1") {
+    } else if (plan.title === "Legacy Reborn") {
       if (numValue < 3000) {
         setAmountError("Minimum investment is $3,000");
       } else if (numValue > walletBalance) {
@@ -210,10 +225,10 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
   };
 
   const getModalTheme = () => {
-    if (plan.id === "trading-fund") {
+    if (plan.title === "Normal") {
       return { btn: "bg-blue-500 hover:bg-blue-600 text-white", text: "text-blue-600", iconBg: "bg-blue-100" };
     }
-    if (plan.id === "legacy-1") {
+    if (plan.title === "Legacy Reborn") {
       return { btn: "bg-amber-500 hover:bg-amber-600 text-white", text: "text-amber-600", iconBg: "bg-amber-100" };
     }
     return { btn: "bg-purple-500 hover:bg-purple-600 text-white", text: "text-purple-600", iconBg: "bg-purple-100" };
@@ -398,82 +413,123 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
 
 export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const plans: Plan[] = [
-    {
-      id: "trading-fund",
-      title: "Trading Fund",
-      subtitle: "Perfect for New Investors",
-      icon: "🚀",
-      investmentRange: "$100 - $2,999",
-      features: [
-        { text: "ROI 8% on 90%" },
-        { text: "10% for Direct Rewards" },
-        { text: "10% for Binary Rewards" },
-        { text: "10% for Rank Rewards" },
-        { text: "Investor Limit 2.5X" },
-        { text: "Leaders Limit 5X" },
-      ],
-      theme: {
-        text: "text-blue-600 dark:text-blue-400",
-        bg: "bg-blue-50 dark:bg-blue-500/10",
-        border: "border-blue-200 dark:border-blue-500/30",
-        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
-        button: "bg-blue-500 text-white border-transparent dark:bg-transparent dark:border-2 dark:border-blue-500 dark:text-blue-400",
-        buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
-        iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
-      },
-    },
-    {
-      id: "legacy-1",
-      title: "Legacy Re-Born-1",
-      subtitle: "For Consistent Growth",
-      icon: "📊",
-      investmentRange: "$3,000+",
-      isPopular: true,
-      features: [
-        { text: "ROI 12%" },
-        { text: "Investor Limit 2.5X" },
-        { text: "Leaders Limit 5X" },
-      ],
-      theme: {
-        text: "text-amber-600 dark:text-amber-400",
-        bg: "bg-amber-50 dark:bg-amber-500/10",
-        border: "border-amber-200 dark:border-amber-500/30",
-        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(245,158,11,0.2)]",
-        button: "bg-amber-500 text-white border-transparent dark:bg-gradient-to-r dark:from-amber-500 dark:to-orange-500 dark:text-black font-bold",
-        buttonHover: "hover:bg-amber-600 dark:hover:from-amber-400 dark:hover:to-orange-400",
-        iconBg: "bg-gradient-to-br from-amber-400 to-orange-600",
-      },
-    },
-    {
-      id: "legacy-2",
-      title: "Legacy Re-Born-2",
-      subtitle: "Professional Trading Suite",
-      icon: "💎",
-      investmentRange: "$660 - 1 Quantity",
-      features: [
-        { text: "ROI 14%" },
-        { text: "Investor Limit 2.5X" },
-        { text: "Leaders Limit 5X" },
-      ],
-      theme: {
-        text: "text-purple-600 dark:text-purple-400",
-        bg: "bg-purple-50 dark:bg-purple-500/10",
-        border: "border-purple-200 dark:border-purple-500/30",
-        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
-        button: "bg-purple-500 text-white border-transparent dark:bg-gradient-to-r dark:from-purple-500 dark:to-fuchsia-500 font-bold",
-        buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
-        iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
-      },
-    },
-  ];
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch('/api/investment-plans?Type=1', {
+          method: 'GET',
+        });
+
+        const data = await response.json();
+
+        if (data.statusCode === 200 && data.data) {
+          const hardcodedPlans: Plan[] = [
+            {
+              id: "", // Will be set from API
+              title: "", // Will be set from API
+              subtitle: "Perfect for New Investors",
+              icon: "🚀",
+              investmentRange: "$100+",
+              features: [
+                { text: "ROI 8% on 90%" },
+                { text: "10% for Direct Rewards" },
+                { text: "10% for Binary Rewards" },
+                { text: "10% for Rank Rewards" },
+                { text: "Investor Limit 2.5X" },
+                { text: "Leaders Limit 5X" },
+              ],
+              theme: {
+                text: "text-blue-600 dark:text-blue-400",
+                bg: "bg-blue-50 dark:bg-blue-500/10",
+                border: "border-blue-200 dark:border-blue-500/30",
+                glow: "shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
+                button: "bg-blue-500 text-white border-transparent dark:bg-transparent dark:border-2 dark:border-blue-500 dark:text-blue-400",
+                buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
+                iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
+              },
+            },
+            {
+              id: "", // Will be set from API
+              title: "", // Will be set from API
+              subtitle: "For Consistent Growth",
+              icon: "📊",
+              investmentRange: "$3,000+",
+              isPopular: true,
+              features: [
+                { text: "ROI 12%" },
+                { text: "Investor Limit 2.5X" },
+                { text: "Leaders Limit 5X" },
+              ],
+              theme: {
+                text: "text-amber-600 dark:text-amber-400",
+                bg: "bg-amber-50 dark:bg-amber-500/10",
+                border: "border-amber-200 dark:border-amber-500/30",
+                glow: "shadow-sm dark:shadow-[0_0_30px_rgba(245,158,11,0.2)]",
+                button: "bg-amber-500 text-white border-transparent dark:bg-gradient-to-r dark:from-amber-500 dark:to-orange-500 dark:text-black font-bold",
+                buttonHover: "hover:bg-amber-600 dark:hover:from-amber-400 dark:hover:to-orange-400",
+                iconBg: "bg-gradient-to-br from-amber-400 to-orange-600",
+              },
+            },
+            {
+              id: "", // Will be set from API
+              title: "", // Will be set from API
+              subtitle: "Professional Trading Suite",
+              icon: "💎",
+              investmentRange: "$660 - 1 Quantity",
+              features: [
+                { text: "ROI 14%" },
+                { text: "Investor Limit 2.5X" },
+                { text: "Leaders Limit 5X" },
+              ],
+              theme: {
+                text: "text-purple-600 dark:text-purple-400",
+                bg: "bg-purple-50 dark:bg-purple-500/10",
+                border: "border-purple-200 dark:border-purple-500/30",
+                glow: "shadow-sm dark:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+                button: "bg-purple-500 text-white border-transparent dark:bg-gradient-to-r dark:from-purple-500 dark:to-fuchsia-500 font-bold",
+                buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
+                iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
+              },
+            },
+          ];
+
+          const mappedPlans = hardcodedPlans.map((plan, index) => {
+            const apiItem = data.data[index];
+            if (apiItem) {
+              return {
+                ...plan,
+                id: apiItem.productId,
+                title: apiItem.name,
+              };
+            }
+            return plan;
+          });
+
+          setPlans(mappedPlans);
+        }
+      } catch (error) {
+        console.error('Failed to fetch plans:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4 sm:p-8 font-sans relative transition-colors duration-300">
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl w-full mx-auto">
-        {plans.map((plan) => (
+      {isLoading ? (
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">Loading investment plans...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl w-full mx-auto">
+          {plans.map((plan) => (
           <div
             key={plan.id}
             className={`relative flex flex-col p-8 rounded-3xl bg-white dark:bg-[#11111a] border ${plan.theme.border} ${plan.theme.glow} transition-all duration-300 hover:-translate-y-2`}
@@ -527,7 +583,8 @@ export default function PricingPage() {
             </button>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       <ActivatePlanModal
         isOpen={!!selectedPlan}

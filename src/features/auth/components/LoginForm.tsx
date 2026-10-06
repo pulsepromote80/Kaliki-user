@@ -43,10 +43,12 @@ export function LoginForm() {
 
     setEmailForOtp(userid);
     try {
-      await sendOtp.mutateAsync({ userid, password });
-      setShowOtpField(true);
+      const response = await sendOtp.mutateAsync({ userid, password });
+      if (response.statusCode === 200) {
+        setShowOtpField(true);
+      }
     } catch (error) {
-     
+
     }
   };
 
