@@ -11,6 +11,9 @@ const serverEnvSchema = z.object({
   BACKEND_API_URL: z.string().url(),
   AUTH_SECRET: z.string().min(1),
   SESSION_COOKIE_NAME: z.string().min(1).default("session_token"),
+  FUND_DIRECTOR_INCOME_AUTH_CODE: z.string().optional(),
+  FUND_DIRECTOR_P2P_AUTH_CODE: z.string().optional(),
+  FUND_DIRECTOR_WITHDRAWAL_SECURE_CODE: z.string().optional(),
 });
 
 const publicEnvSchema = z.object({
@@ -27,12 +30,13 @@ export function getServerEnv() {
     BACKEND_API_URL: process.env.BACKEND_API_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     SESSION_COOKIE_NAME: process.env.SESSION_COOKIE_NAME,
+    FUND_DIRECTOR_INCOME_AUTH_CODE: process.env.FUND_DIRECTOR_INCOME_AUTH_CODE,
+    FUND_DIRECTOR_P2P_AUTH_CODE: process.env.FUND_DIRECTOR_P2P_AUTH_CODE,
+    FUND_DIRECTOR_WITHDRAWAL_SECURE_CODE: process.env.FUND_DIRECTOR_WITHDRAWAL_SECURE_CODE,
   });
 
   if (!parsed.success) {
-    throw new Error(
-      `Invalid server environment variables: ${parsed.error.message}`,
-    );
+    throw new Error(`Invalid server environment variables: ${parsed.error.message}`);
   }
 
   return parsed.data;
