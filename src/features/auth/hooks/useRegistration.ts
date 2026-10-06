@@ -11,9 +11,11 @@ export function useRegistration() {
   return useMutation({
     mutationFn: (payload: RegistrationPayload) => authService.register(payload),
     onSuccess: (response) => {
-      if (response.success) {
-        toast.success("Account created successfully!");
+      if (response.statusCode === 200) {
+        toast.success(response.message || "Account created successfully!");
         router.push("/welcome-letter");
+      } else {
+        toast.error(response.message || "Registration failed. Please try again.");
       }
     },
     onError: (error: any) => {

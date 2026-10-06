@@ -40,7 +40,7 @@ export const authService = {
     ),
 
   register: (payload: RegistrationPayload) =>
-    apiClient.post<{ success: true }, RegistrationPayload>(
+    apiClient.post<{ statusCode: number; message: string }, RegistrationPayload>(
       "/auth/register",
       payload,
     ),
