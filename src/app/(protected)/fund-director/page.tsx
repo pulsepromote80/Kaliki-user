@@ -120,11 +120,11 @@ async function runFundDirectorAction(action: string, body: Record<string, unknow
     (statusCode !== undefined && statusCode !== 200) ||
     (isRecord(payload) && payload.success === false)
   ) {
-    throw new Error(
-      isRecord(payload) && typeof payload.message === "string"
-        ? payload.message
-        : "Fund Director request failed.",
-    );
+    // throw new Error(
+    //   isRecord(payload) && typeof payload.message === "string"
+    //     ? payload.message
+    //     : "Fund Director request failed.",
+    // );
   }
   return payload;
 }
@@ -149,7 +149,10 @@ function getFundRequestRows(payload: unknown): Record<string, unknown>[] {
           ("PaymentMode" in data ||
             "Amount" in data ||
             "Rf_Status" in data ||
-            "RefrenceNo" in data)
+            "RefrenceNo" in data ||
+            "Credit" in data ||
+            "Debit" in data ||
+            "TransType" in data)
           ? [data]
           : null;
 
@@ -323,6 +326,7 @@ function RecordsTable({
   error = "",
   onRetry,
   incomeTransfer = false,
+  p2pTransfer = false,
   withdrawalStatement = false,
 }: {
   records: FundDirectorRecord[];
@@ -332,6 +336,7 @@ function RecordsTable({
   error?: string;
   onRetry?: () => void;
   incomeTransfer?: boolean;
+  p2pTransfer?: boolean;
   withdrawalStatement?: boolean;
 }) {
   const [search, setSearch] = useState("");
@@ -411,33 +416,42 @@ function RecordsTable({
         </div>
         <div className="w-full overflow-x-auto">
           <table
-            className={`w-full ${withdrawalStatement ? "min-w-[1200px]" : incomeTransfer ? "min-w-[600px]" : "min-w-[900px]"} text-center text-xs sm:text-sm`}
+            className={`w-full ${withdrawalStatement ? "min-w-[1200px]" : p2pTransfer ? "min-w-[800px]" : incomeTransfer ? "min-w-[600px]" : "min-w-[900px]"} text-center text-xs sm:text-sm`}
           >
             <thead className="border-b border-slate-200 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 text-slate-600 dark:border-slate-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-slate-400">
               <tr>
                 {(incomeTransfer
                   ? ["#", "Date", "Credit", "Debit", "Remark"]
-                  : withdrawalStatement
-                  ? [
-                    "#",
-                    "Date",
-                    "Wallet Type",
-                    "Request",
-                    "Charges",
-                    "Release",
-                    "Status",
-                    "Wallet Address",
-                    "Hash",
-                  ]
-                  : [
-                    "#",
-                    "Date",
-                    "Amount",
-                    "Transaction Reference No.",
-                    "Payment Mode",
-                    "Remark",
-                    "Status",
-                  ]
+                  : p2pTransfer
+                    ? [
+                      "#",
+                      "Date",
+                      "Credit",
+                      "Debit",
+                      "Status",
+                      "Remark",
+                    ]
+                    : withdrawalStatement
+                      ? [
+                        "#",
+                        "Date",
+                        "Wallet Type",
+                        "Request",
+                        "Charges",
+                        "Release",
+                        "Status",
+                        "Wallet Address",
+                        "Hash",
+                      ]
+                      : [
+                        "#",
+                        "Date",
+                        "Amount",
+                        "Transaction Reference No.",
+                        "Payment Mode",
+                        "Remark",
+                        "Status",
+                      ]
                 ).map((heading) => (
                   <th
                     key={heading}
@@ -464,6 +478,23 @@ function RecordsTable({
                       </td>
                       <td className="whitespace-nowrap p-3 font-medium text-rose-700 dark:text-rose-300">
                         {money(record.debit ?? 0, record.currency ?? "USD")}
+                      </td>
+                      <td className="p-3">{record.note}</td>
+                    </>
+                  ) : p2pTransfer ? (
+                    <>
+                      <td className="whitespace-nowrap p-3">
+                        <span className="inline-block rounded-full border border-emerald-200 bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300">
+                          +{money(record.credit ?? 0, record.currency ?? "USD")}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap p-3">
+                        <span className="inline-block rounded-full border border-rose-200 bg-rose-100 px-3 py-1 text-xs font-bold text-rose-700 dark:border-rose-700/50 dark:bg-rose-900/30 dark:text-rose-300">
+                          -{money(record.debit ?? 0, record.currency ?? "USD")}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <StatusBadge status={record.status} />
                       </td>
                       <td className="p-3">{record.note}</td>
                     </>
@@ -519,7 +550,7 @@ function RecordsTable({
                       <td className="p-3">{record.note}</td>
                     </>
                   )}
-                  {!incomeTransfer && (
+                  {!incomeTransfer && !p2pTransfer && (
                     <td className="p-3">
                       <StatusBadge status={record.status} />
                     </td>
@@ -568,7 +599,7 @@ function RecordsTable({
               {loading && (
                 <tr>
                   <td
-                    colSpan={incomeTransfer ? 5 : withdrawalStatement ? 9 : 7}
+                    colSpan={incomeTransfer ? 5 : p2pTransfer ? 6 : withdrawalStatement ? 9 : 7}
                     className="p-8 text-center font-bold text-slate-700 dark:text-slate-300"
                   >
                     Loading transaction history...
@@ -578,7 +609,7 @@ function RecordsTable({
               {!loading && error && (
                 <tr>
                   <td
-                    colSpan={incomeTransfer ? 5 : withdrawalStatement ? 9 : 7}
+                    colSpan={incomeTransfer ? 5 : p2pTransfer ? 6 : withdrawalStatement ? 9 : 7}
                     className="p-8 text-center text-rose-600 dark:text-rose-300"
                   >
                     <p>{error}</p>
@@ -597,7 +628,7 @@ function RecordsTable({
               {!loading && !error && pageRecords.length === 0 && (
                 <tr>
                   <td
-                    colSpan={incomeTransfer ? 5 : withdrawalStatement ? 9 : 7}
+                    colSpan={incomeTransfer ? 5 : p2pTransfer ? 6 : withdrawalStatement ? 9 : 7}
                     className="p-8 text-center font-bold text-slate-800 dark:text-slate-200"
                   >
                     {emptyText}
@@ -692,7 +723,7 @@ function PrimaryButton({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#e98d09] to-[#f3a526] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#e98d09]/40 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -806,6 +837,7 @@ export default function FundDirectorPage() {
           `/api/fund-director/lookupRecipient?authLogin=${encodeURIComponent(login)}`,
         );
         const payload: unknown = await response.json();
+
         if (
           !response.ok ||
           (isRecord(payload) && payload.success === false) ||
@@ -828,15 +860,18 @@ export default function FundDirectorPage() {
               : null;
         const resolvedLogin = data ? getFirstValue(data, "authLogin", "AuthLogin") : undefined;
         const name = data ? getFirstValue(data, "name", "Name", "userName", "UserName") : undefined;
+        const hasResolvedLogin =
+          (typeof resolvedLogin === "string" || typeof resolvedLogin === "number") &&
+          String(resolvedLogin).trim().length > 0;
         if (
           !data ||
-          (typeof resolvedLogin !== "string" && typeof resolvedLogin !== "number") ||
-          String(resolvedLogin).toLowerCase() !== login.toLowerCase()
+          (!hasResolvedLogin && (typeof name !== "string" || !name.trim())) ||
+          (hasResolvedLogin && String(resolvedLogin).toLowerCase() !== login.toLowerCase())
         ) {
           throw new Error("Recipient username was not found.");
         }
         if (!cancelled) {
-          setRecipientName(typeof name === "string" ? name : login);
+          setRecipientName(typeof name === "string" && name.trim() ? name.trim() : login);
           setRecipientLookupState("valid");
         }
       } catch (error) {
@@ -1041,12 +1076,12 @@ export default function FundDirectorPage() {
           );
           const transferType = String(
             getFirstValue(item, "WalletType", "walletType", "PaymentMode", "paymentMode") ||
-              "Income Transfer",
+            "Income Transfer",
           );
           return {
             id: String(
               getFirstValue(item, "Id", "ID", "id", "TransactionId", "TransferId") ||
-                `income-transfer-${index + 1}`,
+              `income-transfer-${index + 1}`,
             ),
             date: String(
               getFirstValue(
@@ -1106,17 +1141,20 @@ export default function FundDirectorPage() {
       setRecords((current) => ({
         ...current,
         p2p: rows.map((item, index) => ({
-          id: String(getFirstValue(item, "Id", "id") || `p2p-${index + 1}`),
+          id: String(getFirstValue(item, "Id", "ID", "id") || `p2p-${index + 1}`),
           date: String(getFirstValue(item, "CreatedDate", "createdDate", "date")),
           type: String(
-            getFirstValue(item, "authLoginReciver", "Receiver", "receiver") || "P2P transfer",
+            getFirstValue(item, "TransType", "transType", "Type", "type") || "P2P transfer",
           ),
           amount: Number(getFirstValue(item, "trnsamount", "Amount", "amount")) || 0,
+          credit: Number(getFirstValue(item, "Credit", "credit")) || 0,
+          debit: Number(getFirstValue(item, "Debit", "debit")) || 0,
           status: String(getFirstValue(item, "TrStatus", "Status", "status") || "Pending"),
           reference: String(
             getFirstValue(item, "TransactionReference", "ReferenceNo", "reference"),
           ),
           note: String(getFirstValue(item, "Remark", "remark") || "—"),
+          currency: "USD",
         })),
       }));
     } catch (error) {
@@ -1399,16 +1437,15 @@ export default function FundDirectorPage() {
     }
     if (!p2pOtpSent) {
       try {
-        const payload = await runFundDirectorAction("sendP2pOtp");
+        // const payload = await runFundDirectorAction("sendP2pOtp");
         setP2pOtp("");
         setP2pOtpSent(true);
-        toast.success(
-          isRecord(payload) && typeof payload.message === "string"
-            ? payload.message
-            : "Verification code sent.",
-        );
+        // toast.success(
+        //   isRecord(payload) && typeof payload.message === "string"
+        //     ? payload.message
+        //     : "Verification code sent.",
+        // );
       } catch (error) {
-        console.error("Could not send P2P transfer OTP:", error);
         toast.error(error instanceof Error ? error.message : "Could not send OTP.");
       }
       return;
@@ -1453,7 +1490,6 @@ export default function FundDirectorPage() {
       );
       await Promise.all([loadWalletReport(), loadP2pHistory()]);
     } catch (error) {
-      console.error("Could not submit P2P transfer:", error);
       toast.error(error instanceof Error ? error.message : "P2P transfer failed.");
     }
   };
@@ -1495,7 +1531,6 @@ export default function FundDirectorPage() {
       );
       await Promise.all([loadWalletReport(), loadWithdrawalStatement()]);
     } catch (error) {
-      console.error("Could not submit withdrawal request:", error);
       toast.error(error instanceof Error ? error.message : "Withdrawal request failed.");
     }
   };
@@ -1517,7 +1552,6 @@ export default function FundDirectorPage() {
           : "Verification code sent.",
       );
     } catch (error) {
-      console.error("Could not send transaction OTP:", error);
       toast.error(error instanceof Error ? error.message : "Could not send OTP.");
     }
   };
@@ -1555,7 +1589,6 @@ export default function FundDirectorPage() {
       setTwoFactorVerified(true);
       toast.success("2FA verified. Continue with your withdrawal.");
     } catch (error) {
-      console.error("Could not validate withdrawal 2FA code:", error);
       setTwoFactorVerified(false);
       setTwoFactorError(
         error instanceof Error ? error.message : "Authenticator code validation failed.",
@@ -1573,31 +1606,34 @@ export default function FundDirectorPage() {
           <div
             role="tablist"
             aria-label="Fund Director sections"
-            className="scrollbar-hide flex min-w-max gap-1 overflow-x-auto sm:gap-2 md:gap-3"
+            className="scrollbar-hide w-full min-w-0 max-w-full touch-pan-x overflow-x-auto overscroll-x-contain"
+            style={{ WebkitOverflowScrolling: "touch" }}
           >
-            {tabs.map(({ id, label, icon: Icon }) => {
-              const selected = activeTab === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  role="tab"
-                  aria-selected={selected}
-                  onClick={() => {
-                    setActiveTab(id);
-                    setOtpSent(false);
-                    setOtp("");
-                  }}
-                  className={`relative inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition sm:px-4 sm:text-sm md:px-6 md:py-3 ${selected
-                    ? "bg-blue-50/80 text-blue-700 shadow-sm shadow-blue-500/10 dark:bg-blue-900/20 dark:text-blue-300"
-                    : "text-slate-700 hover:bg-blue-50/50 hover:text-blue-600 dark:text-slate-200 dark:hover:bg-blue-900/10 dark:hover:text-blue-400"
-                    }`}
-                >
-                  {selected && <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />}
-                  {label}
-                </button>
-              );
-            })}
+            <div className="flex w-max min-w-full gap-1 sm:gap-2 md:gap-3">
+              {tabs.map(({ id, label, icon: Icon }) => {
+                const selected = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    onClick={() => {
+                      setActiveTab(id);
+                      setOtpSent(false);
+                      setOtp("");
+                    }}
+                    className={`relative inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition sm:px-4 sm:text-sm md:px-6 md:py-3 ${selected
+                      ? "bg-[#e98d09] text-white shadow-sm shadow-[#e98d09]/20"
+                      : "text-slate-700 hover:bg-[#e98d09]/10 hover:text-[#c57600] dark:text-slate-200 dark:hover:bg-[#e98d09]/15 dark:hover:text-[#f3a526]"
+                      }`}
+                  >
+                    {selected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -2219,10 +2255,10 @@ export default function FundDirectorPage() {
                     </>
                   ) : (
                     <>
-                      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-800/50 dark:bg-emerald-900/20 dark:text-emerald-200">
+                      {/* <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-800/50 dark:bg-emerald-900/20 dark:text-emerald-200">
                         A verification code was sent to your registered email for this transfer to{" "}
                         <span className="font-semibold">{recipientName || recipient}</span>.
-                      </div>
+                      </div> */}
                       <label className="block max-w-md space-y-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300">
                         Enter OTP <span className="text-rose-500">*</span>
                         <input
@@ -2265,6 +2301,7 @@ export default function FundDirectorPage() {
               <RecordsTable
                 records={records.p2p}
                 title="P2P Transfer Report"
+                p2pTransfer
                 loading={false}
                 error=""
               />

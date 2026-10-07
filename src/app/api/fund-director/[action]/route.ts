@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextResponse, type NextRequest } from "next/server";
 import { createBackendClient } from "@/lib/backend-client";
 import { getServerEnv } from "@/lib/env";
-import { isTokenExpired } from "@/lib/jwt";
+import { decodeJWT, isTokenExpired } from "@/lib/jwt";
 import { unauthorizedSessionResponse } from "@/lib/session-response";
 
 const actions = {
@@ -37,13 +37,12 @@ const actions = {
   },
   lookupRecipient: {
     method: "GET",
-    path: "/AdminMaster/userNameByLoginId",
+    path: "/FundManager/userNameByLoginId",
     query: "authLogin",
   },
   getP2pHistory: {
     method: "GET",
     path: "/FundManager/getfundTransferDepositToDepositReport",
-    query: "URID",
   },
   sendP2pOtp: {
     method: "POST",
@@ -52,8 +51,6 @@ const actions = {
   transferP2p: {
     method: "POST",
     path: "/FundManager/fundTransferDepositToDeposit",
-    secret: "FUND_DIRECTOR_P2P_AUTH_CODE",
-    secretField: "authenticationCode",
   },
   sendWithdrawalOtp: {
     method: "POST",
@@ -62,8 +59,6 @@ const actions = {
   requestWithdrawal: {
     method: "POST",
     path: "/FundManager/addUserWithdrawalRequest",
-    secret: "FUND_DIRECTOR_WITHDRAWAL_SECURE_CODE",
-    secretField: "secureCode",
   },
 } as const;
 
@@ -71,6 +66,63 @@ type ActionName = keyof typeof actions;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function getUserIdFromProfile(payload: unknown): string | number | undefined {
+  const idKeys = new Set(["urid", "userid", "user_id", "userno", "memberid"]);
+  const pending: unknown[] = [payload];
+  const visited = new Set<object>();
+  let depth = 0;
+
+  while (pending.length > 0 && depth < 6) {
+    const currentLevel = pending.splice(0);
+    for (const value of currentLevel) {
+      if (Array.isArray(value)) {
+        pending.push(...value);
+        continue;
+      }
+      if (!isRecord(value) || visited.has(value)) continue;
+      visited.add(value);
+
+      for (const [key, candidate] of Object.entries(value)) {
+        if (
+          idKeys.has(key.toLowerCase()) &&
+          (typeof candidate === "string" || typeof candidate === "number") &&
+          String(candidate).trim()
+        ) {
+          return candidate;
+        }
+      }
+      pending.push(...Object.values(value));
+    }
+    depth += 1;
+  }
+}
+
+function getUserIdFromToken(token: string): string | number | undefined {
+  const claims = decodeJWT(token);
+  if (!claims) return undefined;
+
+  const idKeys = new Set([
+    "urid",
+    "userid",
+    "user_id",
+    "userno",
+    "memberid",
+    "nameid",
+    "nameidentifier",
+  ]);
+  for (const [key, value] of Object.entries(claims)) {
+    if (
+      idKeys.has(key.toLowerCase()) &&
+      (typeof value === "string" || typeof value === "number") &&
+      String(value).trim()
+    ) {
+      return value;
+    }
+  }
+
+  return typeof claims.sub === "string" && claims.sub.trim() ? claims.sub : undefined;
 }
 
 function isActionName(value: string): value is ActionName {
@@ -114,11 +166,9 @@ async function proxyAction(request: NextRequest, actionName: string, method: "GE
     let endpoint: string = action.path;
     if ("query" in action) {
       let queryValue = request.nextUrl.searchParams.get(action.query) ?? "";
-      if (actionName === "getP2pHistory" && !queryValue) {
+      if (actionName === "getP2pHistory") {
         const { data: profileResponse } = await backend.get("/Authentication/getProfileDetails");
-        const profileData = isRecord(profileResponse) ? profileResponse.data : null;
-        const profile = Array.isArray(profileData) ? profileData[0] : null;
-        const urid = isRecord(profile) ? (profile.URID ?? profile.urid) : undefined;
+        const urid = getUserIdFromProfile(profileResponse) ?? getUserIdFromToken(token);
         if (typeof urid !== "string" && typeof urid !== "number") {
           return NextResponse.json(
             { success: false, message: "Your user ID is unavailable." },
@@ -126,6 +176,12 @@ async function proxyAction(request: NextRequest, actionName: string, method: "GE
           );
         }
         queryValue = String(urid);
+      }
+      if (!queryValue) {
+        return NextResponse.json(
+          { success: false, message: `The required ${action.query} is unavailable.` },
+          { status: 422 },
+        );
       }
       endpoint = `${action.path}?${action.query}=${encodeURIComponent(queryValue)}`;
     }

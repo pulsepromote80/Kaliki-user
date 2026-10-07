@@ -81,7 +81,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ ac
       }
 
       if (action === "detail") {
-        const { data } = await backend.post(
+        const { data } = await backend.get(
           `/Ticket/getTicketByTicketId?ticketId=${encodeURIComponent(String(ticketId))}`,
         );
         return NextResponse.json(data);
