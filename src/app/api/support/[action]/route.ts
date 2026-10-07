@@ -49,7 +49,6 @@ export async function POST(request: NextRequest, context: { params: Promise<{ ac
 
     const token = isRecord(session) ? session.accessToken : undefined;
 
-    console.log("hello", token);
     if (typeof token !== "string" || !token || isTokenExpired(token)) {
       return unauthorizedSessionResponse(
         SESSION_COOKIE_NAME,
@@ -82,7 +81,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ ac
       }
 
       if (action === "detail") {
-        const { data } = await backend.post(
+        const { data } = await backend.get(
           `/Ticket/getTicketByTicketId?ticketId=${encodeURIComponent(String(ticketId))}`,
         );
         return NextResponse.json(data);

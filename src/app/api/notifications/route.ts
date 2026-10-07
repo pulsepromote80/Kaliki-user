@@ -4,8 +4,8 @@ import { createBackendClient } from "@/lib/backend-client";
 import { getServerEnv } from "@/lib/env";
 import { isTokenExpired } from "@/lib/jwt";
 import { unauthorizedSessionResponse } from "@/lib/session-response";
-
-const notificationListPath = "/Ticket/getUnseenUserNotificationListbyURID";
+const unseenNotificationListPath = "/Ticket/getUnseenUserNotificationListbyURID";
+const allNotificationListPath = "/Ticket/getAllUserNotificationList";
 const markNotificationsReadPath = "/Ticket/updateUserNotification";
 
 async function getBackend(request: NextRequest) {
@@ -24,6 +24,8 @@ async function getBackend(request: NextRequest) {
       typeof session === "object" && session !== null && "accessToken" in session
         ? session.accessToken
         : undefined;
+
+    console.log("Token retrieved from session cookie:", token);
 
     if (typeof token !== "string" || !token || isTokenExpired(token)) {
       return {
@@ -45,17 +47,30 @@ async function getBackend(request: NextRequest) {
   }
 }
 
-async function proxyNotificationRequest(request: NextRequest, markRead = false) {
+async function proxyNotificationRequest(
+  request: NextRequest,
+  endpoint: "unseen" | "all" | "markRead",
+) {
   const auth = await getBackend(request);
   if (auth.response) return auth.response;
 
   try {
-    const { data } = await auth.backend.post(
-      markRead ? markNotificationsReadPath : notificationListPath,
-    );
+    const path =
+      endpoint === "all"
+        ? allNotificationListPath
+        : endpoint === "markRead"
+          ? markNotificationsReadPath
+          : unseenNotificationListPath;
+    const { data } =
+      endpoint === "markRead" ? await auth.backend.post(path) : await auth.backend.get(path);
     return NextResponse.json(data);
   } catch (error) {
-    console.error(markRead ? "Could not mark notifications as read:" : "Could not load notifications:", error);
+    console.error(
+      endpoint === "markRead"
+        ? "Could not mark notifications as read:"
+        : "Could not load notifications:",
+      error,
+    );
 
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
@@ -80,9 +95,10 @@ async function proxyNotificationRequest(request: NextRequest, markRead = false) 
 }
 
 export async function GET(request: NextRequest) {
-  return proxyNotificationRequest(request);
+  const endpoint = request.nextUrl.searchParams.get("scope") === "all" ? "all" : "unseen";
+  return proxyNotificationRequest(request, endpoint);
 }
 
 export async function POST(request: NextRequest) {
-  return proxyNotificationRequest(request, true);
+  return proxyNotificationRequest(request, "markRead");
 }
