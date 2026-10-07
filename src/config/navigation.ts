@@ -28,7 +28,7 @@ export const primaryNav: NavItem[] = [
   },
   {
     label: "AI Engine",
-    href: "/event-booking",
+    href: "/ai-engine",
       
     },
   {

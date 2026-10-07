@@ -49,7 +49,6 @@ export async function POST(request: NextRequest, context: { params: Promise<{ ac
 
     const token = isRecord(session) ? session.accessToken : undefined;
 
-    console.log("hello", token);
     if (typeof token !== "string" || !token || isTokenExpired(token)) {
       return unauthorizedSessionResponse(
         SESSION_COOKIE_NAME,

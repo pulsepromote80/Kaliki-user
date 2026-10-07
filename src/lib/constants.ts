@@ -31,6 +31,9 @@ export const QUERY_KEYS = {
     all: ["transactions"] as const,
     detail: (id: string) => ["transactions", id] as const,
   },
+  orderHistory: {
+    all: ["orderHistory"] as const,
+  },
 } as const;
 
 export const DEFAULT_PAGE_SIZE = 20;

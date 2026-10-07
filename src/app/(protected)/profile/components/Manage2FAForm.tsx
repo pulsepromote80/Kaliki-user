@@ -51,8 +51,6 @@ export function Manage2FAForm() {
       });
       const result = await response.json();
 
-      console.log("Check 2FA Status Response:", result);
-
       // Check if 2FA is already enabled
       if (result.success && result.data?.status === false && 
           result.data.message?.toLowerCase().includes('already enabled')) {
@@ -128,9 +126,6 @@ export function Manage2FAForm() {
         body: JSON.stringify({ code: "" }),
       });
       const result = await response.json();
-
-      console.log("Generate QR Response:", result);
-
       if (result.success && result.data) {
         // Check if 2FA is already enabled
         if (result.data.status === false && result.data.message?.toLowerCase().includes('already enabled')) {
@@ -151,10 +146,6 @@ export function Manage2FAForm() {
         const qrCode = result.data.data?.qrCode || result.data.qrCode || result.data.otpauthUrl || result.data.qr || result.data.url || null;
         const manualKey = result.data.data?.manualKey || result.data.manualKey || result.data.secret || result.data.secretKey || null;
         const isAlreadyGenerated = result.data.data?.isAlreadyGenerated || result.data.isAlreadyGenerated || false;
-
-        console.log("QR Code:", qrCode);
-        console.log("Manual Key:", manualKey);
-        console.log("Is Already Generated:", isAlreadyGenerated);
 
         if (qrCode && manualKey) {
           setTwoFAState(prev => ({

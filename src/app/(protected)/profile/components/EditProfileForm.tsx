@@ -86,7 +86,6 @@ export function EditProfileForm() {
       const response = await fetch("/api/auth/countries");
       
       const result = await response.json();
-      console.log("YTTTY",result)
       if (result.statusCode === 200 && result.data) {
         const countryOptions = result.data.map((country: any) => ({
           label: country.country_Name || country.name || country.countryName,

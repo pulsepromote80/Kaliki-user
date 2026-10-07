@@ -2,17 +2,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 
-
 interface BoosterFeature {
   text: string;
 }
 
 interface Booster {
-  id: string;
-  title: string;
+  ProductId: string;
+  ProductName: string;
+  Rkprice: number;
+  PackageName: string;
+  CreatedDate: string;
   subtitle: string;
-  icon: string;
-  price: string;
+  BoosterPackage: number;
   features: BoosterFeature[];
   theme: {
     text: string;
@@ -113,7 +114,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   const handleActivate = async () => {
     if (!booster) return;
 
-    const boosterPrice = Number(booster.price.replace('$', ''));
+    const boosterPrice = booster.Rkprice;
 
     if (boosterPrice > walletBalance) {
       setActivationError("Insufficient balance");
@@ -125,15 +126,15 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
     setActivationError("");
 
     try {
-      const response = await fetch('/api/FundManager', {
+      const response = await fetch('/api/FundManager/addBoosterUser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: "418EC52E-DF10-4BA2-8258-156BA13F7506",
-          rkprice: boosterPrice,
-          byAuthlogin: userIdInput,
+          productId: booster.ProductId,
+          BoosterValue: boosterPrice,
+          BoosterPackage: booster.BoosterPackage,
         }),
       });
 
@@ -158,15 +159,14 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   if (!isOpen || !booster) return null;
 
   const getModalTheme = () => {
-    if (booster.id === "withdrawal-booster") {
+    if (booster.PackageName?.includes("Withdrawal")) {
       return { btn: "bg-blue-500 hover:bg-blue-600 text-white", text: "text-blue-600", iconBg: "bg-blue-100" };
     }
     return { btn: "bg-purple-500 hover:bg-purple-600 text-white", text: "text-purple-600", iconBg: "bg-purple-100" };
   };
 
   const modalTheme = getModalTheme();
-  const boosterPrice = Number(booster.price.replace('$', ''));
-  const isSubmitDisabled = !userIdInput || isActivating || boosterPrice > walletBalance;
+  const isSubmitDisabled = isActivating || booster.Rkprice > walletBalance;
 
   return (
     <>
@@ -201,8 +201,9 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
               Activate Booster
             </p>
             <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              {booster.title}
+              {booster.ProductName}
             </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{booster.subtitle}</p>
           </div>
           <button
             onClick={onClose}
@@ -214,25 +215,25 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
 
         {/* Wallet Info Box */}
         <div className={`flex justify-between items-center rounded-2xl p-5 mb-6 ${
-          boosterPrice > walletBalance
+          booster.Rkprice > walletBalance
             ? "bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-500/30"
             : "bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30"
         }`}>
           <div>
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
-            <p className={`${boosterPrice > walletBalance ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"} text-2xl font-bold`}>
+            <p className={`${booster.Rkprice > walletBalance ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"} text-2xl font-bold`}>
               {isLoadingWallet ? "Loading..." : `$${walletBalance}`}
             </p>
           </div>
           <div className="text-right">
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Booster Price</p>
-            <p className="text-gray-900 dark:text-white text-lg font-semibold">{booster.price}</p>
+            <p className="text-gray-900 dark:text-white text-lg font-semibold">${booster.Rkprice}</p>
           </div>
         </div>
 
         {/* Form */}
         <div className="space-y-5">
-          <div>
+          {/* <div>
             <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
               USER ID <span className="text-red-500">*</span>
             </label>
@@ -253,13 +254,13 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
                 Loading user name...
               </span>
             )}
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED BOOSTER</label>
             <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
-              <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{booster.icon}</span>
-              <span className={modalTheme.text}>{booster.title}</span>
+              <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>⚡</span>
+              <span className={modalTheme.text}>{booster.ProductName}</span>
             </div>
           </div>
         </div>
@@ -273,7 +274,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
           }`}
         >
           <span className="text-xl">{isActivating ? "⏳" : "⚡"}</span>
-          {isActivating ? "Activating..." : `Activate ${booster.title}`}
+          {isActivating ? "Activating..." : `Activate ${booster.ProductName}`}
         </button>
 
         {activationError && (
@@ -291,54 +292,103 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
 // ==========================================
 export default function BoosterPage() {
   const [selectedBooster, setSelectedBooster] = useState<Booster | null>(null);
+  const [boosters, setBoosters] = useState<Booster[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const boosters: Booster[] = [
-    {
-      id: "withdrawal-booster",
-      title: "Withdrawal Booster",
-      subtitle: "Daily Withdrawal Allowed",
-      icon: "💸",
-      price: "$100",
-      features: [
-        { text: "Validity: 30 Days" },
-        { text: "Daily Withdrawal Allowed" },
-        { text: "Instant Withdrawal Access" },
-        { text: "Boost Your Daily Earnings" },
-      ],
-      theme: {
-        text: "text-blue-600 dark:text-blue-400",
-        bg: "bg-blue-50 dark:bg-blue-500/10",
-        border: "border-blue-200 dark:border-blue-500/30",
-        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
-        button: "bg-blue-500 text-white border-transparent dark:bg-transparent dark:border-2 dark:border-blue-500 dark:text-blue-400",
-        buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
-        iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
-      },
-    },
-    {
-      id: "level-booster",
-      title: "Level Booster",
-      subtitle: "Double Your Level ROI",
-      icon: "🚀",
-      price: "$100",
-      isPopular: true, // Isko highlight karne ke liye
-      features: [
-        { text: "30% Get from 15 Levels" },
-        { text: "After Booster: 60% (Double Level ROI)" },
-        { text: "Validity: Lifetime" },
-        { text: "Just Double Level ROI" },
-      ],
-      theme: {
-        text: "text-purple-600 dark:text-purple-400",
-        bg: "bg-purple-50 dark:bg-purple-500/10",
-        border: "border-purple-200 dark:border-purple-500/30",
-        glow: "shadow-sm dark:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
-        button: "bg-purple-500 text-white border-transparent dark:bg-gradient-to-r dark:from-purple-500 dark:to-fuchsia-500 font-bold",
-        buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
-        iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
-      },
-    },
-  ];
+  useEffect(() => {
+    const fetchBoosters = async () => {
+      try {
+        const response = await fetch('/api/investment-plans?Type=2', {
+          method: 'GET',
+        });
+
+        const data = await response.json();
+
+        if (data.statusCode === 200 && data.data) {
+          const hardcodedBoosters: Booster[] = [
+            {
+              ProductId: "", // Will be set from API
+              ProductName: "", // Will be set from API
+              Rkprice: 100,
+              PackageName: "Daily Withdrawal Allowed",
+              CreatedDate: "",
+              subtitle: "Daily Withdrawal Allowed",
+              BoosterPackage: 1,
+              features: [
+                { text: "Validity: 30 Days" },
+                { text: "Daily Withdrawal Allowed" },
+                { text: "Instant Withdrawal Access" },
+                { text: "Boost Your Daily Earnings" },
+              ],
+              theme: {
+                text: "text-blue-600 dark:text-blue-400",
+                bg: "bg-blue-50 dark:bg-blue-500/10",
+                border: "border-blue-200 dark:border-blue-500/30",
+                glow: "shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
+                button: "bg-blue-500 text-white border-transparent dark:bg-transparent dark:border-2 dark:border-blue-500 dark:text-blue-400",
+                buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
+                iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
+              },
+            },
+            {
+              ProductId: "", // Will be set from API
+              ProductName: "", // Will be set from API
+              Rkprice: 100,
+              PackageName: "Double Your Level ROI",
+              CreatedDate: "",
+              subtitle: "Double Your Level ROI",
+              BoosterPackage: 2,
+              features: [
+                { text: "30% Get from 15 Levels" },
+                { text: "After Booster: 60% (Double Level ROI)" },
+                { text: "Validity: Lifetime" },
+                { text: "Just Double Level ROI" },
+              ],
+              theme: {
+                text: "text-purple-600 dark:text-purple-400",
+                bg: "bg-purple-50 dark:bg-purple-500/10",
+                border: "border-purple-200 dark:border-purple-500/30",
+                glow: "shadow-sm dark:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+                button: "bg-purple-500 text-white border-transparent dark:bg-gradient-to-r dark:from-purple-500 dark:to-fuchsia-500 font-bold",
+                buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
+                iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
+              },
+              isPopular: true,
+            },
+          ];
+
+          const mappedBoosters = hardcodedBoosters.map((booster, index) => {
+            const apiItem = data.data[index];
+            if (apiItem) {
+              return {
+                ...booster,
+                ProductId: apiItem.productId,
+                ProductName: apiItem.name,
+                BoosterPackage: apiItem.BoosterPackage,
+              };
+            }
+            return booster;
+          });
+
+          setBoosters(mappedBoosters);
+        }
+      } catch (error) {
+        console.error('Failed to fetch boosters:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBoosters();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4">
+        <div className="text-gray-500 dark:text-gray-400">Loading boosters...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4 sm:p-8 font-sans relative transition-colors duration-300">
@@ -347,7 +397,7 @@ export default function BoosterPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full mx-auto ">
         {boosters.map((booster) => (
           <div
-            key={booster.id}
+            key={booster.ProductId}
             className={`relative flex flex-col p-8 rounded-3xl bg-white dark:bg-[#11111a] border ${booster.theme.border} ${booster.theme.glow} transition-all duration-300 hover:-translate-y-2`}
           >
             {booster.isPopular && (
@@ -357,11 +407,11 @@ export default function BoosterPage() {
             )}
 
             <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 text-3xl ${booster.theme.iconBg} shadow-lg`}>
-              {booster.icon}
+              ⚡
             </div>
 
             <h2 className={`text-3xl font-bold mb-3 ${booster.theme.text}`}>
-              {booster.title}
+              {booster.ProductName}
             </h2>
 
             <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-8 ${booster.theme.bg} ${booster.theme.text} border ${booster.theme.border}`}>
@@ -374,7 +424,7 @@ export default function BoosterPage() {
                 Booster Price
               </p>
               <p className="text-gray-900 dark:text-white text-3xl font-bold">
-                {booster.price}
+                ${booster.Rkprice}
               </p>
             </div>
 
