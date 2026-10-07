@@ -23,6 +23,7 @@ interface Plan {
     iconBg: string;
   };
   isPopular?: boolean;
+  BoosterPackage: number;
 }
 
 interface ActivatePlanModalProps {
@@ -116,18 +117,6 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
     setIsActivating(true);
     setActivationError("");
 
-    // Determine type based on plan title
-    let type: number;
-    if (plan.title === "Normal") {
-      type = 1;
-    } else if (plan.title === "Legacy Reborn") {
-      type = 2;
-    } else if (plan.title === "Legacy Reborn 2.0") {
-      type = 3;
-    } else {
-      type = 1; // default
-    }
-
     try {
       const response = await fetch('/api/FundManager', {
         method: 'POST',
@@ -138,9 +127,10 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
           productId: plan.id,
           rkprice: Number(amount) || 0,
           byAuthlogin: userIdInput,
-          RechargeType: type,
+          RechargeType: plan.BoosterPackage,
         }),
       });
+    
 
       const data = await response.json();
 
@@ -450,6 +440,7 @@ export default function PricingPage() {
                 buttonHover: "hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white",
                 iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
               },
+              BoosterPackage: 1,
             },
             {
               id: "", // Will be set from API
@@ -472,6 +463,7 @@ export default function PricingPage() {
                 buttonHover: "hover:bg-amber-600 dark:hover:from-amber-400 dark:hover:to-orange-400",
                 iconBg: "bg-gradient-to-br from-amber-400 to-orange-600",
               },
+              BoosterPackage: 2,
             },
             {
               id: "", // Will be set from API
@@ -493,6 +485,7 @@ export default function PricingPage() {
                 buttonHover: "hover:bg-purple-600 dark:hover:from-purple-400 dark:hover:to-fuchsia-400",
                 iconBg: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
               },
+              BoosterPackage: 3,
             },
           ];
 
@@ -503,6 +496,7 @@ export default function PricingPage() {
                 ...plan,
                 id: apiItem.productId,
                 title: apiItem.name,
+                BoosterPackage: apiItem.BoosterPackage,
               };
             }
             return plan;

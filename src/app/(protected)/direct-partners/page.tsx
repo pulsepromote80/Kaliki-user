@@ -52,8 +52,6 @@ export default function DirectPartners() {
 
   useEffect(() => {
     const fetchDirectMembers = async () => {
-      console.log("fetchDirectMembers called", { user: user?.id, selectedStatus });
-
       setLoading(true);
       setError(null);
 
@@ -70,9 +68,7 @@ export default function DirectPartners() {
           statusId: statusId,
         };
 
-        console.log("Calling API with data:", data);
         const response = await communityService.getDirectMember(data);
-        console.log("API response:", response);
 
         if (response.data) {
           setDirectMemberData(response.data);

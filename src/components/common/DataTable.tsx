@@ -35,28 +35,23 @@ export function DataTable<T>({
   onPageChange,
   emptyTitle = "No records found",
 }: DataTableProps<T>) {
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Skeleton key={index} className="h-10 w-full" />
-        ))}
-      </div>
-    );
-  }
-
   if (isError) {
     return <ErrorState onRetry={onRetry} />;
   }
 
-  if (data.length === 0) {
+  if (data.length === 0 && !isLoading) {
     return <EmptyState title={emptyTitle} />;
   }
 
   return (
     <div className="space-y-4">
-      <Table columns={columns} data={data} getRowId={getRowId} />
-      {page !== undefined && totalPages !== undefined && onPageChange && (
+      <Table
+        columns={columns}
+        data={isLoading ? [] : data}
+        getRowId={getRowId}
+        isLoading={isLoading}
+      />
+      {page !== undefined && totalPages !== undefined && onPageChange && !isLoading && (
         <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
       )}
     </div>

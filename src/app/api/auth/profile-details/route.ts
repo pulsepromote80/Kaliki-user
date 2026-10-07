@@ -37,7 +37,6 @@ export async function GET(request: NextRequest) {
     // Call backend API to get profile details
     const backend = createBackendClient(token);
     const { data } = await backend.get("/Authentication/getProfileDetails");
-    console.log("OOO",data)
 
     return NextResponse.json({
       success: true,

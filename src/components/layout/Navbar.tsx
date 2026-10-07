@@ -304,7 +304,13 @@ export function Navbar() {
 
         <nav className="hidden lg:flex items-center gap-6 sm:gap-10 flex-1 justify-center">
           {primaryNav.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+            let isActive = false;
+
+            if (item.isDropdown && item.dropdownItems) {
+              isActive = item.dropdownItems.some((dropdownItem) => pathname === dropdownItem.href);
+            } else {
+              isActive = pathname === item.href;
+            }
 
             if (item.isDropdown && item.dropdownItems) {
               return (
@@ -340,7 +346,7 @@ export function Navbar() {
                             key={dropdownItem.href}
                             href={dropdownItem.href}
                             className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/5"
-                            style={{ color: (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
+                            style={{ color: pathname === dropdownItem.href ? '#f5c451' : ((!mounted || theme === 'dark') ? '#E2E8F0' : '#334155') }}
                           >
                             {dropdownItem.label}
                           </Link>
