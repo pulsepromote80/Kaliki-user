@@ -120,11 +120,11 @@ async function runFundDirectorAction(action: string, body: Record<string, unknow
     (statusCode !== undefined && statusCode !== 200) ||
     (isRecord(payload) && payload.success === false)
   ) {
-    // throw new Error(
-    //   isRecord(payload) && typeof payload.message === "string"
-    //     ? payload.message
-    //     : "Fund Director request failed.",
-    // );
+    throw new Error(
+      isRecord(payload) && typeof payload.message === "string"
+        ? payload.message
+        : "Fund Director request failed.",
+    );
   }
   return payload;
 }
@@ -960,43 +960,63 @@ export default function FundDirectorPage() {
   }, []);
 
   const loadSelfDepositData = useCallback(async () => {
-    try {
-      const [usdtPayload, veltPayload, historyPayload] = await Promise.all([
-        runFundDirectorAction("getUsdtBalance"),
-        runFundDirectorAction("getVeltBalance"),
-        runFundDirectorAction("getSelfDepositHistory"),
-      ]);
-      const usdtData = getPayloadData(usdtPayload);
-      const veltData = getPayloadData(veltPayload);
-      if (!isRecord(usdtData) || !isRecord(veltData)) {
-        throw new Error("Self deposit balance response has an invalid format.");
-      }
-      setSelfBalances({
-        usdt: Number(usdtData.usdtBalance) || 0,
-        velt: Number(veltData.velttBalance) || 0,
-      });
+    const [usdtResult, veltResult, historyResult] = await Promise.allSettled([
+      runFundDirectorAction("getUsdtBalance"),
+      runFundDirectorAction("getVeltBalance"),
+      runFundDirectorAction("getSelfDepositHistory"),
+    ]);
+
+    if (usdtResult.status === "fulfilled") {
+      const usdtPayload = usdtResult.value;
       const depositAddress = getNestedValue(
         usdtPayload,
+        "WalletAddress",
         "walletAddress",
         "walletBep20",
         "usdtWalletAddress",
       );
       setWalletAddress(typeof depositAddress === "string" ? depositAddress.trim() : "");
-      const rows = getFundRequestRows(historyPayload);
-      const history = rows.map((item, index) => ({
-        id: String(getFirstValue(item, "Id", "id") || `self-deposit-${index + 1}`),
-        date: String(getFirstValue(item, "creadtedDate", "CreatedDate", "date")),
-        type: "Self deposit",
-        amount: Number(getFirstValue(item, "usdAmount", "UsdAmount", "amount")) || 0,
-        status: String(getFirstValue(item, "status", "Status") || "Pending"),
-        reference: String(getFirstValue(item, "transHash", "TransHash", "hash")),
-        note: "—",
-        currency: "USD",
+      setSelfBalances((current) => ({
+        ...current,
+        usdt: Number(getNestedValue(usdtPayload, "USDTBalance", "usdtBalance")) || 0,
       }));
-      setRecords((current) => ({ ...current, deposit: history }));
-    } catch (error) {
-      console.error("Could not load self deposit data:", error);
-      toast.error(error instanceof Error ? error.message : "Could not load self deposit details.");
+    } else {
+      console.error("Could not load USDT self deposit details:", usdtResult.reason);
+      toast.error(
+        usdtResult.reason instanceof Error
+          ? usdtResult.reason.message
+          : "Could not load USDT deposit wallet details.",
+      );
+    }
+
+    if (veltResult.status === "fulfilled") {
+      setSelfBalances((current) => ({
+        ...current,
+        velt: Number(getNestedValue(veltResult.value, "VELTBalance", "velttBalance")) || 0,
+      }));
+    } else {
+      console.error("Could not load VELT self deposit balance:", veltResult.reason);
+    }
+
+    if (historyResult.status === "fulfilled") {
+      try {
+        const rows = getFundRequestRows(historyResult.value);
+        const history = rows.map((item, index) => ({
+          id: String(getFirstValue(item, "Id", "id") || `self-deposit-${index + 1}`),
+          date: String(getFirstValue(item, "creadtedDate", "CreatedDate", "date")),
+          type: "Self deposit",
+          amount: Number(getFirstValue(item, "usdAmount", "UsdAmount", "amount")) || 0,
+          status: String(getFirstValue(item, "status", "Status") || "Pending"),
+          reference: String(getFirstValue(item, "transHash", "TransHash", "hash")),
+          note: "—",
+          currency: "USD",
+        }));
+        setRecords((current) => ({ ...current, deposit: history }));
+      } catch (error) {
+        console.error("Could not parse self deposit history:", error);
+      }
+    } else {
+      console.error("Could not load self deposit history:", historyResult.reason);
     }
   }, []);
 
