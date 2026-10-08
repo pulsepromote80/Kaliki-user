@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/lib/constants';
 
 interface PlanFeature {
   text: string;
@@ -39,6 +41,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
   plan,
   userId = "",
 }) => {
+  const queryClient = useQueryClient();
   const [amount, setAmount] = useState("");
   const [quantity, setQuantity] = useState("");
   const [amountError, setAmountError] = useState("");
@@ -137,6 +140,8 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
       if (data.statusCode === 200) {
         // Success - close modal and refresh wallet
         toast.success(data.message || "Plan activated successfully!");
+        // Invalidate dashboard summary query to refresh Navbar data
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.summary });
         onClose();
         // Optionally show success message or redirect
       } else {

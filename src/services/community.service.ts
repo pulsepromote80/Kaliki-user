@@ -21,6 +21,7 @@ export interface DirectMember {
   BinaryTotTeam?: number;
   PendingCredit?: string;
   SubscribeDate?: string;
+  Package?: number;
 }
 
 export interface DirectMemberResponse {

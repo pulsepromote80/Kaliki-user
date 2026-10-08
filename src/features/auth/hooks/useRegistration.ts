@@ -10,15 +10,29 @@ export function useRegistration() {
 
   return useMutation({
     mutationFn: (payload: RegistrationPayload) => authService.register(payload),
-    onSuccess: (response) => {
-      if (response.statusCode === 200) {
+    onSuccess: (response, variables) => {
+      console.log("Registration response:", response);
+
+      // Check for success based on different possible response formats
+      const isSuccess = response.statusCode === 200;
+
+      if (isSuccess) {
         toast.success(response.message || "Account created successfully!");
-        router.push("/welcome-letter");
+        console.log("Redirecting to welcome-letter...");
+
+        // Pass registration data via query params
+        const params = new URLSearchParams();
+        if (variables.email) params.set("email", variables.email);
+        if (variables.fName) params.set("firstName", variables.fName);
+        if (variables.lName) params.set("lastName", variables.lName);
+
+        router.push(`/welcome-letter?${params.toString()}`);
       } else {
         toast.error(response.message || "Registration failed. Please try again.");
       }
     },
     onError: (error: any) => {
+      console.error("Registration error:", error);
       toast.error(error?.response?.data?.message || "Registration failed. Please try again.");
     },
   });

@@ -45,7 +45,7 @@ export const primaryNav: NavItem[] = [
       { label: "Business Dashboard", href: "/ai-business-hub" },
       { label: "Direct Partners", href: "/direct-partners" },
       { label: "Level Partners", href: "/level-partners" },
-      { label: "Level Partners Tree", href: "/intelligent-partner-view" },
+      // { label: "Level Partners Tree", href: "/intelligent-partner-view" },
       { label: "Downline Partners", href: "/binary-tree" },
       { label: "Downline Tree", href: "/network-tree" },
     ],
@@ -56,7 +56,7 @@ export const primaryNav: NavItem[] = [
    
     isDropdown: true,
     dropdownItems: [
-      { label: "Income Report", href: "/transaction-history" },
+      { label: "Income Report", href: "/income-reports" },
       { label: "Wallet Manager", href: "/reports" },
     ],
   },

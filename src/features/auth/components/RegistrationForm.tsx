@@ -90,7 +90,7 @@ export function RegistrationForm() {
     setReferralName("");
     try {
       const result = await validateReferral.mutateAsync(referralId);
-      if (result.statusCode === 200) setReferralName(result.data.fullName);
+      if (result.statusCode === 200) setReferralName(result.data.FullName);
       else setReferralError(result.message || "Referral ID not found");
     } catch {
       setReferralError("Invalid referral ID");
@@ -111,7 +111,8 @@ export function RegistrationForm() {
     });
   };
 
-  const countries = countriesData?.data || [];
+  const countries = countriesData?.data|| [];
+  console.log("YTYTTY",countries)
 
   const inputBase = cn(
     "w-full pl-11 pr-4 py-3 text-sm rounded-lg bg-[#0d0d20]/80 border text-white placeholder-slate-500 outline-none transition-all duration-200",
@@ -264,7 +265,7 @@ export function RegistrationForm() {
                             </p>
                           )}
                           {referralName && !referralError && (
-                            <p className="mt-1.5 text-xs font-medium text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                            <p className="mt-1.5 text-xs font-medium text-emerald-400 flex items-center gap-1.5  px-3 py-1.5 ">
                               <FaCheckCircle className="text-[10px]" />{" "}
                               {referralName}
                             </p>
@@ -470,7 +471,7 @@ export function RegistrationForm() {
                               },
                             })}
                             maxLength={10}
-                            placeholder="9876543210"
+                            placeholder="0000000000"
                             className={cn(
                               inputBase,
                               form.formState.errors.mobile
@@ -498,7 +499,7 @@ export function RegistrationForm() {
                               form.setValue("countryId", e.target.value);
                               const country = countries.find(
                                 (c: any) =>
-                                  c.country_Id === parseInt(e.target.value)
+                                  c.Country_Id === parseInt(e.target.value)
                               );
                               if (country)
                                 form.setValue(
@@ -522,10 +523,10 @@ export function RegistrationForm() {
                             </option>
                             {countries.map((country: any) => (
                               <option
-                                key={country.country_Id}
-                                value={country.country_Id}
+                                key={country.Country_Id}
+                                value={country.Country_Id}
                               >
-                                {country.country_Name}
+                                {country.Country_Name}
                               </option>
                             ))}
                           </select>

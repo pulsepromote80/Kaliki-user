@@ -21,6 +21,7 @@ interface PersonalTeamMember {
   TeamBusiness?: number;
   ActiveTeam?: number;
   totTeam?: number;
+  Package?: number;
   CountryFlag?: string;
   CountryId?: number;
 }
@@ -211,17 +212,9 @@ const LevelPartner = () => {
                   </th>
                   <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Date</th>
                   <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
-                    License Amount
+                    Package
                   </th>
-                  <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
-                    License Purchased Date
-                  </th>
-                  <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
-                    Deploy Amount
-                  </th>
-                  <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
-                    Deploy Date
-                  </th>
+                  
 
                   <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Rank</th>
                   <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
@@ -300,24 +293,15 @@ const LevelPartner = () => {
 
                     <td className="p-2 border border-gray-200 dark:border-gray-700">
                       <span className="px-2 py-1 text-black dark:text-gray-100">
-                        {Number(node.SubscriptionAmount) > 0
-                          ? `$${Number(node.SubscriptionAmount).toFixed(2)}`
+                        {Number(node.Package) > 0
+                          ? `$${Number(node.Package).toFixed(2)}`
                           : "$0"}
                       </span>
                     </td>
 
-                    {/* API ka asli Rank */}
-                    <td className="p-2 border border-gray-200 dark:border-gray-700">
-                      <span className="px-2 py-1 text-blue-600 bg-blue-100 rounded dark:text-blue-400 dark:bg-blue-900/30">
-                        {node.SubscribeDate}
-                      </span>
-                    </td>
-                    <td className="p-2 border border-gray-200 dark:border-gray-700">
-                      <span className="px-2 py-1 text-black dark:text-gray-100">$0</span>
-                    </td>
-                    <td className="p-2 border border-gray-200 dark:border-gray-700">
-                      <span className="px-2 py-1 text-black whitespace-nowrap dark:text-gray-100">{node.DeployDate}</span>
-                    </td>
+                   
+                    
+                   
 
 
                     <td className="p-2 border border-gray-200 dark:border-gray-700">

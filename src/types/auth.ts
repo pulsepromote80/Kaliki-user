@@ -5,7 +5,8 @@ export interface LoginCredentials {
 }
 
 export interface ForgotPasswordPayload {
-  email: string;
+  UserId: string;
+  Email: string;
 }
 
 export interface ResetPasswordPayload {
@@ -45,6 +46,6 @@ export interface ReferralData {
   message?: string;
   data: {
     urid: string;
-    fullName: string;
+    FullName: string;
   };
 }

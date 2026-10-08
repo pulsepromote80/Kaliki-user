@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/constants";
 
 type Status = string;
 type FundDirectorRecord = {
@@ -752,6 +754,7 @@ function PrimaryButton({
 }
 
 export default function FundDirectorPage() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TabId>("deposit");
   const [balances, setBalances] = useState(initialBalances);
   const [records, setRecords] = useState(initialRecords);
@@ -1457,6 +1460,8 @@ export default function FundDirectorPage() {
           ? payload.message
           : "Wallet transfer completed.",
       );
+      // Invalidate dashboard summary query to refresh Navbar data
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.summary });
       await Promise.all([loadWalletReport(), loadIncomeTransferHistory()]);
     } catch (error) {
       console.error("Could not transfer wallet income:", error);
@@ -1530,6 +1535,8 @@ export default function FundDirectorPage() {
           ? payload.message
           : "P2P transfer completed.",
       );
+      // Invalidate dashboard summary query to refresh Navbar data
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.summary });
       await Promise.all([loadWalletReport(), loadP2pHistory()]);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "P2P transfer failed.");
@@ -1571,6 +1578,8 @@ export default function FundDirectorPage() {
           ? payload.message
           : "Withdrawal request submitted.",
       );
+      // Invalidate dashboard summary query to refresh Navbar data
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.summary });
       await Promise.all([loadWalletReport(), loadWithdrawalStatement()]);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Withdrawal request failed.");

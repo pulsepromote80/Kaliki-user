@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/lib/constants';
 
 interface BoosterFeature {
   text: string;
@@ -43,6 +45,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   booster,
   userId = "",
 }) => {
+  const queryClient = useQueryClient();
   const [walletBalance, setWalletBalance] = useState(0);
   const [isLoadingWallet, setIsLoadingWallet] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
@@ -99,7 +102,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
       const data = await response.json();
 
       if (data.statusCode === 200 && data.data) {
-        setWalletBalance(data.data.IncomeWallet || 0);
+        setWalletBalance(data.data.DepositWallet || 0);
       } else {
         setWalletBalance(0);
       }
@@ -142,6 +145,8 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
 
       if (data.statusCode === 200) {
         toast.success(data.message || "Booster activated successfully!");
+        // Invalidate dashboard summary query to refresh Navbar data
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.summary });
         onClose();
       } else {
         setActivationError(data.message || "Failed to activate booster");
