@@ -39,6 +39,8 @@ export function Manage2FAForm() {
     if (!statusCheckedRef.current) {
       statusCheckedRef.current = true;
       check2FAStatus();
+      // Auto-generate QR if 2FA is not enabled
+      generateQR();
     }
   }, []);
 
@@ -52,8 +54,11 @@ export function Manage2FAForm() {
       const result = await response.json();
 
       // Check if 2FA is already enabled
-      if (result.success && result.data?.status === false && 
-          result.data.message?.toLowerCase().includes('already enabled')) {
+      const status = result.data?.Status !== undefined ? result.data.Status : result.data?.status;
+      const message = result.data?.Message || result.data?.message;
+
+      if (result.success && status === false &&
+          message?.toLowerCase().includes('already enabled')) {
         setTwoFAState(prev => ({
           ...prev,
           is2FAAlreadyEnabled: true,
@@ -110,11 +115,6 @@ export function Manage2FAForm() {
       return;
     }
 
-    if (qrGeneratedOnce) {
-      toast.error("QR already generated! Please enable 2FA or disable it to regenerate.");
-      return;
-    }
-
     qrToastShownRef.current = false;
     setLoading(true);
     setError(null);
@@ -128,7 +128,10 @@ export function Manage2FAForm() {
       const result = await response.json();
       if (result.success && result.data) {
         // Check if 2FA is already enabled
-        if (result.data.status === false && result.data.message?.toLowerCase().includes('already enabled')) {
+        const status = result.data.Status !== undefined ? result.data.Status : result.data.status;
+        const message = result.data.Message || result.data.message;
+
+        if (status === false && message?.toLowerCase().includes('already enabled')) {
           setTwoFAState(prev => ({
             ...prev,
             is2FAAlreadyEnabled: true,
@@ -143,9 +146,9 @@ export function Manage2FAForm() {
           return;
         }
 
-        const qrCode = result.data.data?.qrCode || result.data.qrCode || result.data.otpauthUrl || result.data.qr || result.data.url || null;
-        const manualKey = result.data.data?.manualKey || result.data.manualKey || result.data.secret || result.data.secretKey || null;
-        const isAlreadyGenerated = result.data.data?.isAlreadyGenerated || result.data.isAlreadyGenerated || false;
+        const qrCode = result.data.Data?.QrCode || result.data.data?.qrCode || result.data.qrCode || result.data.otpauthUrl || result.data.qr || result.data.url || null;
+        const manualKey = result.data.Data?.ManualKey || result.data.data?.manualKey || result.data.manualKey || result.data.secret || result.data.secretKey || null;
+        const isAlreadyGenerated = result.data.Data?.IsAlreadyGenerated || result.data.data?.isAlreadyGenerated || result.data.isAlreadyGenerated || false;
 
         if (qrCode && manualKey) {
           setTwoFAState(prev => ({
@@ -158,7 +161,8 @@ export function Manage2FAForm() {
           setQrGeneratedOnce(true);
           if (!qrToastShownRef.current) {
             qrToastShownRef.current = true;
-            toast.success("✅ QR generated! Scan it with Google Authenticator");
+            const msg = isAlreadyGenerated ? "✅ QR already exists! Scan it with Google Authenticator" : "✅ QR generated! Scan it with Google Authenticator";
+            toast.success(msg);
           }
         }
       } else if (result.message?.toLowerCase().includes('already enabled')) {
@@ -236,12 +240,15 @@ export function Manage2FAForm() {
       });
       const result = await response.json();
 
-      if (result.success && (result.data?.status === true || result.data?.data?.status === true)) {
+      const status = result.data?.Status !== undefined ? result.data.Status : result.data?.status;
+      const message = result.data?.Message || result.data?.message;
+
+      if (result.success && status === true) {
         toast.success("2FA enabled successfully!");
         setOtp("");
         await handleValidateCode();
       } else {
-        const errorMsg = result.message || "Failed to enable 2FA";
+        const errorMsg = message || result.message || "Failed to enable 2FA";
         toast.error(errorMsg);
       }
     } catch (error) {
@@ -254,7 +261,7 @@ export function Manage2FAForm() {
 
   const handleValidateCode = async () => {
     setIsValidating(true);
-    
+
     try {
       const response = await fetch("/api/auth/validate-2fa", {
         method: "POST",
@@ -263,14 +270,18 @@ export function Manage2FAForm() {
       });
       const result = await response.json();
 
-      if (result.success && (result.data?.status === true || result.data?.data?.status === true)) {
+      const status = result.data?.Status !== undefined ? result.data.Status : result.data?.status;
+      const message = result.data?.Message || result.data?.message;
+
+      if (result.success && status === true) {
         setTwoFAState(prev => ({
           ...prev,
           enabled: true,
           qrGenerated: false,
         }));
+        toast.success(message || "Code validated successfully");
       } else {
-        const errorMsg = result.message || "Verification failed";
+        const errorMsg = message || result.message || "Verification failed";
         toast.error(errorMsg);
       }
     } catch (error) {
@@ -415,7 +426,7 @@ export function Manage2FAForm() {
               <button
                 type="button"
                 onClick={generateQR}
-                disabled={loading || qrGeneratedOnce}
+                disabled={loading}
                 className="flex items-center justify-center w-full gap-2 px-5 py-3 font-bold text-white transition-all shadow-lg rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? (
@@ -426,7 +437,7 @@ export function Manage2FAForm() {
                 ) : (
                   <>
                     <RefreshCw className="w-4 h-4" />
-                    {qrGeneratedOnce ? "QR Already Generated" : "Generate QR"}
+                    {qrGeneratedOnce ? "Refresh QR" : "Generate QR"}
                   </>
                 )}
               </button>
