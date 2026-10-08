@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Award, Clock3, RefreshCw, Search, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { Award, Clock3, Loader2, RefreshCw, Search, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSummary";
 
 type ReportTab = "rank" | "deposit" | "performance" | "yield" | "legacy";
@@ -419,9 +419,9 @@ export function WalletManager() {
                   <tr>
                     <td
                       colSpan={columns.length + 1}
-                      className="px-4 py-10 text-center text-slate-500"
+                      className="px-4 py-10 text-center"
                     >
-                      Loading wallet report...
+                      <Loader2 className="mx-auto h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" />
                     </td>
                   </tr>
                 ) : pageRows.length === 0 ? (

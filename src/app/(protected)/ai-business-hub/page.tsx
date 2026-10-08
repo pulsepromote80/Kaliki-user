@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 // import { NftSection } from "@/app/components/NftSection";
 import { usePathname } from "next/navigation";
+import { Loader2 } from "lucide-react";
 // import { getPageName } from "@/app/utils/utils";
 
 // Import icons
@@ -200,7 +201,7 @@ export default function AIBUSINESSHUB() {
       <>
         {/* <NftSection pageName={pageName} /> */}
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-gray-500">Loading...</div>
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#F5C451]" aria-label="Loading" />
         </div>
       </>
     );
@@ -214,23 +215,23 @@ export default function AIBUSINESSHUB() {
 
         {/* Header Card */}
         <div
-          className="relative rounded-2xl overflow-hidden mb-6 shadow-[0_12px_48px_rgba(11,20,55,0.14)] dark:shadow-[0_12px_48px_rgba(0,0,0,0.4)]"
-          style={{ background: "linear-gradient(135deg,#0B1437 0%,#1A2B5E 60%,#1E3A6E 100%)" }}
+          className="relative rounded-2xl overflow-hidden mb-6 shadow-[0_12px_48px_rgba(11,16,33,0.18)] dark:shadow-[0_12px_48px_rgba(0,0,0,0.4)]"
+          style={{ background: "linear-gradient(135deg,#0B1021 0%,#17213A 58%,#302817 100%)" }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at 80% 50%, rgba(0,212,255,0.12) 0%, transparent 65%), radial-gradient(ellipse at 20% 80%, rgba(139,92,246,0.08) 0%, transparent 50%)",
+                "radial-gradient(ellipse at 80% 50%, rgba(245,196,81,0.16) 0%, transparent 65%), radial-gradient(ellipse at 20% 80%, rgba(217,146,35,0.10) 0%, transparent 50%)",
             }}
           />
           <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-8 items-start lg:items-center p-6 sm:p-8 sm:px-9">
             <div>
-              <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/45 mb-2">
+              <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#F5C451] mb-2">
                 Total Agent Deployed
               </div>
               <div className="text-[38px] sm:text-[52px] font-black text-white tracking-[-1.5px] leading-none break-all">
-                ${countedTotalInvestment.toFixed(2)}<span className="text-[#00D4FF]"> </span>
+                <span className="text-[#F5C451]">${countedTotalInvestment.toFixed(2)}</span>
               </div>
               <div className="text-[13px] text-white/50 mt-2">
                 Across all income streams · Updated just now
@@ -251,30 +252,30 @@ export default function AIBUSINESSHUB() {
               </div>
             </div>
             <div className="flex flex-row gap-3 lg:flex-col lg:items-end">
-              <div className="flex-1 lg:flex-none bg-white/[0.07] border border-white/[0.12] rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
+              <div className="flex-1 lg:flex-none bg-amber-300/[0.06] border border-amber-300/20 rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
                 <div className="text-[10px] uppercase tracking-[0.07em] text-white/70 mb-1">
                   Active Direct Members
                 </div>
                 <div className="text-[18px] sm:text-[20px] font-extrabold text-white">
                   {Math.round(countedActiveDirectMembers)}
                 </div>
-                <div className="text-[#00C896] font-semibold mt-[3px]">
+                <div className="text-[#F5C451] font-semibold mt-[3px]">
                   Business:{" "}
-                  <span className="font-semibold text-[#00C896]">
+                  <span className="font-semibold text-[#F5C451]">
                     ${countedDirectBusiness.toFixed(2)}
                   </span>
                 </div>
               </div>
-              <div className="flex-1 lg:flex-none bg-white/[0.07] border border-white/[0.12] rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
+              <div className="flex-1 lg:flex-none bg-amber-300/[0.06] border border-amber-300/20 rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
                 <div className="text-[10px] uppercase tracking-[0.07em] text-white/70 mb-1">
                   Total Downline
                 </div>
                 <div className="text-[18px] sm:text-[20px] font-extrabold text-white">
                   {Math.round(countedTeamDownline)}
                 </div>
-                <div className="text-[#00C896] font-semibold mt-[3px]">
+                <div className="text-[#F5C451] font-semibold mt-[3px]">
                   Business:{" "}
-                  <span className="font-semibold text-[#00C896]">
+                  <span className="font-semibold text-[#F5C451]">
                     ${countedTeamBusiness.toFixed(2)}
                   </span>
                 </div>

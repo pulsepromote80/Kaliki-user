@@ -36,7 +36,7 @@ export function CTA() {
         </p>
 
         {/* CTA Button */}
-        <button className="inline-flex items-center gap-2 bg-[#F5F3EE] text-black px-8 py-4 rounded-full font-medium hover:bg-white transition-colors text-base">
+        <button className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-8 py-4 rounded-full font-medium hover:bg-[#E5B33F] transition-colors text-base">
           Enroll now
           <ArrowUpRightIcon />
         </button>

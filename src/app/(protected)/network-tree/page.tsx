@@ -344,7 +344,7 @@ export default function NetworkTreeView() {
             />
           ) : (
             <div className="flex h-full items-center justify-center space-x-2">
-              <PageLoader message="Loading network tree..." />
+              <PageLoader />
             </div>
           )}
         </div>

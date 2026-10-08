@@ -21,8 +21,8 @@ export const WelcomeBanner = () => {
 
   const getInitials = (fullName: string) => {
     if (!fullName) return "";
-    const names = fullName.split(" ");
-    return names.map((name: string) => name[0]).join("");
+    const names = fullName.trim().split(/\s+/).filter(Boolean);
+    return names.map((name: string) => name[0]).join("").toUpperCase();
   };
 
   const initials = getInitials(fullName);
@@ -53,7 +53,7 @@ export const WelcomeBanner = () => {
                 <div>
                   <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Welcome back</span>
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-bold text-gray-800 dark:text-white sm:text-base">
+                    <span className="text-sm font-bold capitalize text-gray-800 dark:text-white sm:text-base">
                       {fullName || "User"}
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 font-mono border border-amber-200 dark:border-amber-700/50">

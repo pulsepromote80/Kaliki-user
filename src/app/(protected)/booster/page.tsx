@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
+import { Loader2 } from "lucide-react";
 import { toast } from 'sonner';
 
 interface BoosterFeature {
@@ -222,7 +223,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
           <div>
             <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
             <p className={`${booster.Rkprice > walletBalance ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"} text-2xl font-bold`}>
-              {isLoadingWallet ? "Loading..." : `$${walletBalance}`}
+              {isLoadingWallet ? <Loader2 className="h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" /> : `$${walletBalance}`}
             </p>
           </div>
           <div className="text-right">
@@ -250,9 +251,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
               </span>
             )}
             {isLoadingUserName && (
-              <span className="text-gray-500 dark:text-gray-400 text-sm font-medium mt-2 block">
-                Loading user name...
-              </span>
+              <Loader2 className="mt-2 h-4 w-4 animate-spin text-[#F5C451]" aria-label="Loading user name" />
             )}
           </div> */}
 
@@ -382,20 +381,15 @@ export default function BoosterPage() {
     fetchBoosters();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4">
-        <div className="text-gray-500 dark:text-gray-400">Loading boosters...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] flex items-center justify-center p-4 sm:p-8 font-sans relative transition-colors duration-300">
-      
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0f] p-4 sm:p-8 font-sans relative transition-colors duration-300">
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full mx-auto ">
-        {boosters.map((booster) => (
+        {isLoading ? (
+          <div className="col-span-full flex justify-center py-16">
+            <Loader2 className="h-10 w-10 animate-spin text-[#F5C451]" aria-label="Loading" />
+          </div>
+        ) : boosters.map((booster) => (
           <div
             key={booster.ProductId}
             className={`relative flex flex-col p-8 rounded-3xl bg-white dark:bg-[#11111a] border ${booster.theme.border} ${booster.theme.glow} transition-all duration-300 hover:-translate-y-2`}

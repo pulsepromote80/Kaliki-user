@@ -11,6 +11,7 @@ import {
   Clock3,
   Copy,
   Landmark,
+  Loader2,
   QrCode,
   Search,
   Send,
@@ -307,7 +308,7 @@ function SectionHeading({
 }) {
   return (
     <div className="mb-5 flex items-start gap-3">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-400/10 dark:text-blue-300">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-50 text-amber-700 dark:bg-amber-400/10 dark:text-amber-300">
         <Icon className="h-5 w-5" />
       </span>
       <div>
@@ -397,10 +398,10 @@ function RecordsTable({
 
   return (
     <section className="relative mt-2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/90 shadow-xl dark:border-slate-700/60 dark:bg-slate-900/75 sm:rounded-3xl">
-      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500" />
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-amber-500 via-yellow-500 to-yellow-500" />
       <div className="p-4 sm:p-6 md:p-8">
         <h3 className="mb-5 flex items-center gap-3 text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
-          <span className="h-7 w-1 rounded-full bg-blue-500" />
+          <span className="h-7 w-1 rounded-full bg-amber-500" />
           {title}
         </h3>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
@@ -412,7 +413,7 @@ function RecordsTable({
                 setPageSize(Number(event.target.value));
                 setPageIndex(0);
               }}
-              className="rounded-xl border-2 border-slate-200 bg-white p-1.5 text-sm font-normal text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              className="rounded-xl border-2 border-slate-200 bg-white p-1.5 text-sm font-normal text-slate-900 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
               {[10, 25, 50, 100].map((size) => (
                 <option key={size} value={size}>
@@ -431,7 +432,7 @@ function RecordsTable({
                 setPageIndex(0);
               }}
               placeholder="Search records..."
-              className="w-48 rounded-xl border-2 border-slate-200 bg-white px-3 py-2 text-sm font-normal outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 sm:w-56"
+              className="w-48 rounded-xl border-2 border-slate-200 bg-white px-3 py-2 text-sm font-normal outline-none transition placeholder:text-slate-400 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 sm:w-56"
             />
           </label>
         </div>
@@ -439,7 +440,7 @@ function RecordsTable({
           <table
             className={`w-full ${withdrawalStatement ? "min-w-[1200px]" : p2pTransfer ? "min-w-[800px]" : incomeTransfer ? "min-w-[600px]" : "min-w-[900px]"} text-center text-xs sm:text-sm`}
           >
-            <thead className="border-b border-slate-200 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 text-slate-600 dark:border-slate-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-slate-400">
+            <thead className="border-b border-slate-200 bg-gradient-to-r from-amber-50/80 to-yellow-50/80 text-slate-600 dark:border-slate-700 dark:from-amber-900/20 dark:to-yellow-900/20 dark:text-slate-400">
               <tr>
                 {(incomeTransfer
                   ? ["#", "Date", "Credit", "Debit", "Remark"]
@@ -487,7 +488,7 @@ function RecordsTable({
               {pageRecords.map((record, index) => (
                 <tr
                   key={record.id}
-                  className={`border-b border-slate-100 text-slate-700 transition-colors hover:bg-blue-50/50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? "bg-white/50 dark:bg-slate-800/30" : ""
+                  className={`border-b border-slate-100 text-slate-700 transition-colors hover:bg-amber-50/50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-amber-900/10 ${index % 2 === 0 ? "bg-white/50 dark:bg-slate-800/30" : ""
                     }`}
                 >
                   <td className="p-3">{currentPage * pageSize + index + 1}</td>
@@ -522,7 +523,7 @@ function RecordsTable({
                   ) : withdrawalStatement ? (
                     <>
                       <td className="p-3">
-                        <span className="rounded-full border border-blue-200 bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300">
+                        <span className="rounded-full border border-amber-200 bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 dark:border-amber-700/50 dark:bg-amber-900/30 dark:text-amber-300">
                           {record.walletType || "General"}
                         </span>
                       </td>
@@ -557,7 +558,7 @@ function RecordsTable({
                               onClick={() => void copyReference(record.reference)}
                               title="Copy transaction reference"
                               aria-label="Copy transaction reference"
-                              className="shrink-0 text-slate-400 transition-colors hover:text-blue-600"
+                              className="shrink-0 text-slate-400 transition-colors hover:text-amber-600"
                             >
                               <Copy className="h-3.5 w-3.5" />
                             </button>
@@ -584,7 +585,7 @@ function RecordsTable({
                             type="button"
                             onClick={() => void copyReference(record.walletAddress ?? "")}
                             title="Copy wallet address"
-                            className="inline-flex max-w-40 items-center gap-1 text-xs text-slate-600 hover:text-blue-600 dark:text-slate-300"
+                            className="inline-flex max-w-40 items-center gap-1 text-xs text-slate-600 hover:text-amber-600 dark:text-slate-300"
                           >
                             <span className="truncate">{record.walletAddress}</span>
                             <Copy className="h-3.5 w-3.5 shrink-0" />
@@ -604,7 +605,7 @@ function RecordsTable({
                               onClick={() => void copyReference(record.hash ?? "")}
                               title="Copy transaction hash"
                               aria-label="Copy transaction hash"
-                              className="text-slate-400 hover:text-blue-600"
+                              className="text-slate-400 hover:text-amber-600"
                             >
                               <Copy className="h-3.5 w-3.5" />
                             </button>
@@ -621,9 +622,9 @@ function RecordsTable({
                 <tr>
                   <td
                     colSpan={incomeTransfer ? 5 : p2pTransfer ? 6 : withdrawalStatement ? 9 : 7}
-                    className="p-8 text-center font-bold text-slate-700 dark:text-slate-300"
+                    className="p-8 text-center"
                   >
-                    Loading transaction history...
+                    <Loader2 className="mx-auto h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" />
                   </td>
                 </tr>
               )}
@@ -681,8 +682,8 @@ function RecordsTable({
                   (index < 2 && currentPage === 0) || (index > 2 && currentPage >= pageCount - 1)
                 }
                 className={`rounded-lg px-3 py-1.5 text-sm transition disabled:cursor-not-allowed disabled:opacity-40 ${item.current
-                  ? "font-bold text-blue-600"
-                  : "text-slate-600 hover:bg-blue-100 dark:text-slate-400 dark:hover:bg-blue-900/30"
+                  ? "font-bold text-amber-600"
+                  : "text-slate-600 hover:bg-amber-100 dark:text-slate-400 dark:hover:bg-amber-900/30"
                   }`}
               >
                 {item.label}
@@ -722,7 +723,7 @@ function TextField({
         type={type}
         min={min}
         required={required}
-        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 font-normal outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 dark:border-slate-700 dark:bg-slate-950"
+        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 font-normal outline-none transition placeholder:text-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/15 dark:border-slate-700 dark:bg-slate-950"
       />
     </label>
   );
@@ -733,18 +734,20 @@ function PrimaryButton({
   disabled = false,
   type = "submit",
   onClick,
+  className = "",
 }: {
   children: ReactNode;
   disabled?: boolean;
   type?: "button" | "submit";
   onClick?: () => void;
+  className?: string;
 }) {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#e98d09] to-[#f3a526] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#e98d09]/40 disabled:cursor-not-allowed disabled:opacity-50"
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#e98d09] to-[#f3a526] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#e98d09]/40 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       {children}
     </button>
@@ -753,10 +756,19 @@ function PrimaryButton({
 
 export default function FundDirectorPage() {
   const [activeTab, setActiveTab] = useState<TabId>("deposit");
+
+  useEffect(() => {
+    const requestedTab = new URLSearchParams(window.location.search).get("tab");
+    if (requestedTab === "income" || requestedTab === "withdrawal") {
+      setActiveTab(requestedTab);
+    }
+  }, []);
+
   const [balances, setBalances] = useState(initialBalances);
   const [records, setRecords] = useState(initialRecords);
   const [walletAddress, setWalletAddress] = useState("");
   const [selfBalances, setSelfBalances] = useState({ usdt: 0, velt: 0 });
+  const [selfDepositLoading, setSelfDepositLoading] = useState(true);
   const [fiatCurrency, setFiatCurrency] = useState<FiatCurrency | "">("");
   const [fiatStep, setFiatStep] = useState<1 | 2 | 3>(1);
   const [isSubmittingSelfDeposit, setIsSubmittingSelfDeposit] = useState(false);
@@ -982,13 +994,15 @@ export default function FundDirectorPage() {
   }, []);
 
   const loadSelfDepositData = useCallback(async () => {
-    const [usdtResult, veltResult, historyResult] = await Promise.allSettled([
-      runFundDirectorAction("getUsdtBalance"),
-      runFundDirectorAction("getVeltBalance"),
-      runFundDirectorAction("getSelfDepositHistory"),
-    ]);
+    setSelfDepositLoading(true);
+    try {
+      const [usdtResult, veltResult, historyResult] = await Promise.allSettled([
+        runFundDirectorAction("getUsdtBalance"),
+        runFundDirectorAction("getVeltBalance"),
+        runFundDirectorAction("getSelfDepositHistory"),
+      ]);
 
-    if (usdtResult.status === "fulfilled") {
+      if (usdtResult.status === "fulfilled") {
       const usdtPayload = usdtResult.value;
       const depositAddress = getNestedValue(
         usdtPayload,
@@ -1002,25 +1016,25 @@ export default function FundDirectorPage() {
         ...current,
         usdt: Number(getNestedValue(usdtPayload, "USDTBalance", "usdtBalance")) || 0,
       }));
-    } else {
+      } else {
       console.error("Could not load USDT self deposit details:", usdtResult.reason);
       toast.error(
         usdtResult.reason instanceof Error
           ? usdtResult.reason.message
           : "Could not load USDT deposit wallet details.",
       );
-    }
+      }
 
-    if (veltResult.status === "fulfilled") {
+      if (veltResult.status === "fulfilled") {
       setSelfBalances((current) => ({
         ...current,
         velt: Number(getNestedValue(veltResult.value, "VELTBalance", "velttBalance")) || 0,
       }));
-    } else {
+      } else {
       console.error("Could not load VELT self deposit balance:", veltResult.reason);
-    }
+      }
 
-    if (historyResult.status === "fulfilled") {
+      if (historyResult.status === "fulfilled") {
       try {
         const rows = getFundRequestRows(historyResult.value);
         const history = rows.map((item, index) => ({
@@ -1037,8 +1051,11 @@ export default function FundDirectorPage() {
       } catch (error) {
         console.error("Could not parse self deposit history:", error);
       }
-    } else {
+      } else {
       console.error("Could not load self deposit history:", historyResult.reason);
+      }
+    } finally {
+      setSelfDepositLoading(false);
     }
   }, []);
 
@@ -1578,16 +1595,17 @@ export default function FundDirectorPage() {
   };
 
   const sendTransactionOtp = async () => {
-    const action = activeTab === "income" ? "sendIncomeTransferOtp" : "sendWithdrawalOtp";
+    if (activeTab === "withdrawal") {
+      // Temporarily disabled: await runFundDirectorAction("sendWithdrawalOtp");
+      setWithdrawalEmailOtpSent(true);
+      setWithdrawalEmailOtp("");
+      return;
+    }
+
     try {
-      const payload = await runFundDirectorAction(action);
-      if (activeTab === "withdrawal") {
-        setWithdrawalEmailOtpSent(true);
-        setWithdrawalEmailOtp("");
-      } else {
-        setOtpSent(true);
-        setOtp("");
-      }
+      const payload = await runFundDirectorAction("sendIncomeTransferOtp");
+      setOtpSent(true);
+      setOtp("");
       toast.success(
         isRecord(payload) && typeof payload.message === "string"
           ? payload.message
@@ -1643,7 +1661,7 @@ export default function FundDirectorPage() {
   return (
     <div className="mx-auto w-full space-y-5 pb-8 sm:space-y-6">
       <Surface className="relative overflow-hidden rounded-2xl bg-white/80 shadow-lg backdrop-blur-xl dark:bg-slate-800/80 sm:rounded-3xl">
-        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-blue-500 to-violet-500" />
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-amber-500 via-amber-500 to-yellow-500" />
         <div className="relative p-2 sm:p-3 md:p-4">
           <div
             role="tablist"
@@ -1704,7 +1722,7 @@ export default function FundDirectorPage() {
               <Surface className="overflow-hidden p-5 sm:p-6 md:p-8">
                 <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                   <h2 className="flex items-center gap-3 text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
-                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-amber-500 to-yellow-600" />
                     Self Deposit
                   </h2>
                   <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
@@ -1713,9 +1731,14 @@ export default function FundDirectorPage() {
                   </div>
                 </div>
 
+                {selfDepositLoading ? (
+                  <div className="flex min-h-[24rem] items-center justify-center">
+                    <Loader2 className="h-10 w-10 animate-spin text-[#F5C451]" aria-label="Loading self deposit data" />
+                  </div>
+                ) : (
                 <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
                   <div className="flex flex-col items-center rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-950/40 sm:p-6">
-                    <div className="grid aspect-square w-full max-w-[272px] place-items-center rounded-2xl border border-blue-200 bg-white p-3 shadow-md ring-4 ring-blue-50 dark:border-slate-600 dark:bg-white dark:ring-blue-950/40">
+                    <div className="grid aspect-square w-full max-w-[272px] place-items-center rounded-2xl border border-amber-200 bg-white p-3 shadow-md ring-4 ring-amber-50 dark:border-slate-600 dark:bg-white dark:ring-amber-950/40">
                       {walletAddress ? (
                         <QRCodeSVG
                           value={walletAddress}
@@ -1740,24 +1763,13 @@ export default function FundDirectorPage() {
                       Scan with your wallet app to deposit using the BEP20 network.
                     </p>
 
-                    <div className="mt-6 w-full gap-3">
-                      {[
-                        { label: "USDT Balance", value: selfBalances.usdt },
-                        // { label: "VELT Token", value: selfBalances.velt },
-                      ].map((item) => (
-                        <div
-                          key={item.label}
-                          className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
-                        >
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{item.label}</p>
-                          <p className="mt-1 font-semibold text-slate-900 dark:text-white">
-                            {money(item.value)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-4  w-full gap-3">
+                    <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+                      <div className="min-w-0 flex-none rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">USDT Balance</p>
+                        <p className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
+                          {money(selfBalances.usdt)}
+                        </p>
+                      </div>
                       <PrimaryButton
                         type="button"
                         disabled={isSubmittingSelfDeposit}
@@ -1801,7 +1813,7 @@ export default function FundDirectorPage() {
                           onClick={copyAddress}
                           disabled={!walletAddress}
                           aria-label="Copy wallet address"
-                          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-300 dark:hover:bg-blue-900/30"
+                          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-300 dark:hover:bg-amber-900/30"
                         >
                           <Copy className="h-4 w-4" />
                           Copy
@@ -1822,8 +1834,11 @@ export default function FundDirectorPage() {
                     </div>
                   </div>
                 </div>
+                )}
               </Surface>
-              <RecordsTable records={records.deposit} title="Fund Deposit Records" />
+              {!selfDepositLoading && (
+                <RecordsTable records={records.deposit} title="Fund Deposit Records" />
+              )}
             </div>
           )}
 
@@ -1856,7 +1871,7 @@ export default function FundDirectorPage() {
                           setFiatCurrency(mode.value);
                           setFiatStep(2);
                         }}
-                        className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-blue-500 hover:bg-blue-50/60 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-blue-900/20"
+                        className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-amber-500 hover:bg-amber-50/60 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-amber-900/20"
                       >
                         <span className="text-3xl" aria-hidden="true">
                           {mode.flag}
@@ -1874,12 +1889,12 @@ export default function FundDirectorPage() {
                   </div>
                 </Surface>
               ) : fiatCurrency && fiatStep === 2 ? (
-                <Surface className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 p-5 shadow-xl dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/20 sm:p-8 lg:p-10">
+                <Surface className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-white to-amber-50/50 p-5 shadow-xl dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/20 sm:p-8 lg:p-10">
                   <div className="grid items-start gap-8 md:grid-cols-2 md:gap-12">
                     <div className="mx-auto w-full max-w-sm rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-5 shadow-xl dark:border-slate-700 dark:from-slate-800 dark:to-slate-700">
                       <div className="space-y-3.5 text-xs text-slate-600 dark:text-slate-300">
-                        <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 dark:border-blue-800/40 dark:bg-blue-900/20">
-                          <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                        <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 dark:border-amber-800/40 dark:bg-amber-900/20">
+                          <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                             🏦 Bank
                           </p>
                           <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -1911,7 +1926,7 @@ export default function FundDirectorPage() {
                                 void copyFiatValue(fiatDepositDetails[fiatCurrency].accountNumber)
                               }
                               aria-label="Copy account number"
-                              className="rounded-lg p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                              className="rounded-lg p-2 text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/30"
                             >
                               <Copy className="h-4 w-4" />
                             </button>
@@ -1950,8 +1965,8 @@ export default function FundDirectorPage() {
                         <p className="pb-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
                           Selected Payment Mode
                         </p>
-                        <div className="rounded-xl border border-blue-200 bg-blue-50 p-2.5 dark:border-blue-800/50 dark:bg-blue-900/20">
-                          <span className="rounded-lg bg-blue-100 px-3 py-1 text-sm font-bold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-2.5 dark:border-amber-800/50 dark:bg-amber-900/20">
+                          <span className="rounded-lg bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
                             {fiatCurrency}
                           </span>
                         </div>
@@ -1985,7 +2000,7 @@ export default function FundDirectorPage() {
                                   : fiatDepositDetails[fiatCurrency].accountNumber,
                               )
                             }
-                            className="rounded-lg bg-blue-100 px-4 py-1.5 text-xs font-bold text-blue-600 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-400"
+                            className="rounded-lg bg-amber-100 px-4 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-400"
                           >
                             Copy
                           </button>
@@ -2038,7 +2053,7 @@ export default function FundDirectorPage() {
                         <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
                           Selected Currency
                         </p>
-                        <span className="inline-block rounded-xl bg-blue-100 px-4 py-1.5 font-bold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                        <span className="inline-block rounded-xl bg-amber-100 px-4 py-1.5 font-bold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
                           {fiatCurrency}
                         </span>
                       </div>
@@ -2073,8 +2088,8 @@ export default function FundDirectorPage() {
                       You can find the transaction reference number in your wallet&apos;s
                       transaction history.
                     </p>
-                    <div className="space-y-2 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm dark:border-blue-800/30 dark:bg-blue-900/10">
-                      <p className="font-bold text-blue-700 dark:text-blue-300">📋 Next Steps:</p>
+                    <div className="space-y-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm dark:border-amber-800/30 dark:bg-amber-900/10">
+                      <p className="font-bold text-amber-700 dark:text-amber-300">📋 Next Steps:</p>
                       <ul className="space-y-1.5 text-slate-600 dark:text-slate-400">
                         <li>• We will verify your transaction</li>
                         <li>• Your funds will be credited within 1–24 hours</li>
@@ -2104,18 +2119,18 @@ export default function FundDirectorPage() {
               <Surface className="p-5 sm:p-6 md:p-8">
                 <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                   <h2 className="flex items-center gap-3 text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
-                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-amber-500 to-yellow-600" />
                     Transfer To Deposit Wallet
                   </h2>
                   {!otpSent && (
                     <label className="flex w-full items-center gap-3 text-sm font-medium text-slate-700 dark:text-slate-300 sm:w-auto">
-                      <Wallet className="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
+                      <Wallet className="h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
                       <select
                         value={incomeWallet}
                         onChange={(event) =>
                           setIncomeWallet(event.target.value as "performance" | "yield")
                         }
-                        className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
+                        className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
                       >
                         <option value="performance">Income Wallet</option>
                         <option value="yield">Rent Wallet</option>
@@ -2124,7 +2139,7 @@ export default function FundDirectorPage() {
                   )}
                 </div>
 
-                <div className="mb-6 flex flex-col items-start justify-between gap-3 rounded-xl border border-blue-100/70 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 p-4 dark:border-blue-800/30 dark:from-blue-900/10 dark:to-indigo-900/10 sm:flex-row sm:items-center">
+                <div className="mb-6 flex flex-col items-start justify-between gap-3 rounded-xl border border-amber-100/70 bg-gradient-to-r from-amber-50/70 to-yellow-50/70 p-4 dark:border-amber-800/30 dark:from-amber-900/10 dark:to-yellow-900/10 sm:flex-row sm:items-center">
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     {otpSent
                       ? "Transfer confirmation"
@@ -2132,7 +2147,7 @@ export default function FundDirectorPage() {
                   </p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Balance:{" "}
-                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
                       {money(otpSent ? balances.deposit : balances[incomeWallet])}
                     </span>
                   </p>
@@ -2179,7 +2194,7 @@ export default function FundDirectorPage() {
                           maxLength={6}
                           placeholder="Enter 6-digit OTP"
                           required
-                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         />
                       </label>
                       <div className="flex flex-wrap gap-3">
@@ -2218,12 +2233,12 @@ export default function FundDirectorPage() {
               <Surface className="p-5 sm:p-6 md:p-8">
                 <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                   <h2 className="flex items-center gap-3 text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
-                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-amber-500 to-yellow-600" />
                     Transfer To Deposit Wallet
                   </h2>
-                  <div className="rounded-xl border border-blue-100/70 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-blue-800/30 dark:from-blue-900/10 dark:to-indigo-900/10 dark:text-slate-300">
+                  <div className="rounded-xl border border-amber-100/70 bg-gradient-to-r from-amber-50/70 to-yellow-50/70 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-amber-800/30 dark:from-amber-900/10 dark:to-yellow-900/10 dark:text-slate-300">
                     Balance:{" "}
-                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
                       {money(balances.deposit)}
                     </span>
                   </div>
@@ -2246,7 +2261,7 @@ export default function FundDirectorPage() {
                               placeholder="Enter username"
                               autoComplete="username"
                               required
-                              className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                              className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                             />
                           </div>
                           {recipientLookupState === "loading" && (
@@ -2313,7 +2328,7 @@ export default function FundDirectorPage() {
                           maxLength={6}
                           placeholder="Enter 6-digit OTP"
                           required
-                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         />
                         <span className="block text-xs font-normal text-slate-500 dark:text-slate-400">
                           Enter the 6-digit OTP sent to your registered email to confirm this
@@ -2355,7 +2370,7 @@ export default function FundDirectorPage() {
               <Surface className="p-5 sm:p-6 md:p-8">
                 <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                   <h2 className="flex items-center gap-3 text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
-                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+                    <span className="h-6 w-1 rounded-full bg-gradient-to-b from-amber-500 to-yellow-600" />
                     Withdrawal Request
                   </h2>
                   <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
@@ -2364,15 +2379,15 @@ export default function FundDirectorPage() {
                   </div>
                 </div>
 
-                <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-blue-100/70 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 p-4 dark:border-blue-800/30 dark:from-blue-900/10 dark:to-indigo-900/10 sm:flex-row sm:items-center">
+                <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-amber-100/70 bg-gradient-to-r from-amber-50/70 to-yellow-50/70 p-4 dark:border-amber-800/30 dark:from-amber-900/10 dark:to-yellow-900/10 sm:flex-row sm:items-center">
                   <label className="flex w-full items-center gap-3 text-sm font-medium text-slate-700 dark:text-slate-300 sm:w-auto">
-                    <Wallet className="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <Wallet className="h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
                     <select
                       value={withdrawWallet}
                       onChange={(event) =>
                         setWithdrawWallet(event.target.value as "performance" | "yield")
                       }
-                      className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
+                      className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
                     >
                       <option value="performance">Performance Wallet</option>
                       <option value="yield">Yield Wallet</option>
@@ -2380,7 +2395,7 @@ export default function FundDirectorPage() {
                   </label>
                   <div className="whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Balance:{" "}
-                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
                       {money(balances[withdrawWallet])}
                     </span>
                   </div>
@@ -2458,7 +2473,7 @@ export default function FundDirectorPage() {
                           maxLength={6}
                           disabled={checkingTwoFactor || validatingTwoFactor || twoFactorVerified}
                           placeholder="Enter 6-digit authenticator code"
-                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:opacity-70 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 disabled:opacity-70 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         />
                         {!twoFactorVerified && (
                           <PrimaryButton
@@ -2503,22 +2518,24 @@ export default function FundDirectorPage() {
                       </div>
                       <PrimaryButton type="button" onClick={sendTransactionOtp}>
                         <ShieldCheck className="h-4 w-4" />
-                        {withdrawalEmailOtpSent ? "Verification code sent" : "Send email code"}
+                        {withdrawalEmailOtpSent ? "Email code ready" : "Send email code"}
                       </PrimaryButton>
-                      <label className="block space-y-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Email verification code
-                        <input
-                          value={withdrawalEmailOtp}
-                          onChange={(event) =>
-                            setWithdrawalEmailOtp(event.target.value.replace(/\D/g, "").slice(0, 6))
-                          }
-                          inputMode="numeric"
-                          autoComplete="one-time-code"
-                          maxLength={6}
-                          placeholder="Enter 6-digit email code"
-                          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                        />
-                      </label>
+                      {withdrawalEmailOtpSent && (
+                        <label className="block space-y-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">
+                          Email verification code
+                          <input
+                            value={withdrawalEmailOtp}
+                            onChange={(event) =>
+                              setWithdrawalEmailOtp(event.target.value.replace(/\D/g, "").slice(0, 6))
+                            }
+                            inputMode="numeric"
+                            autoComplete="one-time-code"
+                            maxLength={6}
+                            placeholder="Enter 6-digit email code"
+                            className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[6px] outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                          />
+                        </label>
+                      )}
                     </div>
                   )}
 

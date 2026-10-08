@@ -26,9 +26,9 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full text-white transition-all duration-300 ${isScrolled
-          ? "bg-black/60 backdrop-blur-md border-b border-white/10 shadow-lg"
-          : "bg-gradient-to-b from-black/70 via-black/30 to-transparent border-b border-transparent"
+      className={`landing-navbar fixed top-0 left-0 right-0 z-50 w-full text-white transition-all duration-300 ${isScrolled
+        ? "bg-black/60 backdrop-blur-md border-b border-white/10 shadow-lg"
+        : "bg-gradient-to-b from-black/70 via-black/30 to-transparent border-b border-transparent"
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-16 h-24 flex items-center justify-between">
@@ -50,65 +50,67 @@ export function Navbar() {
 
           {/* 1. Company Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#2F6FFF] transition-colors">
+            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#F5C451] transition-colors">
               Company
               <ChevronDownIcon className="group-hover:rotate-180 transition-transform duration-200" />
             </button>
             <div className="absolute left-2 top-[84px] bg-white border border-black/[0.08] rounded-xl shadow-xl py-2 min-w-[200px] hidden group-hover:block">
-              <Link href="#about" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">About Kalkii</Link>
-              <Link href="#why" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Why Kalkii</Link>
-              <Link href="#mentors" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Mentors</Link>
-              <Link href="#careers" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Careers</Link>
-              <Link href="#contact" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Contact</Link>
+              <Link href="#about" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">About Kalkii</Link>
+              <Link href="#why" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Why Kalkii</Link>
+              <Link href="#mentors" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Mentors</Link>
+              <Link href="#careers" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Careers</Link>
+              <Link href="#contact" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Contact</Link>
             </div>
           </div>
 
           {/* 2. Curriculum Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#2F6FFF] transition-colors">
+            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#F5C451] transition-colors">
               Curriculum
               <ChevronDownIcon className="group-hover:rotate-180 transition-transform duration-200" />
             </button>
             <div className="absolute left-2 top-[84px] bg-white border border-black/[0.08] rounded-xl shadow-xl py-2 min-w-[220px] hidden group-hover:block">
-              <Link href="#phase-01" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Forex Foundations</Link>
-              <Link href="#phase-02" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Technical Analysis</Link>
-              <Link href="#phase-03" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Macro & Fundamentals</Link>
-              <Link href="#phase-04" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Risk & Position Sizing</Link>
-              <Link href="#phase-05" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Trading Psychology</Link>
-              <Link href="#phase-06" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Applied Practice Lab</Link>
+              <Link href="#phase-01" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Forex Foundations</Link>
+              <Link href="#phase-02" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Technical Analysis</Link>
+              <Link href="#phase-03" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Macro & Fundamentals</Link>
+              <Link href="#phase-04" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Risk & Position Sizing</Link>
+              <Link href="#phase-05" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Trading Psychology</Link>
+              <Link href="#phase-06" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Applied Practice Lab</Link>
             </div>
           </div>
 
           {/* 3. Markets Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#2F6FFF] transition-colors">
+            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#F5C451] transition-colors">
               Markets
               <ChevronDownIcon className="group-hover:rotate-180 transition-transform duration-200" />
             </button>
             <div className="absolute left-2 top-[84px] bg-white border border-black/[0.08] rounded-xl shadow-xl py-2 min-w-[200px] hidden group-hover:block">
-              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Majors</Link>
-              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Minors & Exotics</Link>
-              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Gold & Commodities</Link>
+              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Majors</Link>
+              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Minors & Exotics</Link>
+              <Link href="#markets" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Gold & Commodities</Link>
             </div>
           </div>
 
           {/* 4. Learn Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#2F6FFF] transition-colors">
+            <button className="flex items-center gap-1 px-4 py-8 text-white group-hover:text-[#F5C451] transition-colors">
               Learn
               <ChevronDownIcon className="group-hover:rotate-180 transition-transform duration-200" />
             </button>
             <div className="absolute left-2 top-[84px] bg-white border border-black/[0.08] rounded-xl shadow-xl py-2 min-w-[200px] hidden group-hover:block">
-              <Link href="#faq" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">FAQs</Link>
-              <Link href="#curriculum" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">Curriculum guide</Link>
-              <Link href="#about" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#2F6FFF]/[0.06] hover:text-[#2F6FFF]">About Kalkii</Link>
+              <Link href="#faq" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">FAQs</Link>
+              <Link href="#curriculum" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">Curriculum guide</Link>
+              <Link href="#about" className="block px-4 py-2.5 text-sm text-[#0B1440]/70 hover:bg-[#F5C451]/[0.06] hover:text-[#F5C451]">About Kalkii</Link>
             </div>
           </div>
 
           {/* Simple Links */}
-          <Link href="#reviews" className="px-4 py-8 text-white hover:text-[#2F6FFF] transition-colors">Reviews</Link>
-          <Link href="#faq" className="px-4 py-8 text-white hover:text-[#2F6FFF] transition-colors">FAQ</Link>
-          <Link href="#contact" className="px-4 py-8 text-white hover:text-[#2F6FFF] transition-colors">Contact</Link>
+          <Link href="#reviews" className="px-4 py-8 text-white hover:text-[#F5C451] transition-colors">Reviews</Link>
+          <Link href="#faq" className="px-4 py-8 text-white hover:text-[#F5C451] transition-colors">FAQ</Link>
+          <Link href="#contact" className="px-4 py-8 text-white hover:text-[#F5C451] transition-colors">Contact</Link>
+          <Link href="/login" className="rounded-lg bg-[#F5C451] px-4 py-2.5 text-[#0B1021] transition-colors hover:bg-[#E5B33F]">Sign In</Link>
+
         </nav>
 
 
@@ -159,7 +161,7 @@ export function Navbar() {
                     <button
                       type="button"
                       onClick={() => toggleMobileSubmenu("company")}
-                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#2F6FFF]"
+                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#F5C451]"
                     >
                       Company
                       <ChevronDown
@@ -169,11 +171,11 @@ export function Navbar() {
                     </button>
                     {openMobileSubmenu === "company" && (
                       <div className="flex flex-col pb-2 pl-4">
-                        <Link href="#about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">About Kalkii</Link>
-                        <Link href="#why" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Why Kalkii</Link>
-                        <Link href="#mentors" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Mentors</Link>
-                        <Link href="#careers" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Careers</Link>
-                        <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Contact</Link>
+                        <Link href="#about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">About Kalkii</Link>
+                        <Link href="#why" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Why Kalkii</Link>
+                        <Link href="#mentors" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Mentors</Link>
+                        <Link href="#careers" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Careers</Link>
+                        <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Contact</Link>
                       </div>
                     )}
                   </div>
@@ -183,7 +185,7 @@ export function Navbar() {
                     <button
                       type="button"
                       onClick={() => toggleMobileSubmenu("curriculum")}
-                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#2F6FFF]"
+                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#F5C451]"
                     >
                       Curriculum
                       <ChevronDown
@@ -193,12 +195,12 @@ export function Navbar() {
                     </button>
                     {openMobileSubmenu === "curriculum" && (
                       <div className="flex flex-col pb-2 pl-4">
-                        <Link href="#phase-01" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Forex Foundations</Link>
-                        <Link href="#phase-02" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Technical Analysis</Link>
-                        <Link href="#phase-03" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Macro & Fundamentals</Link>
-                        <Link href="#phase-04" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Risk & Position Sizing</Link>
-                        <Link href="#phase-05" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Trading Psychology</Link>
-                        <Link href="#phase-06" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Applied Practice Lab</Link>
+                        <Link href="#phase-01" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Forex Foundations</Link>
+                        <Link href="#phase-02" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Technical Analysis</Link>
+                        <Link href="#phase-03" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Macro & Fundamentals</Link>
+                        <Link href="#phase-04" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Risk & Position Sizing</Link>
+                        <Link href="#phase-05" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Trading Psychology</Link>
+                        <Link href="#phase-06" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Applied Practice Lab</Link>
                       </div>
                     )}
                   </div>
@@ -208,7 +210,7 @@ export function Navbar() {
                     <button
                       type="button"
                       onClick={() => toggleMobileSubmenu("markets")}
-                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#2F6FFF]"
+                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#F5C451]"
                     >
                       Markets
                       <ChevronDown
@@ -218,9 +220,9 @@ export function Navbar() {
                     </button>
                     {openMobileSubmenu === "markets" && (
                       <div className="flex flex-col pb-2 pl-4">
-                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Majors</Link>
-                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Minors & Exotics</Link>
-                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Gold & Commodities</Link>
+                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Majors</Link>
+                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Minors & Exotics</Link>
+                        <Link href="#markets" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Gold & Commodities</Link>
                       </div>
                     )}
                   </div>
@@ -230,7 +232,7 @@ export function Navbar() {
                     <button
                       type="button"
                       onClick={() => toggleMobileSubmenu("learn")}
-                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#2F6FFF]"
+                      className="flex w-full items-center justify-between py-3.5 text-left transition-colors hover:text-[#F5C451]"
                     >
                       Learn
                       <ChevronDown
@@ -240,9 +242,9 @@ export function Navbar() {
                     </button>
                     {openMobileSubmenu === "learn" && (
                       <div className="flex flex-col pb-2 pl-4">
-                        <Link href="#faq" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">FAQs</Link>
-                        <Link href="#curriculum" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">Curriculum guide</Link>
-                        <Link href="#about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#2F6FFF]">About Kalkii</Link>
+                        <Link href="#faq" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">FAQs</Link>
+                        <Link href="#curriculum" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">Curriculum guide</Link>
+                        <Link href="#about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm text-[#0B1440]/70 hover:text-[#F5C451]">About Kalkii</Link>
                       </div>
                     )}
                   </div>
@@ -251,23 +253,37 @@ export function Navbar() {
                   <Link
                     href="#reviews"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#2F6FFF]"
+                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#F5C451]"
                   >
                     Reviews
                   </Link>
                   <Link
                     href="#faq"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#2F6FFF]"
+                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#F5C451]"
                   >
                     FAQ
                   </Link>
                   <Link
                     href="#contact"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="py-3.5 transition-colors hover:text-[#2F6FFF]"
+                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#F5C451]"
                   >
                     Contact
+                  </Link>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#F5C451]"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="my-3 rounded-lg bg-[#2F6FFF] px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-[#2459D6]"
+                  >
+                    Register
                   </Link>
 
                 </div>

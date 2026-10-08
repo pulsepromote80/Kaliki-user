@@ -23,7 +23,7 @@ export function Hero() {
           {/* Left Column: Text Content */}
           <div className="relative z-10">
             {/* Tagline */}
-            <p className="text-xs tracking-[0.2em] uppercase text-[#2F6FFF] mb-6 flex items-center gap-2 font-semibold">
+            <p className="text-xs tracking-[0.2em] uppercase text-[#F5C451] mb-6 flex items-center gap-2 font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-[#1FC97D] inline-block animate-pulse"></span>
               Forex Trading Education · Online & Live
             </p>
@@ -43,7 +43,7 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4 mb-10">
-              <Link href="#" className="inline-flex items-center gap-2 bg-[#F5F3EE] text-black px-7 py-3.5 rounded-full font-medium hover:bg-white transition-colors">
+              <Link href="#" className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-7 py-3.5 rounded-full font-medium hover:bg-[#E5B33F] transition-colors">
                 Enroll now 
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </Link>
@@ -103,7 +103,7 @@ export function Hero() {
           
           {/* Card 1: Phases */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-colors">
-            <div className="text-[#2F6FFF] mb-6">
+            <div className="text-[#F5C451] mb-6">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
                 <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/>
@@ -119,7 +119,7 @@ export function Hero() {
 
           {/* Card 2: Mentors */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-colors">
-            <div className="text-[#2F6FFF] mb-6">
+            <div className="text-[#F5C451] mb-6">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>
@@ -136,7 +136,7 @@ export function Hero() {
 
           {/* Card 3: Market Access */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-colors">
-            <div className="text-[#2F6FFF] mb-6">
+            <div className="text-[#F5C451] mb-6">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
@@ -151,7 +151,7 @@ export function Hero() {
 
           {/* Card 4: Trade Review */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-colors">
-            <div className="text-[#2F6FFF] mb-6">
+            <div className="text-[#F5C451] mb-6">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
                 <circle cx="12" cy="12" r="3"/>

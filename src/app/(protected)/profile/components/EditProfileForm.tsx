@@ -134,13 +134,12 @@ export function EditProfileForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userid: user?.id,
-          fName: data.fName,
-          lName: data.lName,
-          address: data.address,
+          FName: data.fName,
+          LName: data.lName,
+          Address: data.address ?? "",
           mobile: data.mobile,
           countryid: parseInt(data.countryid),
-          walletBep20: data.walletBep20,
+          WalletBep20: data.walletBep20 ?? "",
           updateprofileotp: data.updateprofileotp,
         }),
       });
@@ -177,8 +176,8 @@ export function EditProfileForm() {
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-5">
         {/* Personal Information Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-blue-500">
-            <FaUserCircle className="w-5 h-5 text-blue-500" />
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-amber-500">
+            <FaUserCircle className="w-5 h-5 text-amber-500" />
             <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
               Personal Information
             </h3>
@@ -187,23 +186,23 @@ export function EditProfileForm() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <FaUser className="w-4 h-4 text-blue-400" />
+                <FaUser className="w-4 h-4 text-amber-500" />
                 First Name <span className="text-red-500">*</span>
               </label>
               <FormInput
                 name="fName"
-                placeholder="Enter your first name"
+                placeholder={loading ? "Loading..." : "Enter your first name"}
               />
             </div>
 
             <div>
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <FaUser className="w-4 h-4 text-blue-400" />
+                <FaUser className="w-4 h-4 text-amber-500" />
                 Last Name <span className="text-red-500">*</span>
               </label>
               <FormInput
                 name="lName"
-                placeholder="Enter your last name"
+                placeholder={loading ? "Loading..." : "Enter your last name"}
               />
             </div>
           </div>
@@ -211,8 +210,8 @@ export function EditProfileForm() {
 
         {/* Contact Information Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-emerald-500">
-            <FaEnvelope className="w-5 h-5 text-emerald-500" />
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-amber-500">
+            <FaEnvelope className="w-5 h-5 text-amber-500" />
             <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
               Contact Information
             </h3>
@@ -220,12 +219,13 @@ export function EditProfileForm() {
 
           <div>
             <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <FaEnvelope className="w-4 h-4 text-emerald-400" />
+              <FaEnvelope className="w-4 h-4 text-amber-500" />
               Email
             </label>
             <FormInput
               name="email"
               type="email"
+              placeholder={loading ? "Loading..." : ""}
               readOnly
               disabled
             />
@@ -234,7 +234,7 @@ export function EditProfileForm() {
           <div className="grid grid-cols-12 gap-3 mt-4">
             <div className="col-span-3 sm:col-span-2">
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <FaGlobe className="w-4 h-4 text-emerald-400" />
+                <FaGlobe className="w-4 h-4 text-amber-500" />
                 Code
               </label>
               <input
@@ -247,13 +247,13 @@ export function EditProfileForm() {
             </div>
             <div className="col-span-9 sm:col-span-10">
               <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <FaPhone className="w-4 h-4 text-emerald-400" />
+                <FaPhone className="w-4 h-4 text-amber-500" />
                 Mobile
               </label>
               <FormInput
                 name="mobile"
                 type="tel"
-                placeholder="Enter mobile number"
+                placeholder={loading ? "Loading..." : "Enter mobile number"}
               />
             </div>
           </div>
@@ -261,8 +261,8 @@ export function EditProfileForm() {
 
         {/* Location Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-indigo-500">
-            <FaGlobe className="w-5 h-5 text-indigo-500" />
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-amber-500">
+            <FaGlobe className="w-5 h-5 text-amber-500" />
             <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
               Location
             </h3>
@@ -270,24 +270,24 @@ export function EditProfileForm() {
 
           <div className="relative w-full">
             <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <FaGlobe className="w-4 h-4 text-indigo-400" />
+              <FaGlobe className="w-4 h-4 text-amber-500" />
               Country <span className="text-red-500">*</span>
             </label>
             <FormSelect
               name="countryid"
               options={countries}
-              placeholder="Select Country"
+              placeholder={loading ? "Loading..." : "Select Country"}
             />
           </div>
 
           <div className="mt-4">
             <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <FaMapMarkerAlt className="w-4 h-4 text-indigo-400" />
+              <FaMapMarkerAlt className="w-4 h-4 text-amber-500" />
               Address
             </label>
             <FormInput
               name="address"
-              placeholder="Enter your address"
+              placeholder={loading ? "Loading..." : "Enter your address"}
             />
           </div>
         </div>
@@ -308,7 +308,7 @@ export function EditProfileForm() {
             </label>
             <FormInput
               name="walletBep20"
-              placeholder="Enter BEP20 wallet address"
+              placeholder={loading ? "Loading..." : "Enter BEP20 wallet address"}
               maxLength={44}
             />
             {walletBep20 && !isValidBep20Length(walletBep20) && (
@@ -321,8 +321,8 @@ export function EditProfileForm() {
 
         {/* OTP Verification Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-purple-500">
-            <FaPaperPlane className="w-5 h-5 text-purple-500" />
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-amber-500">
+            <FaPaperPlane className="w-5 h-5 text-amber-500" />
             <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
               OTP Verification
             </h3>
@@ -344,7 +344,7 @@ export function EditProfileForm() {
                 type="button"
                 onClick={handleSendOtp}
                 disabled={sendingOtp || otpSent}
-                className="w-full sm:w-auto px-4 py-2.5 font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                className="w-full sm:w-auto px-4 py-2.5 font-semibold text-gray-900 bg-amber-400 hover:bg-amber-500 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 {sendingOtp ? "Sending..." : otpSent ? "OTP Sent" : "Send OTP"}
               </Button>
@@ -356,7 +356,7 @@ export function EditProfileForm() {
         <Button
           type="submit"
           disabled={isSubmitting || !otpSent}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-600 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-gray-900 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
         >
           <FaSave className="w-4 h-4" />
           {isSubmitting ? "Saving..." : "Save Changes"}

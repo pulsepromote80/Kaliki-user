@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useCommunityStore } from "@/store/community.store";
 import { communityService } from "@/services/community.service";
 import { toast } from "sonner";
@@ -233,8 +234,8 @@ const LevelPartner = () => {
               <tbody className="bg-white dark:bg-gray-900">
                 {loading && (
                   <tr>
-                    <td colSpan={13} className="p-4 text-center text-blue-500 dark:text-blue-400">
-                      Loading...
+                    <td colSpan={13} className="p-4 text-center">
+                      <Loader2 className="mx-auto h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" />
                     </td>
                   </tr>
                 )}

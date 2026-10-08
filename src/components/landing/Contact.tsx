@@ -96,7 +96,7 @@ export function Contact() {
                             {/* Submit Button */}
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center gap-2 bg-[#F5F3EE] text-black px-7 py-3.5 rounded-full font-medium hover:bg-white transition-colors w-fit"
+                                className="inline-flex items-center justify-center gap-2 bg-[#F5C451] text-black px-7 py-3.5 rounded-full font-medium hover:bg-[#E5B33F] transition-colors w-fit"
                             >
                                 Send message
                                 <SendIcon />
