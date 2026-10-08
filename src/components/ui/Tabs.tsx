@@ -22,29 +22,26 @@ export function Tabs({ tabs, defaultTab, className, card = false }: TabsProps) {
   if (card) {
     return (
       <div className={cn("w-full max-w-4xl mx-auto", className)}>
-        <div className="border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
-          <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 px-4 sm:px-6">
-            <nav className="flex overflow-x-auto space-x-2 sm:space-x-6" aria-label="Tabs">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex-shrink-0 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-colors border-b-2 -mb-px px-2 sm:px-0",
-                    activeTab === tab.id
-                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                      : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                  )}
-                  aria-current={activeTab === tab.id ? "page" : undefined}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-          <div className="p-4 sm:p-6">
-            {activeTabData?.content}
-          </div>
+        <nav className="mb-4 flex gap-2 overflow-x-auto" aria-label="Tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex-shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:py-2.5 sm:text-sm",
+                activeTab === tab.id
+                  ? "border-amber-500 bg-amber-400 text-gray-900"
+                  : "border-gray-200 bg-white text-gray-500 hover:border-amber-400 hover:text-amber-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-amber-300"
+              )}
+              aria-current={activeTab === tab.id ? "page" : undefined}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <div className="p-4 sm:p-6">{activeTabData?.content}</div>
         </div>
       </div>
     );

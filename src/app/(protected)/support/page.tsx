@@ -5,6 +5,7 @@ import {
   AlertCircle,
   FileImage,
   LifeBuoy,
+  Loader2,
   MessageCircle,
   Plus,
   RefreshCw,
@@ -486,10 +487,8 @@ export default function SupportPage() {
         </div>
 
         {loading ? (
-          <div className="space-y-3 p-5" aria-label="Loading tickets">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="h-12 animate-pulse rounded-lg bg-muted" />
-            ))}
+          <div className="flex justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin text-[#F5C451]" aria-label="Loading tickets" />
           </div>
         ) : loadError ? (
           <div className="flex flex-col items-center gap-3 px-5 py-12 text-center">

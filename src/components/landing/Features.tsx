@@ -9,7 +9,7 @@ export function Features() {
         
         {/* Top Heading Section */}
         <div className="mb-14">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#2F6FFF] mb-5 font-semibold">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#F5C451] mb-5 font-semibold">
             WHY KALKII
           </p>
           <h2 className="text-4xl md:text-5xl lg:text-[56px] leading-[1.15] font-serif tracking-tight text-white">
@@ -29,10 +29,10 @@ export function Features() {
             >
               {/* Card Header: Chapter Number & Icon */}
               <div className="flex items-center justify-between mb-8">
-                <p className="text-[10px] tracking-[0.2em] uppercase text-white/40 font-semibold">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-[#F5C451] font-semibold">
                   {feature.chapter}
                 </p>
-                <div className="text-white/40">
+                <div className="text-[#F5C451]">
                   {feature.icon === 'book' && <BookIcon />}
                   {feature.icon === 'chart' && <ChartIcon />}
                   {feature.icon === 'target' && <TargetIcon />}

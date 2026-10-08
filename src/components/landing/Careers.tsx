@@ -31,7 +31,7 @@ export function Careers() {
         {/* CTA Button */}
         <a 
           href="#contact" 
-          className="inline-flex items-center gap-2 border border-white/20 text-white px-8 py-4 rounded-full font-medium hover:border-white/50 transition-colors text-base"
+          className="inline-flex items-center gap-2 border border-[#F5C451] text-[#F5C451] px-8 py-4 rounded-full font-medium hover:bg-[#F5C451] hover:text-black transition-colors text-base"
         >
           Get in touch
           <ArrowUpRightIcon />

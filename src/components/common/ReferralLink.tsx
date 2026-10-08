@@ -43,8 +43,8 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
           <button
             onClick={() => setPosition("L")}
             className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${position === "L"
-                ? "bg-[#4338ca] text-white shadow-lg"
-                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/20"
+                ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
+                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
               }`}
           >
             Left Position
@@ -52,8 +52,8 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
           <button
             onClick={() => setPosition("R")}
             className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${position === "R"
-                ? "bg-[#4338ca] text-white shadow-lg"
-                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/20"
+                ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
+                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
               }`}
           >
             Right Position
@@ -61,14 +61,14 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
         </div>
 
         {/* Referral Box */}
-        <div className="p-4 rounded-lg shadow-inner bg-gradient-to-br from-blue-600 to-indigo-700 border border-white/30">
+        <div className="p-4 rounded-lg shadow-inner bg-gradient-to-br from-amber-400 to-yellow-500 border border-amber-200/70">
           <div className="flex items-center gap-2">
-            <p className="relative z-10 text-sm font-medium text-white/80">
+            <p className="relative z-10 text-sm font-semibold text-[#7A4B00]">
               Your Referral Link
             </p>
             <button
               onClick={handleCopy}
-              className="relative p-1 text-white rounded-md hover:bg-white/10"
+              className="relative p-1 text-gray-900 rounded-md hover:bg-black/10"
             >
               <FiCopy className="" />
             </button>
@@ -84,7 +84,7 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
             />
             <button
               onClick={handleCopyClick}
-              className="flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium text-white bg-[#4338ca] rounded-lg"
+              className="flex items-center justify-center gap-1 px-4 py-2 text-sm font-semibold text-amber-300 bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
             >
               <LinkIcon size={16} />
               Copy

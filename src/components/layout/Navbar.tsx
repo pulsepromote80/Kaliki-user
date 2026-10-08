@@ -1,9 +1,9 @@
 "use client";
 
-import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut, X, Briefcase, TrendingUp, BarChart3, ShieldCheck } from "lucide-react";
+import { Menu, User, Moon, Sun, Wallet, Bell, ChevronDown, UserRound, ChevronUp, Check, Copy, Headphones, LogOut, X, Briefcase, TrendingUp, BarChart3, ShieldCheck, Loader2 } from "lucide-react";
 import { useAuthStore } from "@/store/auth.store";
 import { primaryNav } from "@/config/navigation";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -11,8 +11,19 @@ import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSumm
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import type { NavItem } from "@/types/common";
 
 type HeaderNotification = Record<string, unknown>;
+
+function isNavPathActive(pathname: string, href: string) {
+  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+}
+
+function isNavItemActive(pathname: string, item: NavItem) {
+  return item.isDropdown && item.dropdownItems
+    ? item.dropdownItems.some((dropdownItem) => isNavPathActive(pathname, dropdownItem.href))
+    : isNavPathActive(pathname, item.href);
+}
 
 function getNotificationRows(payload: unknown): HeaderNotification[] {
   const pending: unknown[] = [payload];
@@ -76,7 +87,9 @@ function getNotificationId(notification: HeaderNotification, index: number) {
 export function Navbar() {
   const user = useAuthStore((state) => state.user);
   const pathname = usePathname();
+  const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [loadingInvestmentFund, setLoadingInvestmentFund] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -100,6 +113,11 @@ export function Navbar() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setLoadingInvestmentFund(false);
+    setMobileDropdownOpen(null);
+  }, [pathname]);
 
   const { data: dashboardData } = useDashboardSummary();
   const displayAuthLogin = dashboardData?.data?.[0]?.AuthLogin || user?.name || 'Account';
@@ -168,6 +186,17 @@ export function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [accountMenuOpen, walletOpen, notificationsOpen]);
+
+  useEffect(() => {
+    const openNotifications = () => {
+      setAccountMenuOpen(false);
+      setWalletOpen(false);
+      setNotificationsOpen(true);
+    };
+
+    window.addEventListener("open-header-notifications", openNotifications);
+    return () => window.removeEventListener("open-header-notifications", openNotifications);
+  }, []);
 
   useEffect(() => {
     if (!notificationUserKey || notificationUserKey === "Account") return;
@@ -281,7 +310,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="flex h-16 items-center justify-between border-b px-4 sm:px-6 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b px-4 sm:px-6 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
       <button
         className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-white/5 lg:hidden"
         onClick={() => setMobileNavOpen(true)}
@@ -304,13 +333,7 @@ export function Navbar() {
 
         <nav className="hidden lg:flex items-center gap-6 sm:gap-10 flex-1 justify-center">
           {primaryNav.map((item) => {
-            let isActive = false;
-
-            if (item.isDropdown && item.dropdownItems) {
-              isActive = item.dropdownItems.some((dropdownItem) => pathname === dropdownItem.href);
-            } else {
-              isActive = pathname === item.href;
-            }
+            const isActive = isNavItemActive(pathname, item);
 
             if (item.isDropdown && item.dropdownItems) {
               return (
@@ -321,11 +344,13 @@ export function Navbar() {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <button
+                    type="button"
                     className={cn(
                       "flex items-center gap-2 text-sm font-medium transition-colors",
                       isActive ? "" : "hover:text-[#f5c451]",
                     )}
                     style={{ color: isActive ? '#f5c451' : (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
+                    aria-expanded={openDropdown === item.label}
                   >
                     {item.img && (
                       <img
@@ -339,18 +364,28 @@ export function Navbar() {
                   </button>
 
                   {openDropdown === item.label && (
-                    <div className="absolute left-0 top-full z-50 mt-2 w-56 rounded-md border shadow-lg bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
-                      <div className="py-2">
-                        {item.dropdownItems.map((dropdownItem) => (
-                          <Link
-                            key={dropdownItem.href}
-                            href={dropdownItem.href}
-                            className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/5"
-                            style={{ color: pathname === dropdownItem.href ? '#f5c451' : ((!mounted || theme === 'dark') ? '#E2E8F0' : '#334155') }}
-                          >
-                            {dropdownItem.label}
-                          </Link>
-                        ))}
+                    <div className="absolute left-0 top-full z-50 w-56 pt-2">
+                      <div className="rounded-md border shadow-lg bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]">
+                        <div className="py-2">
+                          {item.dropdownItems.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.href}
+                              href={dropdownItem.href}
+                              onClick={(event) => {
+                                setOpenDropdown(null);
+                                if (dropdownItem.href === "/investment-amount" && pathname !== dropdownItem.href) {
+                                  event.preventDefault();
+                                  setLoadingInvestmentFund(true);
+                                  router.push(dropdownItem.href);
+                                }
+                              }}
+                              className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/5"
+                              style={{ color: pathname === dropdownItem.href ? '#f5c451' : ((!mounted || theme === 'dark') ? '#E2E8F0' : '#334155') }}
+                            >
+                              {dropdownItem.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -518,9 +553,9 @@ export function Navbar() {
                     </button>
                   </div>
                 ) : notificationsLoading ? (
-                  <p className="px-4 py-8 text-center text-xs text-gray-500 dark:text-gray-400">
-                    Loading notifications...
-                  </p>
+                  <div className="flex justify-center px-4 py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading notifications" />
+                  </div>
                 ) : unreadCount > 0 ? (
                   notifications.map((notification, index) => {
                     const id = getNotificationId(notification, index);
@@ -596,10 +631,15 @@ export function Navbar() {
           )}
         </div>
 
-        <div ref={accountMenuRef} className="relative">
+        <div
+          ref={accountMenuRef}
+          className="relative"
+          onMouseEnter={() => setAccountMenuOpen(true)}
+          onMouseLeave={() => setAccountMenuOpen(false)}
+        >
           <button
             type="button"
-            onClick={() => setAccountMenuOpen((open) => !open)}
+            onClick={() => setAccountMenuOpen(true)}
             className="flex h-10 items-center gap-2 rounded-full border px-2 py-1.5 text-xs transition hover:border-[#f5c451] hover:bg-gray-100 dark:hover:bg-white/5 sm:px-2.5 bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B]"
             style={{ color: '#f5c451' }}
             aria-expanded={accountMenuOpen}
@@ -613,21 +653,22 @@ export function Navbar() {
           </button>
 
           {accountMenuOpen && (
-            <div className="absolute right-0 top-full z-20 mt-3 w-[min(280px,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border shadow-2xl bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B] dark:shadow-black/50">
-              <div className="p-4 sm:p-5">
-                <div className="mb-3 text-[11px] font-semibold tracking-[0.18em]" style={{ color: theme === 'dark' ? '#64748B' : '#6B7280' }}>YOUR USER ID</div>
-                <button type="button" onClick={copyAuthLogin} className="flex w-full items-center justify-between gap-3 rounded-xl p-2 text-left transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#f5c451]" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', color: '#FFFFFF' }} aria-label="Copy your user ID">
-                  <span className="flex min-w-0 items-center gap-3">
-                    <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide" style={{ background: 'rgba(255,255,255,0.22)' }}>ID</span>
-                    <span className="truncate text-base font-semibold tracking-wide">{displayAuthLogin || 'Not available'}</span>
-                  </span>
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.22)' }}>
-                    {authLoginCopied ? <Check size={17} /> : <Copy size={17} />}
-                  </span>
-                </button>
-                <div className="mt-2 text-center text-xs" style={{ color: theme === 'dark' ? '#64748B' : '#6B7280' }}>Click to copy your ID</div>
-              </div>
-              <div className="border-t py-1 border-gray-200 dark:border-[#1E293B]">
+            <div className="absolute right-0 top-full z-20 w-[min(280px,calc(100vw-1.5rem))] pt-3">
+              <div className="overflow-hidden rounded-2xl border shadow-2xl bg-white dark:bg-[#0B1021] border-gray-200 dark:border-[#1E293B] dark:shadow-black/50">
+                <div className="p-4 sm:p-5">
+                  <div className="mb-3 text-[11px] font-semibold tracking-[0.18em]" style={{ color: theme === 'dark' ? '#64748B' : '#6B7280' }}>YOUR USER ID</div>
+                  <button type="button" onClick={copyAuthLogin} className="flex w-full items-center justify-between gap-3 rounded-xl p-2 text-left transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#f5c451]" style={{ background: 'linear-gradient(135deg, #f5c451, #d4a017)', color: '#0B1021' }} aria-label="Copy your user ID">
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide" style={{ background: 'rgba(255,255,255,0.22)' }}>ID</span>
+                      <span className="truncate text-base font-semibold tracking-wide">{displayAuthLogin || 'Not available'}</span>
+                    </span>
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.22)' }}>
+                      {authLoginCopied ? <Check size={17} /> : <Copy size={17} />}
+                    </span>
+                  </button>
+                  <div className="mt-2 text-center text-xs" style={{ color: theme === 'dark' ? '#64748B' : '#6B7280' }}>Click to copy your ID</div>
+                </div>
+                <div className="border-t py-1 border-gray-200 dark:border-[#1E293B]">
                 <Link
                   href="/profile"
                   onClick={() => setAccountMenuOpen(false)}
@@ -656,6 +697,7 @@ export function Navbar() {
                   <LogOut size={18} strokeWidth={1.8} />
                   Logout
                 </button>
+                </div>
               </div>
             </div>
           )}
@@ -678,7 +720,7 @@ export function Navbar() {
             </div>
             <nav className="p-4 space-y-2">
               {primaryNav.map((item) => {
-                const isActive = pathname.startsWith(item.href);
+                const isActive = isNavItemActive(pathname, item);
                 const isDropdownOpen = mobileDropdownOpen === item.label;
 
                 if (item.isDropdown && item.dropdownItems) {
@@ -706,20 +748,36 @@ export function Navbar() {
                       </button>
                       {isDropdownOpen && (
                         <div className="ml-4 mt-2 space-y-1">
-                          {item.dropdownItems.map((dropdownItem) => (
-                            <Link
-                              key={dropdownItem.href}
-                              href={dropdownItem.href}
-                              onClick={() => {
-                                setMobileNavOpen(false);
-                                setMobileDropdownOpen(null);
-                              }}
-                              className="block px-4 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-white/5"
-                              style={{ color: (!mounted || theme === 'dark') ? '#E2E8F0' : '#334155' }}
-                            >
-                              {dropdownItem.label}
-                            </Link>
-                          ))}
+                          {item.dropdownItems.map((dropdownItem) => {
+                            const isDropdownItemActive = isNavPathActive(pathname, dropdownItem.href);
+
+                            return (
+                              <Link
+                                key={dropdownItem.href}
+                                href={dropdownItem.href}
+                                onClick={() => {
+                                  setMobileNavOpen(false);
+                                  setMobileDropdownOpen(null);
+                                }}
+                                aria-current={isDropdownItemActive ? "page" : undefined}
+                                className={cn(
+                                  "block px-4 py-2 text-sm rounded-lg transition-colors",
+                                  isDropdownItemActive
+                                    ? "bg-[#f5c451]/10 font-semibold"
+                                    : "hover:bg-gray-100 dark:hover:bg-white/5",
+                                )}
+                                style={{
+                                  color: isDropdownItemActive
+                                    ? "#f5c451"
+                                    : (!mounted || theme === "dark")
+                                      ? "#E2E8F0"
+                                      : "#334155",
+                                }}
+                              >
+                                {dropdownItem.label}
+                              </Link>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -749,6 +807,15 @@ export function Navbar() {
                 );
               })}
             </nav>
+          </div>
+        </div>
+      )}
+      {loadingInvestmentFund && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]/75 px-4 backdrop-blur-sm">
+          <div className="flex h-28 w-28 items-center justify-center rounded-full border border-amber-400/20 bg-[#0B1021] shadow-2xl shadow-amber-500/10">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-amber-400/20 bg-amber-400/10">
+              <Loader2 className="h-7 w-7 animate-spin text-[#F5C451]" aria-hidden />
+            </div>
           </div>
         </div>
       )}

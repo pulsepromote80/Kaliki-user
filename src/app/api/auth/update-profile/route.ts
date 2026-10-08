@@ -36,17 +36,13 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // Get userId from session or from the user data
-    const userId = sessionData.userData?.UserId || body.userid;
-
     const payload = {
-      userid: userId,
-      fName: body.fName,
-      lName: body.lName,
-      address: body.address,
+      FName: body.FName,
+      LName: body.LName,
+      Address: body.Address,
       mobile: body.mobile,
       countryid: body.countryid,
-      walletBep20: body.walletBep20,
+      WalletBep20: body.WalletBep20,
       updateprofileotp: body.updateprofileotp,
     };
 

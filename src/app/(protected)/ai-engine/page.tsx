@@ -230,7 +230,7 @@ export default function AIEnginePage() {
       EXEC: GOLD_COLOR,
       SETTLE: "#22c55e",
       RISK: "#f59e0b",
-      HEARTBEAT: "#3b82f6",
+      HEARTBEAT: GOLD_COLOR,
     };
     return colors[type];
   };
@@ -576,7 +576,7 @@ function StatPill({ label, value, color }: StatPill) {
   return (
     <div className="rounded-xl border border-gray-200 dark:border-[#1E293B] px-3 py-1.5 bg-white dark:bg-[#0B1021]">
       <div className="text-[10px] text-gray-400">{label}</div>
-      <div className="font-mono text-sm font-semibold" style={{ color: color || "#2c72e3" }}>
+      <div className="font-mono text-sm font-semibold" style={{ color: color || GOLD_COLOR }}>
         {value}
       </div>
     </div>

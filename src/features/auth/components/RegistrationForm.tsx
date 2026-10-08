@@ -492,6 +492,9 @@ export function RegistrationForm() {
                         </label>
                         <div className="relative">
                           <FaGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm z-10" />
+                          {countriesLoading && (
+                            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-[#F5C451]" aria-label="Loading countries" />
+                          )}
                           <select
                             {...form.register("countryId")}
                             onChange={(e) => {
@@ -516,9 +519,7 @@ export function RegistrationForm() {
                             )}
                           >
                             <option value="">
-                              {countriesLoading
-                                ? "Loading..."
-                                : "Select Country"}
+                              Select Country
                             </option>
                             {countries.map((country: any) => (
                               <option

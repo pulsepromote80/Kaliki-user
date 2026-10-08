@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/Skeleton";
 
 export interface TableColumn<T> {
   key: string;
@@ -35,15 +35,11 @@ export function Table<T>({ columns, data, getRowId, isLoading }: TableProps<T>) 
         </thead>
         <tbody className="divide-y divide-border">
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column) => (
-                  <td key={column.key} className={cn("px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap", column.className)}>
-                    <Skeleton className="h-4 w-full" />
-                  </td>
-                ))}
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-10 text-center">
+                <Loader2 className="mx-auto h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" />
+              </td>
               </tr>
-            ))
           ) : (
             data.map((row, index) => (
               <tr key={getRowId(row)} className="hover:bg-muted/30">

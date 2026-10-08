@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { useCommunityStore } from "@/store/community.store";
 import { communityService } from "@/services/community.service";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function DirectPartners() {
@@ -251,11 +251,7 @@ export default function DirectPartners() {
             <div className="overflow-x-auto">
               {loading && (
                 <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-
-                  <span className="ml-3 text-gray-700 dark:text-gray-300">
-                    Loading team data...
-                  </span>
+                  <Loader2 className="h-8 w-8 animate-spin text-[#F5C451]" aria-label="Loading" />
                 </div>
               )}
 

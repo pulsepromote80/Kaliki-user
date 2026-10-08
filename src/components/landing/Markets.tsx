@@ -145,7 +145,7 @@ export function Markets() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16">
         {/* Heading */}
         <div className="mb-10">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#2F6FFF] mb-5 font-semibold">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#F5C451] mb-5 font-semibold">
             LIVE MARKETS
           </p>
           <h2 className="text-4xl md:text-5xl lg:text-[56px] leading-[1.15] font-serif tracking-tight text-white mb-4 max-w-3xl">
@@ -160,8 +160,8 @@ export function Markets() {
               key={tab}
               onClick={() => setActiveTab(tab as keyof typeof tabsData)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === tab
-                ? "bg-white text-black"
-                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                ? "bg-[#F5C451] text-[#0B1021] ring-2 ring-[#F5C451] ring-offset-2 ring-offset-[#050505]"
+                : "bg-white/5 text-white/60 hover:bg-[#F5C451]/[0.12] hover:text-[#F5C451]"
                 }`}
             >
               {tab}

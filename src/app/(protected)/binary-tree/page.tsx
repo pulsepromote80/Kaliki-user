@@ -453,8 +453,8 @@ function StatsBar({ root }: { root: TreeNode | null }) {
 // ─── Loading / Error ────────────────────────────────────────────────────────
 function LoadingSpinner() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 gap-5">
-      <PageLoader message="Loading tree..." />
+    <div className="flex min-h-[400px] items-center justify-center">
+      <PageLoader />
     </div>
   );
 }

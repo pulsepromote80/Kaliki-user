@@ -196,24 +196,23 @@ export function Banner() {
 
   return (
     <div
-      className="relative rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center gap-4 sm:gap-7 p-4 sm:p-6 lg:p-8"
+      className="relative rounded-3xl overflow-hidden mb-4 grid grid-cols-1 lg:grid-cols-2 items-center gap-4 sm:gap-7 p-4 sm:p-6 lg:p-8"
       style={{
         background: theme === 'dark'
-          ? "linear-gradient(120deg, #0b1220 0%, #101a2e 55%, #0f2a1e 100%)"
-          : "linear-gradient(120deg, #f0f9ff 0%, #e0f2fe 55%, #f0fdf4 100%)",
+          ? "linear-gradient(120deg, #17130b 0%, #201a10 55%, #211b0d 100%)"
+          : "linear-gradient(120deg, #fffbeb 0%, #fef3c7 55%, #fffbeb 100%)",
         border: theme === 'dark'
-          ? "1px solid rgba(80, 200, 150, 0.25)"
-          : "1px solid rgba(80, 200, 150, 0.4)",
+          ? "1px solid rgba(245, 196, 81, 0.25)"
+          : "1px solid rgba(245, 196, 81, 0.4)",
       }}
     >
       {/* ================= LEFT SIDE ================= */}
       <div className="relative z-10">
-        <div className={`inline-flex items-center gap-2 rounded-full font-semibold px-3.5 py-[7px] text-[11px] border mb-4 ${
-          theme === 'dark'
-            ? "bg-[rgba(62,207,142,.1)] border-[rgba(62,207,142,.35)] text-[#6be0ac]"
-            : "bg-[rgba(62,207,142,.15)] border-[rgba(62,207,142,.4)] text-[#059669]"
-        }`}>
-          <span className={`rounded-full w-[7px] h-[7px] ${theme === 'dark' ? 'bg-[#3ecf8e]' : 'bg-[#10b981]'}`} />
+        <div className={`inline-flex items-center gap-2 rounded-full font-semibold px-3.5 py-[7px] text-[11px] border mb-4 ${theme === 'dark'
+            ? "bg-[rgba(245,196,81,.1)] border-[rgba(245,196,81,.35)] text-[#f5c451]"
+            : "bg-[rgba(245,196,81,.15)] border-[rgba(245,196,81,.4)] text-[#a16207]"
+          }`}>
+          <span className="rounded-full w-[7px] h-[7px] bg-[#f5c451]" />
           Trade with AI-Assisted Risk Intelligence
         </div>
 
@@ -222,7 +221,7 @@ export function Banner() {
           style={{ fontFamily: '"Space Grotesk", sans-serif' }}
         >
           Your financial command center, powered by{" "}
-          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent">
             AI intelligence.
           </span>
         </h1>
@@ -242,11 +241,10 @@ export function Banner() {
           {pairsData.map((p) => (
             <div
               key={p.pair}
-              className={`rounded-xl px-2.5 py-2 sm:px-3 sm:py-2 min-w-[85px] sm:min-w-[98px] border transition-colors duration-300 ${
-                theme === 'dark'
+              className={`rounded-xl px-2.5 py-2 sm:px-3 sm:py-2 min-w-[85px] sm:min-w-[98px] border transition-colors duration-300 ${theme === 'dark'
                   ? "bg-white/[.04] border-white/10 hover:bg-white/[.07]"
                   : "bg-white border-gray-200 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <div className={`text-[9.5px] sm:text-[10.5px] ${theme === 'dark' ? 'text-[#8a97ad]' : 'text-gray-500'}`}>{p.pair}</div>
               <div
@@ -256,9 +254,8 @@ export function Banner() {
                 {p.price.toFixed(p.decimals)}
               </div>
               <div
-                className={`text-[9.5px] sm:text-[10.5px] mt-0.5 transition-colors duration-300 ${
-                  p.change >= 0 ? "text-[#4ade9a]" : "text-[#ff8b96]"
-                }`}
+                className={`text-[9.5px] sm:text-[10.5px] mt-0.5 transition-colors duration-300 ${p.change >= 0 ? "text-[#4ade9a]" : "text-[#ff8b96]"
+                  }`}
               >
                 {p.change >= 0 ? "+" : ""}
                 {p.change.toFixed(2)}%
@@ -270,11 +267,10 @@ export function Banner() {
       </div>
 
       {/* ================= RIGHT SIDE — LIVE MARKET FEED ================= */}
-      <div className={`relative z-10 rounded-2xl p-3 sm:p-[18px] backdrop-blur-sm border flex flex-col ${
-        theme === 'dark'
+      <div className={`relative z-10 rounded-2xl p-3 sm:p-[18px] backdrop-blur-sm border flex flex-col ${theme === 'dark'
           ? "bg-black/30 border-white/10"
           : "bg-white/80 border-gray-200"
-      }`}>
+        }`}>
         <div className={`flex justify-between text-[9px] sm:text-[10px] tracking-[.08em] mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           <span>Live Market Feed</span>
           <b className="text-[#e0ac2e] font-semibold flex items-center gap-1">
@@ -292,9 +288,8 @@ export function Banner() {
               ${currentPrice !== undefined ? currentPrice.toFixed(2) : "0.00"}
             </div>
             <div
-              className={`text-[10px] sm:text-[11px] ${
-                isUp ? "text-[#4ade9a]" : "text-[#ff6b7d]"
-              }`}
+              className={`text-[10px] sm:text-[11px] ${isUp ? "text-[#4ade9a]" : "text-[#ff6b7d]"
+                }`}
             >
               {isUp ? "+" : ""}
               {priceChange.toFixed(2)} ({priceChangePct.toFixed(2)}%)
@@ -376,20 +371,20 @@ export function Banner() {
                         strokeOpacity="0.4"
                         strokeWidth="1.5"
                       >
-                      <animate
-                        attributeName="r"
-                        values="7;10;7"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                      <animate
-                        attributeName="strokeOpacity"
-                        values="0.4;0;0.4"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </circle>
-                  </>
+                        <animate
+                          attributeName="r"
+                          values="7;10;7"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                        <animate
+                          attributeName="strokeOpacity"
+                          values="0.4;0;0.4"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </circle>
+                    </>
                   );
                 })()}
               </svg>

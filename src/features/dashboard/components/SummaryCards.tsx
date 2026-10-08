@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Loader2 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSummary";
 import { formatCurrency } from "@/lib/utils";
@@ -11,10 +11,8 @@ export function SummaryCards() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <Skeleton key={index} className="h-28 w-full" />
-        ))}
+      <div className="flex min-h-28 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#F5C451]" aria-label="Loading dashboard data" />
       </div>
     );
   }

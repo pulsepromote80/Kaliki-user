@@ -97,11 +97,14 @@ export function ChangePasswordForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="space-y-6 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-900/50 dark:bg-amber-950/20 sm:p-6"
+      >
         {/* Current Password */}
         <div>
           <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <FaLock className="w-4 h-4 text-blue-400" />
+            <FaLock className="w-4 h-4 text-amber-500" />
             Current Password <span className="text-red-500">*</span>
           </label>
           <FormInput
@@ -140,10 +143,10 @@ export function ChangePasswordForm() {
         {/* OTP Section */}
         <div>
           <label className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <FaPaperPlane className="w-4 h-4 text-purple-400" />
+            <FaPaperPlane className="w-4 h-4 text-amber-500" />
             Enter OTP <span className="text-red-500">*</span>
           </label>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="flex-1">
               <FormInput
                 name="otp"
@@ -155,7 +158,7 @@ export function ChangePasswordForm() {
               type="button"
               onClick={handleSendOtp}
               disabled={sendingOtp || otpSent}
-              className="w-full sm:w-auto px-4 py-2.5 font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              className="h-10 w-full px-4 font-semibold text-gray-900 bg-amber-400 hover:bg-amber-500 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md sm:w-auto"
             >
               {sendingOtp ? "Sending..." : otpSent ? "OTP Sent" : "Send OTP"}
             </Button>
