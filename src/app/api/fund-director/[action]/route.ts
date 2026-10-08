@@ -9,7 +9,7 @@ const actions = {
   getUsdtBalance: { method: "POST", path: "/Self/USDTBalance" },
   getVeltBalance: { method: "POST", path: "/Self/VELTTBalance" },
   getSelfDepositHistory: {
-    method: "POST",
+    method: "GET",
     path: "/Self/getSelfDepsiteDetailsByURID",
   },
   requestUsdtDeposit: { method: "POST", path: "/Self/SendUSDTDepositRequest" },
@@ -32,8 +32,7 @@ const actions = {
   transferIncome: {
     method: "POST",
     path: "/FundManager/addTransferIncomeToDepositWallet",
-    secret: "FUND_DIRECTOR_INCOME_AUTH_CODE",
-    secretField: "authenticationCode",
+ 
   },
   lookupRecipient: {
     method: "GET",
@@ -288,19 +287,6 @@ async function proxyAction(request: NextRequest, actionName: string, method: "GE
       body.email = email;
     }
 
-    if ("secret" in action) {
-      const secret = serverEnv[action.secret];
-      if (!secret) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: `Server configuration is missing ${action.secret}.`,
-          },
-          { status: 503 },
-        );
-      }
-      body[action.secretField] = secret;
-    }
 
     const { data } = await backend.post(action.path, body);
     return NextResponse.json(data);

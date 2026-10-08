@@ -65,13 +65,13 @@ export function EditProfileForm() {
 
       if (result.success && result.data?.data?.[0]) {
         const data = result.data.data[0];
-        setValue("fName", data.fName || "");
-        setValue("lName", data.lName || "");
-        setValue("email", data.email || "");
-        setValue("mobile", data.mobile || "");
-        setValue("countryid", data.countryId?.toString() || "");
-        setValue("address", data.address || "");
-        setValue("walletBep20", data.walletBep20 || "");
+        setValue("fName", data.FName || "");
+        setValue("lName", data.LName || "");
+        setValue("email", data.Email || "");
+        setValue("mobile", data.Mobile || "");
+        setValue("countryid", data.CountryId?.toString() || "");
+        setValue("address", data.Address || "");
+        setValue("walletBep20", data.WalletBep20 || "");
       }
     } catch (error) {
       console.error("Error fetching profile details:", error);
@@ -84,12 +84,12 @@ export function EditProfileForm() {
   const fetchCountries = async () => {
     try {
       const response = await fetch("/api/auth/countries");
-      
+
       const result = await response.json();
       if (result.statusCode === 200 && result.data) {
         const countryOptions = result.data.map((country: any) => ({
-          label: country.country_Name || country.name || country.countryName,
-          value: country.country_Id?.toString() || country.id?.toString() || country.countryId?.toString(),
+          label: country.Country_Name || country.name || country.countryName,
+          value: country.Country_Id?.toString() || country.id?.toString() || country.countryId?.toString(),
         }));
         setCountries(countryOptions);
       }
@@ -147,7 +147,10 @@ export function EditProfileForm() {
 
       const result = await response.json();
 
-      if (result.success) {
+      const statusCode = result.data?.statusCode || result.statusCode;
+      const message = result.data?.message || result.message;
+
+      if (result.success && statusCode === 200) {
         // Update local store
         if (user) {
           setUser({
@@ -157,11 +160,11 @@ export function EditProfileForm() {
           });
         }
 
-        toast.success("Profile updated successfully");
+        toast.success(message || "Profile updated successfully");
         setOtpSent(false);
         setValue("updateprofileotp", "");
       } else {
-        toast.error(result.message || "Failed to update profile");
+        toast.error(message || "Failed to update profile");
       }
     } catch (error) {
       console.error("Error updating profile:", error);

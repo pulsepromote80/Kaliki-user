@@ -106,11 +106,32 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+const actionMethods: Record<string, "GET" | "POST"> = {
+  getUsdtBalance: "POST",
+  getVeltBalance: "POST",
+  getSelfDepositHistory: "GET",
+  requestUsdtDeposit: "POST",
+  requestVeltDeposit: "POST",
+  getWalletReport: "GET",
+  getWithdrawalStatement: "GET",
+  sendIncomeTransferOtp: "POST",
+  transferIncome: "POST",
+  lookupRecipient: "GET",
+  getP2pHistory: "GET",
+  sendP2pOtp: "POST",
+  transferP2p: "POST",
+  sendWithdrawalOtp: "POST",
+  requestWithdrawal: "POST",
+};
+
 async function runFundDirectorAction(action: string, body: Record<string, unknown> = {}) {
-  const response = await fetch(`/api/fund-director/${action}`, {
-    method: "POST",
+  const method = actionMethods[action] || "POST";
+  const url = `/api/fund-director/${action}`;
+
+  const response = await fetch(url, {
+    method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: method === "POST" ? JSON.stringify(body) : undefined,
   });
   const payload: unknown = await response.json();
   const statusCode =
@@ -902,6 +923,7 @@ export default function FundDirectorPage() {
         const result: unknown = await twoFactorResponse.json();
         const data = isRecord(result) && isRecord(result.data) ? result.data : null;
         const message =
+          (data && typeof data.Message === "string" ? data.Message : "") ||
           (data && typeof data.message === "string" ? data.message : "") ||
           (isRecord(result) && typeof result.message === "string" ? result.message : "");
 
@@ -1592,17 +1614,17 @@ export default function FundDirectorPage() {
       });
       const result: unknown = await response.json();
       const data = isRecord(result) && isRecord(result.data) ? result.data : null;
+      const status = data?.Status !== undefined ? data.Status : data?.status;
+      const message = data?.Message || data?.message || (isRecord(result) && result.message);
+
       if (!response.ok || (isRecord(result) && result.success === false)) {
         throw new Error(
-          isRecord(result) && typeof result.message === "string"
-            ? result.message
-            : "Authenticator code validation failed.",
+          typeof message === "string" ? message : "Authenticator code validation failed.",
         );
       }
-      if (data?.status !== true) {
+      if (status !== true) {
         throw new Error(
-          (data && typeof data.message === "string" && data.message) ||
-          "Invalid authenticator code. Please try again.",
+          typeof message === "string" ? message : "Invalid authenticator code. Please try again.",
         );
       }
 
@@ -1718,10 +1740,10 @@ export default function FundDirectorPage() {
                       Scan with your wallet app to deposit using the BEP20 network.
                     </p>
 
-                    <div className="mt-6 grid w-full grid-cols-2 gap-3">
+                    <div className="mt-6 w-full gap-3">
                       {[
                         { label: "USDT Balance", value: selfBalances.usdt },
-                        { label: "VELT Token", value: selfBalances.velt },
+                        // { label: "VELT Token", value: selfBalances.velt },
                       ].map((item) => (
                         <div
                           key={item.label}
@@ -1735,7 +1757,7 @@ export default function FundDirectorPage() {
                       ))}
                     </div>
 
-                    <div className="mt-4 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="mt-4  w-full gap-3">
                       <PrimaryButton
                         type="button"
                         disabled={isSubmittingSelfDeposit}
@@ -1744,7 +1766,7 @@ export default function FundDirectorPage() {
                         <ArrowDownLeft className="h-4 w-4" />
                         {isSubmittingSelfDeposit ? "Processing..." : "USDT Deposit"}
                       </PrimaryButton>
-                      <button
+                      {/* <button
                         type="button"
                         disabled={isSubmittingSelfDeposit}
                         onClick={() => void submitSelfDeposit("VELT")}
@@ -1752,7 +1774,7 @@ export default function FundDirectorPage() {
                       >
                         <ArrowDownLeft className="h-4 w-4" />
                         {isSubmittingSelfDeposit ? "Processing..." : "VELT Deposit"}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
 
@@ -1872,7 +1894,7 @@ export default function FundDirectorPage() {
                             💳 Account Holder Name
                           </p>
                           <p className="font-mono text-sm font-bold tracking-wider text-slate-800 dark:text-white">
-                            Velvora AI
+                            KALKII
                           </p>
                         </div>
                         <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 dark:border-emerald-800/40 dark:bg-emerald-900/20">
