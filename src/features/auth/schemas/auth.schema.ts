@@ -9,7 +9,8 @@ export const loginSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  userid: z.string().min(1, "Userid is required"),
+  UserId: z.string().min(1, "UserId is required"),
+  Email: z.string().email("Invalid email address"),
 });
 
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;

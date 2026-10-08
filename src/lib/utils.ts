@@ -37,3 +37,17 @@ export function formatDate(date: string | Date): string {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/**
+ * Get page name from pathname for display purposes.
+ */
+export function getPageName(pathname: string): string {
+  const segments = pathname.split("/").filter(Boolean);
+  const lastSegment = segments[segments.length - 1];
+  return lastSegment
+    ? lastSegment
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    : "Dashboard";
+}

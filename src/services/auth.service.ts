@@ -28,8 +28,8 @@ export const authService = {
     ),
 
   forgotPassword: (payload: ForgotPasswordPayload) =>
-    apiClient.post<{ success: true }, ForgotPasswordPayload>(
-      "/auth/forgot-password",
+    apiClient.post<{ statusCode: number; message: string }, ForgotPasswordPayload>(
+      "/Authentication/forgotPassword",
       payload,
     ),
 

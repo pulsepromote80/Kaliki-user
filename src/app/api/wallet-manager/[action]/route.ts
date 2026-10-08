@@ -26,6 +26,10 @@ const walletActions = {
     path: "/WalletReport/GetRankRewardList",
     needsTransactionType: false,
   },
+  income: {
+    path: "/WalletReport/getTransactionIncomeHistory",
+    needsTransactionType: true,
+  },
 } as const;
 
 type WalletAction = keyof typeof walletActions;

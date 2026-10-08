@@ -40,7 +40,7 @@ interface TreeNodeData {
   };
 }
 
-const buildTreeData = (data: any[], collapsedMap: Map<string, boolean>): TreeNodeData[] => {
+const buildTreeData = (data: any[]): TreeNodeData[] => {
   if (!Array.isArray(data) || data.length === 0) return [];
 
   const unique = data.filter(
@@ -81,9 +81,6 @@ const buildTreeData = (data: any[], collapsedMap: Map<string, boolean>): TreeNod
         isExists: node.IsExists,
       },
       children: [],
-      __rd3t: {
-        collapsed: collapsedMap.get(node.Loginid) ?? true,
-      },
     });
   });
 
@@ -108,7 +105,7 @@ const buildTreeData = (data: any[], collapsedMap: Map<string, boolean>): TreeNod
 };
 
 
-const CustomNode = ({ nodeDatum, toggleNode, collapsedMap, setCollapsedMap }: { nodeDatum: any; toggleNode: () => void; collapsedMap: Map<string, boolean>; setCollapsedMap: React.Dispatch<React.SetStateAction<Map<string, boolean>>> }) => {
+const CustomNode = ({ nodeDatum, toggleNode }: { nodeDatum: any; toggleNode: () => void }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ top: 10, left: 0 });
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -190,7 +187,7 @@ const CustomNode = ({ nodeDatum, toggleNode, collapsedMap, setCollapsedMap }: { 
               <button
                 onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
-                  setCollapsedMap((prev) => new Map(prev).set(nodeDatum.loginid, !nodeDatum.__rd3t?.collapsed));
+                  toggleNode();
                 }}
                 className={`w-full text-[10px] py-1.5 text-white rounded-lg transition-colors ${nodeDatum.__rd3t?.collapsed
                   ? "bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
@@ -244,8 +241,6 @@ export default function NetworkTreeView() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const [collapsedMap, setCollapsedMap] = useState<Map<string, boolean>>(new Map());
-  const [treeKey, setTreeKey] = useState(0);
   const [treeData, setTreeData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -264,17 +259,6 @@ export default function NetworkTreeView() {
 
         if (result.statusCode === 200 && result.data) {
           setTreeData(result.data);
-
-          const ids = new Set(result.data.map((n: any) => n.AuthLogin));
-          const map = new Map();
-
-          result.data.forEach((node: any) => {
-            const isRoot = !node.SponsorId || !ids.has(node.SponsorId);
-            map.set(node.AuthLogin, !isRoot);
-          });
-
-          setCollapsedMap(map);
-          setTreeKey((k) => k + 1);
         } else {
           setError(result.message || "Failed to load network tree");
         }
@@ -290,8 +274,8 @@ export default function NetworkTreeView() {
   }, []);
 
   const formattedTreeData = useMemo(
-    () => buildTreeData(treeData || [], collapsedMap),
-    [treeData, collapsedMap]
+    () => buildTreeData(treeData || []),
+    [treeData]
   );
 
   useEffect(() => {
@@ -326,19 +310,18 @@ export default function NetworkTreeView() {
         >
           {formattedTreeData.length ? (
             <Tree
-              key={treeKey}
+
               data={formattedTreeData}
               translate={translate}
               orientation="vertical"
               renderCustomNodeElement={(rd3tProps) => (
-                <CustomNode {...rd3tProps} collapsedMap={collapsedMap} setCollapsedMap={setCollapsedMap} />
+                <CustomNode {...rd3tProps} />
               )}
               nodeSize={{ x: 240, y: 300 }}
               pathFunc="diagonal"
               separation={{ siblings: 1.3, nonSiblings: 1.6 }}
               zoomable
               draggable
-              initialDepth={1}
               enableLegacyTransitions
               transitionDuration={500}
             />

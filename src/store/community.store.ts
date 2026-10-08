@@ -19,6 +19,7 @@ interface PersonalTeamMember {
   totTeam?: number;
   CountryFlag?: string;
   CountryId?: number;
+  Package?: number;
 }
 
 interface CommunityState {

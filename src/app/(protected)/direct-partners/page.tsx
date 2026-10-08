@@ -300,20 +300,9 @@ export default function DirectPartners() {
                           </th>
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Subscription Amt
+                            Package
                           </th>
 
-                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Subscribe Date
-                          </th>
-
-                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Pending Credit
-                          </th>
-
-                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Deploy Date
-                          </th>
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Team Business
@@ -402,27 +391,10 @@ export default function DirectPartners() {
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 rounded-full border border-indigo-200 dark:border-indigo-700/50">
-                                    ${member.SubscriptionAmount || "0"}
+                                    ${member.Package || "0"}
                                   </div>
                                 </td>
 
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700/50 rounded-full border border-gray-200 dark:border-gray-600">
-                                    {member.SubscribeDate || ""}
-                                  </div>
-                                </td>
-
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-100 dark:bg-teal-900/40 rounded-full border border-teal-200 dark:border-teal-700/50">
-                                    {member.PendingCredit || "0"}
-                                  </div>
-                                </td>
-
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-900/40 rounded-full border border-cyan-200 dark:border-cyan-700/50">
-                                    {member.DeployDate || ""}
-                                  </div>
-                                </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/40 rounded-full border border-rose-200 dark:border-rose-700/50">

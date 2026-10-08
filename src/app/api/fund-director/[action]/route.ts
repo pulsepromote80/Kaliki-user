@@ -7,10 +7,10 @@ import { unauthorizedSessionResponse } from "@/lib/session-response";
 
 const actions = {
   getUsdtBalance: { method: "POST", path: "/Self/USDTBalance" },
-  getVeltBalance: { method: "POST", path: "/Self/VELTTBalance" },
+  getVeltBalance: { method: "POST", path: "/Self/VELTBalance" },
   getSelfDepositHistory: {
     method: "GET",
-    path: "/Self/getSelfDepsiteDetailsByURID",
+    path: "/Self/getSelfDepositDetailsByURID",
   },
   requestUsdtDeposit: { method: "POST", path: "/Self/SendUSDTDepositRequest" },
   requestVeltDeposit: {
