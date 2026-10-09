@@ -53,6 +53,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
   const [activationError, setActivationError] = useState("");
   const [userIdInput, setUserIdInput] = useState(userId);
   const [userName, setUserName] = useState("");
+  const [userNameError, setUserNameError] = useState("");
   const [isLoadingUserName, setIsLoadingUserName] = useState(false);
 
   // Fetch wallet details when modal opens
@@ -60,24 +61,29 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
     if (isOpen) {
       setUserIdInput(userId);
       setUserName("");
+      setUserNameError("");
       fetchWalletDetails();
     }
   }, [isOpen, userId]);
 
   const fetchUserName = useCallback(async () => {
     setIsLoadingUserName(true);
+    setUserName("");
+    setUserNameError("");
     try {
       const response = await fetch(`/api/FundManager?authLogin=${userIdInput}`);
       const data = await response.json();
 
-      if (data.statusCode === 200 && data.data) {
-        setUserName(data.data.Name || "");
+      if (response.ok && data.statusCode === 200 && data.data?.Name) {
+        setUserName(data.data.Name);
       } else {
-        setUserName("");
+        setUserNameError(
+          typeof data.message === "string" ? data.message : "User ID not found.",
+        );
       }
     } catch (error) {
       console.error('Failed to fetch user name:', error);
-      setUserName("");
+      setUserNameError("Could not verify this User ID. Please try again.");
     } finally {
       setIsLoadingUserName(false);
     }
@@ -134,7 +140,7 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
           RechargeType: plan.BoosterPackage,
         }),
       });
-    
+
 
       const data = await response.json();
 
@@ -264,143 +270,155 @@ const ActivatePlanModal: React.FC<ActivatePlanModalProps> = ({
         }
       `}</style>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="relative w-full max-w-[480px] bg-white dark:bg-[#11111a] rounded-3xl shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200 border border-gray-100 dark:border-white/10">
+        <div className="relative w-full max-w-[480px] bg-white dark:bg-[#11111a] rounded-3xl shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200 border border-gray-100 dark:border-white/10">
 
-        {/* Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <p className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-1">
-              Subscribe Now
-            </p>
-            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Activate <span className={modalTheme.text}>{plan.title}</span>
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors border border-gray-100 dark:border-white/10"
-          >
-            <span className="text-gray-500 dark:text-gray-400 font-bold text-lg leading-none">&times;</span>
-          </button>
-        </div>
-
-        {/* Wallet Info Box */}
-        <div className="flex justify-between items-center bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30 rounded-2xl p-5 mb-6">
-          <div>
-            <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
-            <p className="text-green-600 dark:text-green-400 text-2xl font-bold">
-              {isLoadingWallet ? <Loader2 className="h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" /> : `$${walletBalance}`}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Investment Range</p>
-            <p className="text-gray-900 dark:text-white text-lg font-semibold">{plan.investmentRange}</p>
-          </div>
-        </div>
-
-        {/* Form */}
-        <div className="space-y-5">
-          <div>
-            <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
-              USER ID <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={userIdInput}
-              placeholder="Enter UserID"
-              onChange={(e) => setUserIdInput(e.target.value)}
-              className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border border-transparent focus:border-blue-300 dark:focus:border-blue-500 outline-none transition-all"
-            />
-            {userName && (
-              <span className="text-green-600 dark:text-green-400 text-sm font-medium mt-2 block">
-                {userName}
-              </span>
-            )}
-            {isLoadingUserName && (
-              <Loader2 className="mt-2 h-4 w-4 animate-spin text-[#F5C451]" aria-label="Loading user name" />
-            )}
+          {/* Header */}
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <p className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-1">
+                Subscribe Now
+              </p>
+              <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                Activate <span className={modalTheme.text}>{plan.title}</span>
+              </h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors border border-gray-100 dark:border-white/10"
+            >
+              <span className="text-gray-500 dark:text-gray-400 font-bold text-lg leading-none">&times;</span>
+            </button>
           </div>
 
-          {isQuantityPlan ? (
+          {/* Wallet Info Box */}
+          <div className="flex justify-between items-center bg-[#f0fdf4] dark:bg-green-900/20 border border-green-100 dark:border-green-500/30 rounded-2xl p-5 mb-6">
+            <div>
+              <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Wallet Balance</p>
+              <p className="text-green-600 dark:text-green-400 text-2xl font-bold">
+                {isLoadingWallet ? <Loader2 className="h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading" /> : `$${walletBalance}`}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-1">Investment Range</p>
+              <p className="text-gray-900 dark:text-white text-lg font-semibold">{plan.investmentRange}</p>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="space-y-5">
             <div>
               <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
-                QUANTITY <span className="text-red-500">*</span>
+                USER ID <span className="text-red-500">*</span>
               </label>
-              <input
-                type="number"
-                placeholder="Enter quantity"
-                value={quantity}
-                onChange={handleQuantityChange}
-                className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${
-                  quantityError
-                    ? "border-red-400 dark:border-red-500"
-                    : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
-                }`}
-              />
-              {quantityError ? (
-                <p className="text-red-500 text-xs font-medium mt-2">⚠️ {quantityError}</p>
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
-                  💡 1 Quantity = $660
+              <div className="relative">
+                <input
+                  type="text"
+                  value={userIdInput}
+                  placeholder="Enter UserID"
+                  onChange={(e) => {
+                    setUserIdInput(e.target.value);
+                    setUserName("");
+                    setUserNameError("");
+                  }}
+                  aria-invalid={!!userNameError}
+                  aria-describedby={userNameError ? "user-id-error" : undefined}
+                  className="w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 pr-12 rounded-xl border outline-none transition-all"
+                />
+                {isLoadingUserName && (
+                  <Loader2
+                    className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-[#F5C451]"
+                    aria-label="Loading user name"
+                  />
+                )}
+              </div>
+              {userName && (
+                <span className="text-green-600 dark:text-green-400 text-sm font-medium mt-2 block">
+                  {userName}
+                </span>
+              )}
+              {userNameError && !isLoadingUserName && (
+                <p id="user-id-error" className="mt-2 text-xs font-medium text-red-500" role="alert">
+                  {userNameError}
                 </p>
               )}
             </div>
-          ) : (
-            <div>
-              <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED PLAN</label>
-              <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
-                <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{plan.icon}</span>
-                <span className={modalTheme.text}>{plan.title}</span>
+
+            {isQuantityPlan ? (
+              <div>
+                <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
+                  QUANTITY <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter quantity"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${quantityError
+                      ? "border-red-400 dark:border-red-500"
+                      : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
+                    }`}
+                />
+                {quantityError ? (
+                  <p className="text-red-500 text-xs font-medium mt-2">⚠️ {quantityError}</p>
+                ) : (
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
+                    💡 1 Quantity = $660
+                  </p>
+                )}
               </div>
+            ) : (
+              <div>
+                <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">SELECTED PLAN</label>
+                <div className="w-full bg-[#f8f9fc] dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-gray-300 text-lg font-medium px-4 py-3.5 rounded-xl flex items-center gap-3">
+                  <span className={`text-xl p-1.5 rounded-md ${modalTheme.iconBg}`}>{plan.icon}</span>
+                  <span className={modalTheme.text}>{plan.title}</span>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
+                INVESTMENT AMOUNT (USD) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={handleAmountChange}
+                readOnly={isQuantityPlan}
+                className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${isQuantityPlan ? "cursor-not-allowed" : ""
+                  } ${amountError
+                    ? "border-red-400 dark:border-red-500"
+                    : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
+                  }`}
+              />
+              {amountError ? (
+                <p className="text-red-500 text-xs font-medium mt-2">⚠️ {amountError}</p>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
+                  💡 Investment range: <span className="text-gray-900 dark:text-white font-bold">{plan.investmentRange}</span>
+                </p>
+              )}
             </div>
+          </div>
+
+          {/* Button */}
+          <button
+            onClick={handleActivate}
+            disabled={isSubmitDisabled || isActivating}
+            className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn} ${isSubmitDisabled || isActivating ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+          >
+            <span className="text-xl">{isActivating ? "⏳" : "🚀"}</span>
+            {isActivating ? "Activating..." : `Activate ${plan.title}`}
+          </button>
+
+          {activationError && (
+            <p className="text-red-500 text-xs font-medium mt-3 text-center">⚠️ {activationError}</p>
           )}
 
-          <div>
-            <label className="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">
-              INVESTMENT AMOUNT (USD) <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              placeholder="Enter amount"
-              value={amount}
-              onChange={handleAmountChange}
-              readOnly={isQuantityPlan}
-              className={`w-full bg-[#f4f6fc] dark:bg-white/5 text-gray-800 dark:text-white text-lg placeholder-gray-400 font-medium px-4 py-3.5 rounded-xl border outline-none transition-all ${
-                isQuantityPlan ? "cursor-not-allowed" : ""
-              } ${
-                amountError
-                  ? "border-red-400 dark:border-red-500"
-                  : "border-transparent focus:border-blue-300 dark:focus:border-blue-500"
-              }`}
-            />
-            {amountError ? (
-              <p className="text-red-500 text-xs font-medium mt-2">⚠️ {amountError}</p>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-xs font-medium mt-2 flex items-center gap-1">
-                💡 Investment range: <span className="text-gray-900 dark:text-white font-bold">{plan.investmentRange}</span>
-              </p>
-            )}
-          </div>
         </div>
-
-        {/* Button */}
-        <button
-          onClick={handleActivate}
-          disabled={isSubmitDisabled || isActivating}
-          className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-extrabold tracking-widest uppercase transition-all duration-300 ${modalTheme.btn} ${
-            isSubmitDisabled || isActivating ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          <span className="text-xl">{isActivating ? "⏳" : "🚀"}</span>
-          {isActivating ? "Activating..." : `Activate ${plan.title}`}
-        </button>
-
-        {activationError && (
-          <p className="text-red-500 text-xs font-medium mt-3 text-center">⚠️ {activationError}</p>
-        )}
-
       </div>
-    </div>
     </>
   );
 };
