@@ -228,7 +228,7 @@ export default function AIBUSINESSHUB() {
           <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-8 items-start lg:items-center p-6 sm:p-8 sm:px-9">
             <div>
               <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#F5C451] mb-2">
-                Total Agent Deployed
+                Total Investment
               </div>
               <div className="text-[38px] sm:text-[52px] font-black text-white tracking-[-1.5px] leading-none break-all">
                 <span className="text-[#F5C451]">${countedTotalInvestment.toFixed(2)}</span>
@@ -398,7 +398,7 @@ export default function AIBUSINESSHUB() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-pink-700 sm:text-sm dark:text-pink-300 geidt-font">
-                    Yield Income
+                    ROI Income
                   </h4>
                   <p className="text-lg font-bold text-pink-900 sm:text-xl dark:text-pink-200">
                     ${countedYieldIncome.toFixed(2)}
@@ -439,7 +439,7 @@ export default function AIBUSINESSHUB() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="mb-1 text-xs font-medium sm:text-sm text-slate-600 dark:text-slate-300 geidt-font">
-                      Performance Withdrawal
+                      Working Withdrawal
                     </h4>
                     <p className="text-lg font-bold sm:text-xl text-slate-900 dark:text-white">
                       ${countedPerformanceWithdrawal.toFixed(2)}
@@ -459,7 +459,7 @@ export default function AIBUSINESSHUB() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="mb-1 text-xs font-medium sm:text-sm text-slate-600 dark:text-slate-300 geidt-font">
-                      Yield Withdrawal
+                      ROI Withdrawal
                     </h4>
                     <p className="text-lg font-bold sm:text-xl text-slate-900 dark:text-white">
                       ${countedYieldWithdrawal.toFixed(2)}
@@ -497,7 +497,7 @@ export default function AIBUSINESSHUB() {
             <div className="relative p-3 overflow-hidden transition-colors border border-teal-200 rounded-lg sm:p-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-teal-50 dark:from-teal-900/30 dark:via-cyan-900/30 dark:to-teal-900/30 text-slate-800 dark:text-slate-200 dark:border-teal-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">Weaker Team Volume</h4>
+                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">Left Business</h4>
                   <p className="text-sm font-bold text-teal-900 dark:text-teal-200">${countedOtherLegBus.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-teal-200/70 dark:bg-teal-700/50">
@@ -512,7 +512,7 @@ export default function AIBUSINESSHUB() {
             <div className="relative p-3 overflow-hidden transition-colors border border-indigo-200 rounded-lg sm:p-4 bg-gradient-to-r from-indigo-50 via-blue-50 to-indigo-50 dark:from-indigo-900/30 dark:via-blue-900/30 dark:to-indigo-900/30 text-slate-800 dark:text-slate-200 dark:border-indigo-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-indigo-700 sm:text-sm dark:text-indigo-300 geidt-font">Strong Team Volume</h4>
+                  <h4 className="mb-1 text-xs font-medium text-indigo-700 sm:text-sm dark:text-indigo-300 geidt-font">Right Business</h4>
                   <p className="text-sm font-bold text-purple-900 dark:text-purple-200">${countedStrongLegBus.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-indigo-200/70 dark:bg-indigo-700/50">

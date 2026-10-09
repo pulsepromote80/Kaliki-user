@@ -285,7 +285,7 @@ export function Navbar() {
     },
     {
       id: 'performance',
-      name: 'Performance Wallet',
+      name: 'Working Wallet',
       balance: walletData?.IncomeWalletbal ? `$${Number(walletData.IncomeWalletbal).toFixed(4)}` : '$0.0000',
       icon: TrendingUp,
       color: '#8b5cf6',
@@ -293,20 +293,13 @@ export function Navbar() {
     },
     {
       id: 'yield',
-      name: 'Yield Wallet',
+      name: 'ROI Wallet',
       balance: walletData?.RentWalletBal ? `$${Number(walletData.RentWalletBal).toFixed(4)}` : '$0.0000',
       icon: BarChart3,
       color: '#10b981',
       bg: '#d1fae5'
     },
-    {
-      id: 'legacy',
-      name: 'Legacy Wallet',
-      balance: walletData?.LegacyWallet ? `$${Number(walletData.LegacyWallet).toFixed(4)}` : '$0.0000',
-      icon: ShieldCheck,
-      color: '#f59e0b',
-      bg: '#fef3c7'
-    },
+   
   ];
 
   return (

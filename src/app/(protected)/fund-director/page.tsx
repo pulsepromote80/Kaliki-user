@@ -43,35 +43,26 @@ type FundDirectorRecord = {
   hash?: string;
 };
 type TabId = "deposit" | "fiat" | "income" | "p2p" | "withdrawal";
-type FiatCurrency = "AED" | "INR";
+type FiatCurrency = "USDT";
+type NetworkType = "TRC20" | "BEP20";
 
 const fiatDepositDetails: Record<
-  FiatCurrency,
+  NetworkType,
   {
-    bank: string;
-    bankCode: string;
     network: string;
-    accountNumber: string;
+    walletAddress: string;
     destinationLabel: string;
-    swift?: string;
-    ifsc?: string;
   }
 > = {
-  AED: {
-    bank: "COMMERCIAL BANK OF DUBAI",
-    bankCode: "(CBD)",
-    network: "United Arab Emirates Dirham",
-    accountNumber: "10XXXXXXXXX7X6",
-    destinationLabel: "IBAN",
-    swift: "CBDUAEAD",
+  TRC20: {
+    network: "Tron (TRC20)",
+    walletAddress: "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    destinationLabel: "Wallet Address",
   },
-  INR: {
-    bank: "STATE BANK OF INDIA",
-    bankCode: "(SBI)",
-    network: "Indian Rupee",
-    accountNumber: "30XXXXXXXXX7X6",
-    destinationLabel: "Account Number",
-    ifsc: "SBIN0001234",
+  BEP20: {
+    network: "Binance Smart Chain (BEP20)",
+    walletAddress: "0x1234567890123456789012345678901234567890",
+    destinationLabel: "Wallet Address",
   },
 };
 
@@ -98,12 +89,20 @@ const initialBalances = {
   legacy: 0,
 };
 
-const money = (amount: number, currency = "USD") =>
-  new Intl.NumberFormat("en-US", {
+const money = (amount: number, currency = "USD") => {
+  if (currency === "USDT") {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 2,
+    }).format(amount).replace("$", "USDT");
+  }
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     maximumFractionDigits: 2,
   }).format(amount);
+};
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -266,7 +265,7 @@ function mapFundRequestRecord(item: Record<string, unknown>, index: number): Fun
   const statusValue = String(getFirstValue(item, "Rf_Status", "Status", "status"));
   const paymentMode = String(
     getFirstValue(item, "PaymentMode", "paymentMode", "Mode", "mode") || "Fiat",
-  );
+  ).split("-")[0] || "Fiat";
   const reference = String(
     getFirstValue(item, "RefrenceNo", "ReferenceNo", "TransactionHash", "referenceNo", "reference"),
   );
@@ -283,8 +282,8 @@ function mapFundRequestRecord(item: Record<string, unknown>, index: number): Fun
     status: statusValue || "Pending",
     reference,
     note: String(getFirstValue(item, "Remark", "remark", "AdminRemark", "adminRemark") || "—"),
-    currency: ["INR", "AED", "USD"].includes(paymentMode.toUpperCase())
-      ? paymentMode.toUpperCase()
+    currency: paymentMode.toUpperCase().startsWith("USDT")
+      ? "USDT"
       : "USD",
   };
 }
@@ -773,6 +772,7 @@ export default function FundDirectorPage() {
   const [selfBalances, setSelfBalances] = useState({ usdt: 0, velt: 0 });
   const [selfDepositLoading, setSelfDepositLoading] = useState(true);
   const [fiatCurrency, setFiatCurrency] = useState<FiatCurrency | "">("");
+  const [selectedNetwork, setSelectedNetwork] = useState<NetworkType | "">("");
   const [fiatStep, setFiatStep] = useState<1 | 2 | 3>(1);
   const [isSubmittingSelfDeposit, setIsSubmittingSelfDeposit] = useState(false);
   const [depositAmount, setDepositAmount] = useState("");
@@ -1373,8 +1373,8 @@ export default function FundDirectorPage() {
   const submitFiatDeposit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const amount = Number(depositAmount);
-    if (!fiatCurrency) {
-      toast.error("Select a payment mode first.");
+    if (!selectedNetwork) {
+      toast.error("Select a network first.");
       setFiatStep(1);
       return;
     }
@@ -1392,10 +1392,10 @@ export default function FundDirectorPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          paymentMode: fiatCurrency,
+          paymentMode: `${fiatCurrency}-${selectedNetwork}`,
           amount,
           refrenceNo: depositReference.trim(),
-          depositDetails: depositDetails.trim() || fiatDepositDetails[fiatCurrency].accountNumber,
+          depositDetails: depositDetails.trim() || fiatDepositDetails[selectedNetwork].walletAddress,
           remark: depositRemark.trim(),
         }),
       });
@@ -1837,7 +1837,7 @@ export default function FundDirectorPage() {
                       <ul className="mt-2 list-inside list-disc space-y-1.5 text-sm text-amber-800 dark:text-amber-100/80">
                         <li>Only send supported assets to this wallet.</li>
                         <li>Make sure you are using the correct network: BEP20.</li>
-                        <li>Minimum deposit: $10 USD equivalent.</li>
+                        <li>Minimum deposit: 10 USDT equivalent.</li>
                         <li>Deposit requests remain pending until confirmed.</li>
                       </ul>
                     </div>
@@ -1861,23 +1861,24 @@ export default function FundDirectorPage() {
               {fiatStep === 1 ? (
                 <Surface className="p-5 sm:p-7">
                   <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-white">
-                    Select Payment Mode
+                    Select Network
                   </h3>
                   <p className="mb-5 text-sm text-slate-500 dark:text-slate-400">
-                    Choose the currency used for your fiat deposit.
+                    Choose the network for your USDT deposit.
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {(
                       [
-                        { value: "AED", label: "United Arab Emirates Dirham", flag: "🇦🇪" },
-                        { value: "INR", label: "Indian Rupee", flag: "🇮🇳" },
+                        { value: "TRC20", label: "Tron (TRC20)", flag: "🔗" },
+                        { value: "BEP20", label: "Binance Smart Chain (BEP20)", flag: "⚡" },
                       ] as const
                     ).map((mode) => (
                       <button
                         key={mode.value}
                         type="button"
                         onClick={() => {
-                          setFiatCurrency(mode.value);
+                          setSelectedNetwork(mode.value);
+                          setFiatCurrency("USDT");
                           setFiatStep(2);
                         }}
                         className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-amber-500 hover:bg-amber-50/60 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-amber-900/20"
@@ -1897,70 +1898,42 @@ export default function FundDirectorPage() {
                     ))}
                   </div>
                 </Surface>
-              ) : fiatCurrency && fiatStep === 2 ? (
+              ) : selectedNetwork && fiatStep === 2 ? (
                 <Surface className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-white to-amber-50/50 p-5 shadow-xl dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/20 sm:p-8 lg:p-10">
                   <div className="grid items-start gap-8 md:grid-cols-2 md:gap-12">
                     <div className="mx-auto w-full max-w-sm rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-5 shadow-xl dark:border-slate-700 dark:from-slate-800 dark:to-slate-700">
                       <div className="space-y-3.5 text-xs text-slate-600 dark:text-slate-300">
                         <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 dark:border-amber-800/40 dark:bg-amber-900/20">
                           <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                            🏦 Bank
+                            💎 Payment Mode
                           </p>
                           <p className="text-sm font-bold text-slate-800 dark:text-white">
-                            {fiatDepositDetails[fiatCurrency].bank}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {fiatDepositDetails[fiatCurrency].bankCode}
+                            {fiatCurrency}
                           </p>
                         </div>
                         <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 dark:border-emerald-800/40 dark:bg-emerald-900/20">
                           <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                            💳 Account Holder Name
+                            🌐 Network
                           </p>
-                          <p className="font-mono text-sm font-bold tracking-wider text-slate-800 dark:text-white">
-                            KALKII
+                          <p className="text-sm font-bold text-slate-800 dark:text-white">
+                            {fiatDepositDetails[selectedNetwork].network}
                           </p>
                         </div>
                         <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 dark:border-emerald-800/40 dark:bg-emerald-900/20">
                           <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                            💳 Account Number
+                            💳 Wallet Address
                           </p>
                           <div className="flex items-center justify-between gap-2">
-                            <p className="font-mono text-sm font-bold tracking-wider text-slate-800 dark:text-white">
-                              {fiatDepositDetails[fiatCurrency].accountNumber}
+                            <p className="font-mono text-xs font-bold tracking-wider text-slate-800 dark:text-white break-all">
+                              {fiatDepositDetails[selectedNetwork].walletAddress}
                             </p>
                             <button
                               type="button"
                               onClick={() =>
-                                void copyFiatValue(fiatDepositDetails[fiatCurrency].accountNumber)
+                                void copyFiatValue(fiatDepositDetails[selectedNetwork].walletAddress)
                               }
-                              aria-label="Copy account number"
-                              className="rounded-lg p-2 text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/30"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-3 dark:border-amber-800/40 dark:bg-amber-900/20">
-                          <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                            🌐 {fiatCurrency === "AED" ? "SWIFT Code" : "IFSC Code"}
-                          </p>
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="font-mono text-sm font-bold tracking-wider text-slate-800 dark:text-white">
-                              {fiatDepositDetails[fiatCurrency].swift ??
-                                fiatDepositDetails[fiatCurrency].ifsc}
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                void copyFiatValue(
-                                  fiatDepositDetails[fiatCurrency].swift ??
-                                  fiatDepositDetails[fiatCurrency].ifsc ??
-                                  "",
-                                )
-                              }
-                              aria-label={`Copy ${fiatCurrency === "AED" ? "SWIFT" : "IFSC"} code`}
-                              className="rounded-lg p-2 text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/30"
+                              aria-label="Copy wallet address"
+                              className="rounded-lg p-2 text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/30 shrink-0"
                             >
                               <Copy className="h-4 w-4" />
                             </button>
@@ -1972,42 +1945,16 @@ export default function FundDirectorPage() {
                     <div className="space-y-4 md:pt-2">
                       <div>
                         <p className="pb-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
-                          Selected Payment Mode
-                        </p>
-                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-2.5 dark:border-amber-800/50 dark:bg-amber-900/20">
-                          <span className="rounded-lg bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
-                            {fiatCurrency}
-                          </span>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="pb-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
-                          Network
-                        </p>
-                        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 dark:border-emerald-800/50 dark:bg-emerald-900/20">
-                          <span className="rounded-lg bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
-                            {fiatDepositDetails[fiatCurrency].network}
-                          </span>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="mb-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
-                          {fiatDepositDetails[fiatCurrency].destinationLabel}
+                          {fiatDepositDetails[selectedNetwork].destinationLabel}
                         </p>
                         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-100 p-3 dark:border-slate-600 dark:bg-slate-700/50">
                           <span className="break-all text-sm text-slate-600 dark:text-slate-300">
-                            {fiatCurrency === "AED"
-                              ? "AEX0 0000 0000 0000 0000 000"
-                              : fiatDepositDetails[fiatCurrency].accountNumber}
+                            {fiatDepositDetails[selectedNetwork].walletAddress}
                           </span>
                           <button
                             type="button"
                             onClick={() =>
-                              void copyFiatValue(
-                                fiatCurrency === "AED"
-                                  ? "AEX0 0000 0000 0000 0000 000"
-                                  : fiatDepositDetails[fiatCurrency].accountNumber,
-                              )
+                              void copyFiatValue(fiatDepositDetails[selectedNetwork].walletAddress)
                             }
                             className="rounded-lg bg-amber-100 px-4 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-400"
                           >
@@ -2020,11 +1967,9 @@ export default function FundDirectorPage() {
                           ⚠️ Important Notes:
                         </p>
                         <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-amber-600 dark:text-amber-400">
-                          <li>
-                            Only send {fiatCurrency === "AED" ? "Dirham" : "Rupees"} to this account
-                          </li>
-                          <li>Make sure you are using the correct network</li>
-                          <li>Minimum deposit: 10 {fiatCurrency} equivalent</li>
+                          <li>Only send USDT to this wallet address</li>
+                          <li>Make sure you are using the correct network: {selectedNetwork}</li>
+                          <li>Minimum deposit: 10 USDT equivalent</li>
                           <li>Deposits will be credited after payment verification</li>
                         </ul>
                       </div>
@@ -2042,11 +1987,7 @@ export default function FundDirectorPage() {
                     <PrimaryButton
                       type="button"
                       onClick={() => {
-                        setDepositDetails(
-                          fiatCurrency === "AED"
-                            ? "AEX0 0000 0000 0000 0000 000"
-                            : fiatDepositDetails[fiatCurrency].accountNumber,
-                        );
+                        setDepositDetails(fiatDepositDetails[selectedNetwork].walletAddress);
                         setFiatStep(3);
                       }}
                     >
@@ -2054,17 +1995,27 @@ export default function FundDirectorPage() {
                     </PrimaryButton>
                   </div>
                 </Surface>
-              ) : fiatCurrency && fiatStep === 3 ? (
+              ) : selectedNetwork && fiatStep === 3 ? (
                 <Surface className="p-5 sm:p-8 lg:p-10">
                   <form onSubmit={submitFiatDeposit} className="relative space-y-6">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                          Selected Currency
-                        </p>
-                        <span className="inline-block rounded-xl bg-amber-100 px-4 py-1.5 font-bold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
-                          {fiatCurrency}
-                        </span>
+                      <div className="flex flex-wrap gap-3">
+                        <div>
+                          <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            Selected Currency
+                          </p>
+                          <span className="inline-block rounded-xl bg-amber-100 px-4 py-1.5 font-bold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+                            {fiatCurrency}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            Network
+                          </p>
+                          <span className="inline-block rounded-xl bg-emerald-100 px-4 py-1.5 font-bold text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
+                            {selectedNetwork}
+                          </span>
+                        </div>
                       </div>
                       <button
                         type="button"
@@ -2141,8 +2092,8 @@ export default function FundDirectorPage() {
                         }
                         className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
                       >
-                        <option value="performance">Income Wallet</option>
-                        <option value="yield">Rent Wallet</option>
+                        <option value="performance">Working Wallet</option>
+                        <option value="yield">ROI Wallet</option>
                       </select>
                     </label>
                   )}
@@ -2152,7 +2103,7 @@ export default function FundDirectorPage() {
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     {otpSent
                       ? "Transfer confirmation"
-                      : `${incomeWallet === "performance" ? "Income" : "Rent"} Wallet Balance`}
+                      : `${incomeWallet === "performance" ? "Working" : "ROI"} Wallet Balance`}
                   </p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Balance:{" "}
@@ -2398,8 +2349,8 @@ export default function FundDirectorPage() {
                       }
                       className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 font-medium outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white sm:w-auto"
                     >
-                      <option value="performance">Performance Wallet</option>
-                      <option value="yield">Yield Wallet</option>
+                      <option value="performance">Working Wallet</option>
+                      <option value="yield">ROI Wallet</option>
                     </select>
                   </label>
                   <div className="whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">

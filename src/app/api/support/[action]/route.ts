@@ -13,6 +13,11 @@ const ticketTypes = new Set([
   "income",
   "fund",
   "General",
+  "trading",
+  "Legacy",
+  "LegacyReborn",
+  "WithdrawalBooster",
+  "LevelBooster",
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
