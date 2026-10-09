@@ -19,13 +19,13 @@ type Ticket = Record<string, unknown>;
 const TICKETS_PER_PAGE = 10;
 
 const ticketTypes = [
-  { value: "event", label: "Event Request" },
-  { value: "Profile", label: "Profile" },
+  { value: "trading", label: "Trading Investment" },
+  { value: "Legacy", label: "Legacy Reborn" },
   { value: "Withdrawal", label: "Withdrawal" },
-  { value: "buyLicense", label: "Buy License" },
-  { value: "income", label: "Incomes" },
+  { value: "LegacyReborn", label: "Legacy Reborn 2.0" },
+  { value: "WithdrawalBooster", label: "Withdrawal Booster" },
   { value: "fund", label: "Fund Deposit" },
-  { value: "General", label: "General Inquiry" },
+  { value: "LevelBooster", label: "Level Booster" },
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {

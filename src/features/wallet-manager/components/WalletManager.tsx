@@ -10,9 +10,8 @@ type ReportRow = Record<string, unknown>;
 const tabs: { id: ReportTab; label: string }[] = [
   { id: "rank", label: "Rank Rewards" },
   { id: "deposit", label: "Deposit Wallet" },
-  { id: "performance", label: "Performance Rewards Wallet" },
-  { id: "yield", label: "Yield Wallet" },
-  { id: "legacy", label: "Legacy Wallet" },
+  { id: "performance", label: "Working Rewards Wallet" },
+  { id: "yield", label: "ROI Wallet" },
 ];
 
 const reportColumns: Record<Exclude<ReportTab, "rank">, string[]> = {

@@ -36,14 +36,15 @@ export default function Reports() {
   };
 
   const tabs = [
-    { id: "Direct Bonus", label: "Direct Bonus", icon: FaUserPlus },
-    { id: "Credit Revenue Share", label: "Credit Revenue Share", icon: FaMoneyBillWave },
-    { id: "Community Building Bonus", label: "Community Building Bonus", icon: FaUsers },
-    { id: "Reward Bonus", label: "Reward Bonus", icon: FaGift },
-    { id: "Rank Bonus", label: "Rank Bonus", icon: FaMedal },
-    { id: "Royalty Bonus", label: "Leadership Bonus", icon: FaCrown },
-    { id: "Yield Income", label: "Yield Income", icon: FaSeedling },
-    { id: "Level Income", label: "Level Income", icon: FaLayerGroup },
+    { id: "Direct Bonus", label: "Direct Income", icon: FaUserPlus },
+    { id: "Credit Revenue Share", label: "Binary Income", icon: FaMoneyBillWave },
+    { id: "Community Building Bonus", label: "Bonus ROI Income", icon: FaUsers },
+    { id: "Bonus Direct Income", label: "Bonus Direct Income", icon: FaUsers },
+    { id: "Reward Bonus", label: "Rank & Reward Bonus", icon: FaGift },
+    // { id: "Rank Bonus", label: "Rank Bonus", icon: FaMedal },
+    // { id: "Royalty Bonus", label: "Leadership Bonus", icon: FaCrown },
+    { id: "Yield Income", label: "ROI Income", icon: FaSeedling },
+    { id: "Level Income", label: "Total ROI Income", icon: FaLayerGroup },
   ];
 
   return (
