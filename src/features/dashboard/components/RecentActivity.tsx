@@ -96,8 +96,6 @@ export function RecentActivity() {
       const response = await fetch("/api/notifications?scope=all", { signal });
       const payload: unknown = await response.json();
 
-      console.log("Recent activity payload:", payload);
-
       if (!response.ok) {
         throw new Error(
           typeof payload === "object" &&

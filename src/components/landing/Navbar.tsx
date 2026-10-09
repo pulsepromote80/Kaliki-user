@@ -274,14 +274,14 @@ export function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="border-b border-black/[0.06] py-3.5 transition-colors hover:text-[#F5C451]"
+                    className="border-b border-black/[0.06] py-3.5 font-semibold text-[#B77908] transition-colors hover:text-[#8A5A00]"
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="my-3 rounded-lg bg-[#2F6FFF] px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-[#2459D6]"
+                    className="my-3 rounded-lg bg-[#F5C451] px-4 py-3 text-center font-semibold text-[#0B1021] transition-colors hover:bg-[#E5B33F]"
                   >
                     Register
                   </Link>
