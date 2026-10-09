@@ -16,7 +16,7 @@ const ReferralLink = () => {
   const referralLink = `https://Kalkii.io/register?RefID=${authLogin}&Position=${position}`;
 
   const handleCopyClick = () => {
-    const fullMessage = `🚀 𝐉𝐨𝐢𝐧 Kalikii – 𝐓𝐡𝐞 𝐅𝐮𝐭𝐮𝐫𝐞 𝐨𝐟 𝐀𝐈 𝐋𝐞𝐚𝐬𝐢𝐧𝐠!
+    const fullMessage = `🚀 𝐉𝐨𝐢𝐧 Kalikii – Powering the Future of Wealth
 Start Earning by leasing AI agents today. Sign up using my referral link and unlock exciting rewards:
 👉 ${referralLink}`;
     navigator.clipboard
@@ -43,8 +43,8 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
           <button
             onClick={() => setPosition("L")}
             className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${position === "L"
-                ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
-                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
+              ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
+              : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
               }`}
           >
             Left Position
@@ -52,8 +52,8 @@ Start Earning by leasing AI agents today. Sign up using my referral link and unl
           <button
             onClick={() => setPosition("R")}
             className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${position === "R"
-                ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
-                : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
+              ? "bg-amber-400 text-gray-900 shadow-lg shadow-amber-500/20"
+              : "bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 hover:bg-amber-100 dark:hover:bg-amber-400/15"
               }`}
           >
             Right Position

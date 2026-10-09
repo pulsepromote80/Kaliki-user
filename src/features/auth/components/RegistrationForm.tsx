@@ -114,6 +114,24 @@ export function RegistrationForm() {
   const countries = countriesData?.data|| [];
   console.log("YTYTTY",countries)
 
+  const passwordValue = form.watch("password") || "";
+  const passwordStrengthChecks = [
+    passwordValue.length >= 8,
+    /[a-z]/.test(passwordValue),
+    /[A-Z]/.test(passwordValue),
+    /\d/.test(passwordValue),
+    /[@$!%*?&]/.test(passwordValue),
+  ];
+  const passwordStrength = passwordStrengthChecks.filter(Boolean).length;
+  const passwordStrengthLabel =
+    passwordStrength <= 2 ? "Weak" : passwordStrength <= 3 ? "Medium" : "Strong";
+  const passwordStrengthColor =
+    passwordStrength <= 2
+      ? "bg-red-500"
+      : passwordStrength <= 3
+        ? "bg-amber-400"
+        : "bg-emerald-500";
+
   const inputBase = cn(
     "w-full pl-11 pr-4 py-3 text-sm rounded-lg bg-[#0d0d20]/80 border text-white placeholder-slate-500 outline-none transition-all duration-200",
     "focus:border-[#d4a017]/70 focus:bg-[#12122b] focus:ring-2 focus:ring-[#d4a017]/20"
@@ -277,77 +295,49 @@ export function RegistrationForm() {
                             <span className="w-1 h-1 rounded-full bg-[#f5c451]" />
                             Placement Side <span className="text-[#f5c451]">*</span>
                           </label>
-                          <div className="flex gap-3">
-                            <label
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-label="Team placement"
+                            aria-checked={form.watch("teamPosition") === "R"}
+                            disabled={isPositionLocked}
+                            onClick={() => {
+                              const currentPosition = form.getValues("teamPosition");
+                              form.setValue(
+                                "teamPosition",
+                                currentPosition === "L" ? "R" : "L",
+                                { shouldDirty: true, shouldValidate: true },
+                              );
+                            }}
+                            className={cn(
+                              "relative flex h-14 w-full items-center rounded-full border border-[#d4a017]/30 bg-[#0d0d20]/80 p-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c451]",
+                              isPositionLocked && "cursor-not-allowed opacity-50",
+                            )}
+                          >
+                            <span
                               className={cn(
-                                "flex-1 flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden group",
-                                "hover:scale-[1.02]",
-                                form.watch("teamPosition") === "L"
-                                  ? "bg-gradient-to-br from-[#d4a017]/20 to-[#b8860b]/10 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
-                                  : "bg-[#0d0d20]/70 hover:bg-[#0d0d20]/90",
-                                isPositionLocked && "cursor-not-allowed opacity-50"
+                                "absolute left-1.5 top-1.5 h-11 w-[calc(50%-0.375rem)] rounded-full bg-gradient-to-r from-[#f5c451] to-[#d4a017] shadow-[0_0_16px_rgba(245,196,81,0.3)] transition-transform duration-300",
+                                form.watch("teamPosition") === "R" && "translate-x-full",
+                                !form.watch("teamPosition") && "opacity-40",
+                              )}
+                            />
+                            <span
+                              className={cn(
+                                "relative z-10 flex-1 transition-colors",
+                                form.watch("teamPosition") === "L" ? "text-black" : "text-slate-300",
                               )}
                             >
-                              {form.watch("teamPosition") === "L" && (
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#d4a017]/10 to-transparent animate-pulse" />
-                              )}
-                              <input
-                                {...form.register("teamPosition")}
-                                type="radio"
-                                value="L"
-                                disabled={isPositionLocked}
-                                className="hidden"
-                              />
-                              <div
-                                className={cn(
-                                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative z-10",
-                                  form.watch("teamPosition") === "L"
-                                    ? "border-[#f5c451] bg-[#f5c451] shadow-[0_0_10px_rgba(245,196,81,0.5)]"
-                                    : "border-[#d4a017]/40"
-                                )}
-                              >
-                                {form.watch("teamPosition") === "L" && (
-                                  <div className="w-2.5 h-2.5 rounded-full bg-black" />
-                                )}
-                              </div>
-                              <span className="text-sm text-white font-medium relative z-10">Left Team</span>
-                            </label>
-
-                            <label
+                              Left Team
+                            </span>
+                            <span
                               className={cn(
-                                "flex-1 flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden group",
-                                "hover:scale-[1.02]",
-                                form.watch("teamPosition") === "R"
-                                  ? "bg-gradient-to-br from-[#d4a017]/20 to-[#b8860b]/10 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
-                                  : "bg-[#0d0d20]/70 hover:bg-[#0d0d20]/90",
-                                isPositionLocked && "cursor-not-allowed opacity-50"
+                                "relative z-10 flex-1 transition-colors",
+                                form.watch("teamPosition") === "R" ? "text-black" : "text-slate-300",
                               )}
                             >
-                              {form.watch("teamPosition") === "R" && (
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#d4a017]/10 to-transparent animate-pulse" />
-                              )}
-                              <input
-                                {...form.register("teamPosition")}
-                                type="radio"
-                                value="R"
-                                disabled={isPositionLocked}
-                                className="hidden"
-                              />
-                              <div
-                                className={cn(
-                                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative z-10",
-                                  form.watch("teamPosition") === "R"
-                                    ? "border-[#f5c451] bg-[#f5c451] shadow-[0_0_10px_rgba(245,196,81,0.5)]"
-                                    : "border-[#d4a017]/40"
-                                )}
-                              >
-                                {form.watch("teamPosition") === "R" && (
-                                  <div className="w-2.5 h-2.5 rounded-full bg-black" />
-                                )}
-                              </div>
-                              <span className="text-sm text-white font-medium relative z-10">Right Team</span>
-                            </label>
-                          </div>
+                              Right Team
+                            </span>
+                          </button>
                           {isPositionLocked && (
                             <p className="mt-2 text-xs text-[#f5c451] flex items-center gap-1.5 bg-[#d4a017]/10 px-3 py-1.5 rounded-lg border border-[#d4a017]/20">
                               <ShieldCheck className="w-3 h-3" /> Locked via
@@ -582,6 +572,46 @@ export function RegistrationForm() {
                           )}
                         </button>
                       </div>
+                      {passwordValue && (
+                        <div className="mt-2" aria-live="polite">
+                          <div className="mb-1.5 flex items-center justify-between text-xs">
+                            <span className="text-slate-400">Password strength</span>
+                            <span
+                              className={cn(
+                                "font-semibold",
+                                passwordStrength <= 2
+                                  ? "text-red-400"
+                                  : passwordStrength <= 3
+                                    ? "text-amber-300"
+                                    : "text-emerald-400",
+                              )}
+                            >
+                              {passwordStrengthLabel}
+                            </span>
+                          </div>
+                          <div
+                            className="flex gap-1"
+                            role="progressbar"
+                            aria-label={`Password strength: ${passwordStrengthLabel}`}
+                            aria-valuemin={0}
+                            aria-valuemax={5}
+                            aria-valuenow={passwordStrength}
+                          >
+                            {passwordStrengthChecks.map((_, index) => (
+                              <span
+                                key={index}
+                                className={cn(
+                                  "h-1.5 flex-1 rounded-full bg-slate-700/70",
+                                  index < passwordStrength && passwordStrengthColor,
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <p className="mt-1.5 text-[11px] text-slate-500">
+                            Use 8+ characters with uppercase, lowercase, a number, and a symbol.
+                          </p>
+                        </div>
+                      )}
                       {form.formState.errors.password && (
                         <p className="mt-1.5 text-xs text-red-400">
                           {form.formState.errors.password.message}
@@ -604,14 +634,18 @@ export function RegistrationForm() {
                     >
                       I agree to the{" "}
                       <Link
-                        href="#"
+                        href="/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-[#f5c451] hover:text-[#ffd971] underline underline-offset-2 transition-colors"
                       >
                         Terms & Conditions
                       </Link>{" "}
                       and{" "}
                       <Link
-                        href="#"
+                        href="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-[#f5c451] hover:text-[#ffd971] underline underline-offset-2 transition-colors"
                       >
                         Privacy Policy

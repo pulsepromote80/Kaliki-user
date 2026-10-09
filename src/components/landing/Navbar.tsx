@@ -110,6 +110,7 @@ export function Navbar() {
           <Link href="#faq" className="px-4 py-8 text-white hover:text-[#F5C451] transition-colors">FAQ</Link>
           <Link href="#contact" className="px-4 py-8 text-white hover:text-[#F5C451] transition-colors">Contact</Link>
           <Link href="/login" className="rounded-lg bg-[#F5C451] px-4 py-2.5 text-[#0B1021] transition-colors hover:bg-[#E5B33F]">Sign In</Link>
+          <Link href="/register" className="rounded-lg bg-[#F5C451] px-4 py-2.5 text-[#0B1021] transition-colors hover:bg-[#E5B33F]">Onboard</Link>
 
         </nav>
 
@@ -274,16 +275,16 @@ export function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="border-b border-black/[0.06] py-3.5 font-semibold text-[#B77908] transition-colors hover:text-[#8A5A00]"
+                    className="my-3 rounded-lg border border-[#F5C451] px-4 py-3 text-center font-semibold text-[#B77908] transition-colors hover:bg-[#F5C451]/10"
                   >
-                    Login
+                    Sign In
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="my-3 rounded-lg bg-[#F5C451] px-4 py-3 text-center font-semibold text-[#0B1021] transition-colors hover:bg-[#E5B33F]"
                   >
-                    Register
+                    Onboard
                   </Link>
 
                 </div>
