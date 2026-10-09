@@ -284,7 +284,7 @@ export function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="my-3 rounded-lg bg-[#F5C451] px-4 py-3 text-center font-semibold text-[#0B1021] transition-colors hover:bg-[#E5B33F]"
                   >
-                    Onboard
+                    Enroll now
                   </Link>
 
                 </div>

@@ -38,7 +38,7 @@ export function CTA() {
         </p>
 
         {/* CTA Button */}
-        <Link href="/login" className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-8 py-4 rounded-full font-medium hover:bg-[#E5B33F] transition-colors text-base">
+        <Link href="/register" className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-8 py-4 rounded-full font-medium hover:bg-[#E5B33F] transition-colors text-base">
           Enroll now
           <ArrowUpRightIcon />
         </Link>

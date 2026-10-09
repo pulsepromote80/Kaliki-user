@@ -43,7 +43,7 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4 mb-10">
-              <Link href="/login" className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-7 py-3.5 rounded-full font-medium hover:bg-[#E5B33F] transition-colors">
+              <Link href="/register" className="inline-flex items-center gap-2 bg-[#F5C451] text-black px-7 py-3.5 rounded-full font-medium hover:bg-[#E5B33F] transition-colors">
                 Enroll now
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
               </Link>
