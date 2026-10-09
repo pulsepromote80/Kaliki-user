@@ -16,7 +16,7 @@ const ReferralLink = () => {
   const referralLink = `https://Kalkii.io/register?RefID=${authLogin}&Position=${position}`;
 
   const handleCopyClick = () => {
-    const fullMessage = `🚀 𝐉𝐨𝐢𝐧 Kalikii – Empowering the Future of Trading.
+    const fullMessage = `🚀 𝐉𝐨𝐢𝐧 Kalikii – 𝐄𝐦𝐩𝐨𝐰𝐞𝐫𝐢𝐧𝐠 𝐭𝐡𝐞 𝐅𝐮𝐭𝐮𝐫𝐞 𝐨𝐟 𝐓𝐫𝐚𝐝𝐢𝐧𝐠.
      Start your trading journey today and explore exciting market opportunities. Sign up using my referral link and unlock exclusive rewards:
 👉 ${referralLink}`;
     navigator.clipboard
