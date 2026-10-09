@@ -158,9 +158,10 @@ export function ChangePasswordForm() {
               type="button"
               onClick={handleSendOtp}
               disabled={sendingOtp || otpSent}
-              className="h-10 w-full px-4 font-semibold text-gray-900 bg-amber-400 hover:bg-amber-500 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md sm:w-auto"
+              isLoading={sendingOtp}
+              className="h-10 w-full rounded-lg bg-amber-400 px-4 font-semibold text-gray-900 shadow-md transition-all duration-200 hover:bg-amber-500 focus-visible:ring-amber-400 sm:w-auto"
             >
-              {sendingOtp ? "Sending..." : otpSent ? "OTP Sent" : "Send OTP"}
+              {otpSent ? "OTP Sent" : "Send OTP"}
             </Button>
           </div>
         </div>
@@ -168,9 +169,10 @@ export function ChangePasswordForm() {
         <Button
           type="submit"
           disabled={isSubmitting || !otpSent}
-          className="w-full"
+          isLoading={isSubmitting}
+          className="w-full bg-amber-400 text-gray-900 hover:bg-amber-500 focus-visible:ring-amber-400"
         >
-          {isSubmitting ? "Changing..." : "Change Password"}
+          Change Password
         </Button>
       </form>
     </FormProvider>
