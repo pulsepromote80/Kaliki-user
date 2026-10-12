@@ -186,7 +186,7 @@ const LevelPartner = () => {
                 onChange={(e) => setPageSize(e.target.value)}
               >
                 <option value="">Select Level</option>
-                {Array.from({ length: 15 }, (_, i) => i + 1).map((lvl) => (
+                {Array.from({ length: 20 }, (_, i) => i + 1).map((lvl) => (
                   <option key={lvl} value={lvl}>
                     {lvl}
                   </option>
@@ -211,16 +211,16 @@ const LevelPartner = () => {
                   <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">
                     Sponsor ID
                   </th>
-                  <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Date</th>
+                  <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Reg. Date</th>
+                            <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Activation Date</th>
                   <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
                     Package
                   </th>
                   
 
                   <th className="px-2 py-1 py-2 text-left text-black dark:text-gray-100">Rank</th>
-                  <th className="px-2 py-1 py-2 text-left text-black whitespace-nowrap dark:text-gray-100">
-                    Team Business
-                  </th>
+                  
+                
                 </tr>
               </thead>
 
@@ -291,6 +291,9 @@ const LevelPartner = () => {
                     <td className="p-2 border border-gray-200 dark:border-gray-700">
                       <span className="px-2 py-1 text-black dark:text-gray-100">{node.RegDate}</span>
                     </td>
+                      <td className="p-2 border border-gray-200 dark:border-gray-700">
+                      <span className="px-2 py-1 text-black dark:text-gray-100">{node.SubscribeDate}</span>
+                    </td>
 
                     <td className="p-2 border border-gray-200 dark:border-gray-700">
                       <span className="px-2 py-1 text-black dark:text-gray-100">
@@ -311,15 +314,6 @@ const LevelPartner = () => {
                       </span>
                     </td>
 
-
-
-                    <td className="p-2 border border-gray-200 dark:border-gray-700">
-                      <span className="px-2 py-1 text-black dark:text-gray-100">
-                        {Number(node.TeamBusiness) > 0
-                          ? `$${Number(node.TeamBusiness).toFixed(2)}`
-                          : "$0"}
-                      </span>
-                    </td>
                   </tr>
                 ))}
               </tbody>

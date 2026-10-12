@@ -22,6 +22,7 @@ export interface DirectMember {
   PendingCredit?: string;
   SubscribeDate?: string;
   Package?: number;
+  ActivationDate?: string;
 }
 
 export interface DirectMemberResponse {

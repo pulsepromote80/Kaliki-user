@@ -20,6 +20,8 @@ export interface AuthenticatedUser {
   name: string;
   email: string;
   roles: string[];
+  userId?: string;
+  loginid?: string;
 }
 
 export interface RegistrationPayload {

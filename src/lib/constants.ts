@@ -33,6 +33,7 @@ export const QUERY_KEYS = {
   },
   orderHistory: {
     all: ["orderHistory"] as const,
+    booster: ["orderHistory", "booster"] as const,
   },
 } as const;
 
