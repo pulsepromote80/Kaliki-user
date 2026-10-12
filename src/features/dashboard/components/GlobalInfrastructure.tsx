@@ -2,9 +2,19 @@
 
 import { CircleDollarSign, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSummary";
+import { formatCurrency } from "@/lib/utils";
 
 export function GlobalInfrastructure() {
-  const programs = ["Trading", "Legacy Reborn", "Legacy Reborn 2.0", "Withdrwal Fund", "Withdrwal Booster"];
+  const { data } = useDashboardSummary();
+  const dashboardData = data?.data?.[0];
+  const programs = [
+    { name: "Trading Package", key: "TradingPackage" },
+    { name: "Legacy Reborn", key: "RebornPacakge" },
+    { name: "Legacy Reborn 2.0", key: "Reborn2Pacakge" },
+    { name: "BoosterPackage", key: "BoosterPackage" },
+    { name: "Withdrwal Booster", key: "LevelBoosterPackage" },
+  ] as const;
 
   return (
     <div className="mt-4">
@@ -27,18 +37,28 @@ export function GlobalInfrastructure() {
           <div className="text-right text-[12px] font-semibold uppercase tracking-[0.11em] sm:text-sm">AMOUNT</div>
         </div>
 
-        {programs.map((program) => (
-          <div
-            key={program}
-            className="grid grid-cols-[1.8fr_0.8fr_0.9fr] items-center border-b border-gray-200 py-5 text-gray-900 last:border-b-0 dark:border-[#1E293B] dark:text-white"
-          >
-            <div className="text-[12px] font-semibold leading-snug ">{program}</div>
-            <div className="flex justify-center">
-              <span aria-label="Inactive" className="text-2xl font-bold leading-none text-red-500 ">✕</span>
+        {programs.map((program) => {
+          const amount = dashboardData?.[program.key] ?? 0;
+          const isActive = amount > 0;
+
+          return (
+            <div
+              key={program.key}
+              className="grid grid-cols-[1.8fr_0.8fr_0.9fr] items-center border-b border-gray-200 py-5 text-gray-900 last:border-b-0 dark:border-[#1E293B] dark:text-white"
+            >
+              <div className="text-[12px] font-semibold leading-snug ">{program.name}</div>
+              <div className="flex justify-center">
+                <span
+                  aria-label={isActive ? "Active" : "Inactive"}
+                  className={`text-2xl font-bold leading-none ${isActive ? "text-green-500" : "text-red-500"}`}
+                >
+                  {isActive ? "✓" : "✕"}
+                </span>
+              </div>
+              <div className="text-right font-bold ">{formatCurrency(amount)}</div>
             </div>
-            <div className="text-right font-bold ">$0.00</div>
-          </div>
-        ))}
+          );
+        })}
 
         <div className="mt-8 flex justify-center sm:mt-10">
           <Link
