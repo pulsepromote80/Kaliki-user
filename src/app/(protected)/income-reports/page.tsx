@@ -16,35 +16,28 @@ import {
 } from "react-icons/fa";
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState("Direct Bonus");
+  const [activeTab, setActiveTab] = useState("Direct Income");
   const pathname = usePathname();
   const pageName = getPageName(pathname);
 
   const getTransactionType = (tabName: string) => {
     const map: Record<string, string> = {
-      "Direct Bonus": "Direct Bonus",
-      "Community Building Bonus": "Community Building Bonus",
-      "Reward Bonus": "Reward Bonus",
-      "Rank Bonus": "Rank Bonus",
-      "Royalty Bonus": "Royalty Bonus",
-      "Yield Income": "Yield Income",
-      "Level Income": "Level Income",
-      "Credit Revenue Share": "Credit Revenue Share",
+      "Direct Income": "Direct Income",
+      "Binary Income": "Binary Income",
+      "Rank & Reward Bonus": "Rank & Reward",
+      "ROI Income": "ROI Income",
+      "Total ROI Income": "Level Income",
 
     };
     return map[tabName] || "ALL";
   };
 
   const tabs = [
-    { id: "Direct Bonus", label: "Direct Income", icon: FaUserPlus },
-    { id: "Credit Revenue Share", label: "Binary Income", icon: FaMoneyBillWave },
-    { id: "Community Building Bonus", label: "Bonus ROI Income", icon: FaUsers },
-    { id: "Bonus Direct Income", label: "Bonus Direct Income", icon: FaUsers },
-    { id: "Reward Bonus", label: "Rank & Reward Bonus", icon: FaGift },
-    // { id: "Rank Bonus", label: "Rank Bonus", icon: FaMedal },
-    // { id: "Royalty Bonus", label: "Leadership Bonus", icon: FaCrown },
-    { id: "Yield Income", label: "ROI Income", icon: FaSeedling },
-    { id: "Level Income", label: "Total ROI Income", icon: FaLayerGroup },
+    { id: "Direct Income", label: "Direct Income", icon: FaUserPlus },
+    { id: "Binary Income", label: "Binary Income", icon: FaMoneyBillWave },
+    { id: "Rank & Reward Bonus", label: "Rank & Reward Bonus", icon: FaGift },
+    { id: "ROI Income", label: "ROI Income", icon: FaSeedling },
+    { id: "Total ROI Income", label: "Total ROI Income", icon: FaLayerGroup },
   ];
 
   return (

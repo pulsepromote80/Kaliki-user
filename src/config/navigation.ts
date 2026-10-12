@@ -44,10 +44,10 @@ export const primaryNav: NavItem[] = [
     dropdownItems: [
       { label: "Business Dashboard", href: "/ai-business-hub" },
       { label: "Direct Partners", href: "/direct-partners" },
-      { label: "Level Partners", href: "/level-partners" },
+      { label: "Level Tree", href: "/network-tree" },
       // { label: "Level Partners Tree", href: "/intelligent-partner-view" },
-      { label: "Downline Partners", href: "/binary-tree" },
-      { label: "Downline Tree", href: "/network-tree" },
+      { label: "Downline Partners", href: "/downline" },
+      { label: "Downline Tree", href: "/binary-tree" },
     ],
   },
   {

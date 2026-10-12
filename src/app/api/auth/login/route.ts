@@ -22,18 +22,20 @@ export async function POST(request: NextRequest) {
       loginOTP: body.loginOTP,
     });
 
-    const { accessToken, statusCode, message } = backendResponse.data;
+    const { accessToken, statusCode, message, data } = backendResponse.data;
 
     const response = NextResponse.json({
       statusCode,
       message,
       accessToken,
+      data,
 
     });
 
     // Store both token and userData in the cookie
     const sessionData = JSON.stringify({
       accessToken,
+      userData: data,
 
     });
 
