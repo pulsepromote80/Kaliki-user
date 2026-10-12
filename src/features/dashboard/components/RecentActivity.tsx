@@ -185,7 +185,7 @@ export function RecentActivity() {
           </div>
         )}
 
-        <div className="max-h-[290px] overflow-y-auto">
+        <div className=" overflow-y-auto">
           {isLoading ? (
             <div className="flex justify-center px-4 py-8">
               <Loader2 className="h-6 w-6 animate-spin text-[#F5C451]" aria-label="Loading recent activity" />

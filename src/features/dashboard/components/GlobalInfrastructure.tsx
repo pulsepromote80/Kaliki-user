@@ -1,48 +1,65 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { useTheme } from "next-themes";
+import { CircleDollarSign, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export function GlobalInfrastructure() {
-  const { theme } = useTheme();
-  const regions = [
-    { name: "North America", status: "Active", nodes: 124 },
-    { name: "Europe", status: "Active", nodes: 89 },
-    { name: "Asia Pacific", status: "Active", nodes: 156 },
-    { name: "South America", status: "Maintenance", nodes: 45 },
-  ];
+  const programs = ["Trading", "Legacy Reborn", "Legacy Reborn 2.0", "Withdrwal Fund", "Withdrwal Booster"];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Global AI Infrastructure</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {regions.map((region) => (
-            <div
-              key={region.name}
-              className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg gap-2 ${
-                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'
-              }`}
-            >
-              <div>
-                <p className="font-medium text-sm">{region.name}</p>
-                <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{region.nodes} Active Nodes</p>
-              </div>
-              <span
-                className={`px-2 py-1 rounded-full text-[10px] sm:text-xs font-medium w-fit ${
-                  region.status === "Active"
-                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                    : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-                }`}
-              >
-                {region.status}
-              </span>
-            </div>
-          ))}
+    <div className="mt-4">
+      <div className="mb-6 flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F5C451]/10">
+          <TrendingUp className="h-5 w-5 text-[#D4A017]" aria-hidden />
         </div>
-      </CardContent>
-    </Card>
+        <div>
+          <h2 className="text-lg text-gray-900 dark:text-white md:text-xl">Executing Trades</h2>
+          <p className="text-xs font-bold text-gray-800 dark:text-gray-200">
+            Your live self-trading position.
+          </p>
+        </div>
+      </div>
+
+      <section className="w-full rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-[#1E293B] dark:bg-[#0b0b0e] sm:p-6">
+        <div className="grid grid-cols-[1.8fr_0.8fr_0.9fr] items-center border-b border-gray-200 pb-4 text-gray-500 dark:border-[#1E293B] dark:text-gray-400">
+          <div className="text-[12px] font-semibold uppercase tracking-[0.11em] sm:text-sm">PROGRAM</div>
+          <div className="text-center text-[12px] font-semibold uppercase tracking-[0.11em] sm:text-sm">STATUS</div>
+          <div className="text-right text-[12px] font-semibold uppercase tracking-[0.11em] sm:text-sm">AMOUNT</div>
+        </div>
+
+        {programs.map((program) => (
+          <div
+            key={program}
+            className="grid grid-cols-[1.8fr_0.8fr_0.9fr] items-center border-b border-gray-200 py-5 text-gray-900 last:border-b-0 dark:border-[#1E293B] dark:text-white"
+          >
+            <div className="text-[12px] font-semibold leading-snug ">{program}</div>
+            <div className="flex justify-center">
+              <span aria-label="Inactive" className="text-2xl font-bold leading-none text-red-500 ">✕</span>
+            </div>
+            <div className="text-right font-bold ">$0.00</div>
+          </div>
+        ))}
+
+        <div className="mt-8 flex justify-center sm:mt-10">
+          <Link
+            href="/fund-director"
+            aria-label="Go to Self Deposit"
+            className="block w-full max-w-[560px] rounded-2xl border border-gray-200 bg-gray-50 px-5 py-7 text-center transition-colors hover:border-[#F5C451] hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5C451] dark:border-[#1E293B] dark:bg-[#0b0b0e] dark:hover:bg-white/5 sm:px-8 sm:py-8"
+          >
+            <div className="mx-auto mb-4 flex h-[68px] w-[68px] items-center justify-center rounded-xl bg-gradient-to-br from-[#F5C451] to-[#D4A017] text-[#0B1021] shadow-[0_10px_22px_rgba(212,160,23,0.2)] sm:mb-5 sm:h-[76px] sm:w-[76px]">
+              <CircleDollarSign aria-hidden="true" className="h-9 w-9 sm:h-10 sm:w-10" strokeWidth={2.2} />
+            </div>
+
+            <h3 className="text-2xl font-semibold tracking-[-0.02em] text-gray-900 dark:text-white sm:text-[28px]">
+              Deposit
+            </h3>
+
+            <p className="mx-auto mt-2 max-w-[460px] text-base leading-relaxed text-gray-600 dark:text-gray-400 sm:text-lg">
+              Trade smarter with a strategy designed to optimize your potential returns.
+            </p>
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }
