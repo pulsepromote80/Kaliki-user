@@ -28,6 +28,11 @@ export interface DashboardData {
   IncomeWalletbal: number;
   DepositWalletBal: number;
   RentWalletBal: number;
+  TradingPackage?: number;
+  RebornPacakge?: number;
+  Reborn2Pacakge?: number;
+  BoosterPackage?: number;
+  LevelBoosterPackage?: number;
 }
 
 export interface DashboardSummary {
