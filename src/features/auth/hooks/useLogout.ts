@@ -11,18 +11,19 @@ export function useLogout() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    // Clear user state immediately
+    try {
+      // Call logout API to clear the session cookie
+      await authService.logout();
+    } catch (error) {
+      console.error("Logout API call failed:", error);
+    }
+
+    // Clear user state after API call
     clearUser();
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me });
-    
-    // Fire and forget the API call - don't wait for it
-    authService.logout().catch((error) => {
-      console.error("Logout API call failed:", error);
-    });
-    
-    // Redirect immediately without waiting for API
+
+    // Redirect to login page
     router.push("/login");
-    router.refresh();
   };
 
   return {

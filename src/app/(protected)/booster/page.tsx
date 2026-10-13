@@ -120,7 +120,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
     if (!booster) return;
 
     const boosterPrice = booster.Rkprice;
-    console.log("uuu",boosterPrice);
+   
 
     if (boosterPrice > walletBalance) {
       setActivationError("Insufficient balance");

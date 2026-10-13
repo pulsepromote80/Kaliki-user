@@ -24,7 +24,7 @@ export default function Reports() {
     const map: Record<string, string> = {
       "Direct Income": "Direct Income",
       "Binary Income": "Binary Income",
-      "Rank & Reward": "Rank & Reward",
+      "Reward Income": "Reward Income",
       "ROI Income": "ROI Income",
       "Level Income": "Level Income",
 
@@ -35,7 +35,7 @@ export default function Reports() {
   const tabs = [
     { id: "Direct Income", label: "Direct Income", icon: FaUserPlus },
     { id: "Binary Income", label: "Binary Income", icon: FaMoneyBillWave },
-    { id: "Rank & Reward", label: "Rank & Reward", icon: FaGift },
+    { id: "Reward Income", label: "Rank & Reward", icon: FaGift },
     { id: "ROI Income", label: "ROI Income", icon: FaSeedling },
     { id: "Level Income", label: "Level Income", icon: FaLayerGroup },
   ];
