@@ -1,15 +1,18 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  userid: z.string().min(1, "Userid is required"),
+  userid: z.string().min(1, "Username is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   loginOTP: z.string().optional(),
+  rememberMe: z.boolean().refine((val) => val === true, {
+    message: "Please check 'Keep me signed in' to continue",
+  }),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  UserId: z.string().min(1, "UserId is required"),
+  UserId: z.string().min(1, "Username is required"),
   Email: z.string().email("Invalid email address"),
 });
 

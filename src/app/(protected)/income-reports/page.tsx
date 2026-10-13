@@ -24,9 +24,9 @@ export default function Reports() {
     const map: Record<string, string> = {
       "Direct Income": "Direct Income",
       "Binary Income": "Binary Income",
-      "Rank & Reward Bonus": "Rank & Reward",
+      "Rank & Reward": "Rank & Reward",
       "ROI Income": "ROI Income",
-      "Total ROI Income": "Level Income",
+      "Level Income": "Level Income",
 
     };
     return map[tabName] || "ALL";
@@ -35,9 +35,9 @@ export default function Reports() {
   const tabs = [
     { id: "Direct Income", label: "Direct Income", icon: FaUserPlus },
     { id: "Binary Income", label: "Binary Income", icon: FaMoneyBillWave },
-    { id: "Rank & Reward Bonus", label: "Rank & Reward Bonus", icon: FaGift },
+    { id: "Rank & Reward", label: "Rank & Reward", icon: FaGift },
     { id: "ROI Income", label: "ROI Income", icon: FaSeedling },
-    { id: "Total ROI Income", label: "Total ROI Income", icon: FaLayerGroup },
+    { id: "Level Income", label: "Level Income", icon: FaLayerGroup },
   ];
 
   return (

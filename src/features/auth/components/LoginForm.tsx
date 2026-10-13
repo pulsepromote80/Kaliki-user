@@ -22,7 +22,7 @@ export function LoginForm() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { userid: "", password: "", loginOTP: "" },
+    defaultValues: { userid: "", password: "", loginOTP: "", rememberMe: false },
   });
 
   const login = useLogin();
@@ -33,7 +33,7 @@ export function LoginForm() {
     const password = form.getValues("password");
 
     if (!userid) {
-      form.setError("userid", { message: "userid is required to send OTP" });
+      form.setError("userid", { message: "Username is required to send OTP" });
       return;
     }
     if (!password) {
@@ -277,6 +277,7 @@ export function LoginForm() {
                   {/* ═══ Remember Me ═══ */}
                   <div className="flex items-center gap-3 px-1">
                     <input
+                      {...form.register("rememberMe")}
                       type="checkbox"
                       id="rememberMe"
                       className="w-4 h-4 rounded border-[#d4a017]/30 bg-[#0d0d20] text-[#d4a017] focus:ring-[#d4a017]/40 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer accent-[#d4a017]"
@@ -288,6 +289,11 @@ export function LoginForm() {
                       Keep me signed in
                     </label>
                   </div>
+                  {form.formState.errors.rememberMe && (
+                    <p className="mt-1.5 text-xs text-red-400">
+                      {form.formState.errors.rememberMe.message}
+                    </p>
+                  )}
 
                   {/* ═══ Submit Button ═══ */}
                   <button
