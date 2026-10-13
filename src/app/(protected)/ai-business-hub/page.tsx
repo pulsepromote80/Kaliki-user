@@ -262,7 +262,7 @@ export default function AIBUSINESSHUB() {
                   ${(countedTeamDownline)}
                 </div>
                 <div className="text-[#F5C451] font-semibold mt-[3px]">
-                 (20%)
+                 (10%)
                 </div>
               </div>
               <div className="flex-1 lg:flex-none bg-amber-300/[0.06] border border-amber-300/20 rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
@@ -273,7 +273,7 @@ export default function AIBUSINESSHUB() {
                   ${(countedTeamBusiness)}
                 </div>
                 <div className="text-[#F5C451] font-semibold mt-[3px]">
-                  (80%)
+                  (90%)
                 </div>
               </div>
             </div>
