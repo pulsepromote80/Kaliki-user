@@ -42,10 +42,13 @@ export default function TransactionData({ transType }: { transType: string }) {
     }, [transType, setTransactionHistory]);
 
     // Filter transactions based on search term
-    const filteredTransactions = transactionhistorydata?.filter(transaction => 
+    const filteredTransactions = transactionhistorydata?.filter(transaction =>
         transaction.Remark?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         transaction.message?.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
+
+    console.log("transactionhistorydata:", transactionhistorydata);
+    console.log("filteredTransactions:", filteredTransactions);
 
     // Calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -145,12 +148,7 @@ export default function TransactionData({ transType }: { transType: string }) {
                                                 Remark
                                             </span>
                                         </th>
-                                        <th className="px-3 py-3 text-xs font-bold tracking-wider text-center text-gray-600 uppercase sm:px-6 dark:text-gray-400 whitespace-nowrap">
-                                            <span className="flex items-center justify-center gap-1.5">
-                                                <MessageSquare className="w-3.5 h-3.5" />
-                                                Message
-                                            </span>
-                                        </th>
+                                      
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -186,9 +184,7 @@ export default function TransactionData({ transType }: { transType: string }) {
                                                 <td className="px-3 sm:px-6 py-3.5 text-center text-sm font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap  truncate" title={rank.Remark}>
                                                     {rank.Remark || "-"}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3.5 text-center text-sm font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap  truncate" title={rank.message}>
-                                                    {rank.message || "-"}
-                                                </td>
+                                             
                                             </tr>
                                         ))
                                     ) : (

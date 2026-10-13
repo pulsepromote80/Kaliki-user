@@ -16,27 +16,30 @@ export async function POST(request: NextRequest) {
 
   try {
     const backend = createBackendClient();
-    const backendResponse = await backend.post("/Authentication/appLogin", {
-      userid: body.userid,
-      password: body.password,
-      loginOTP: body.loginOTP,
-    });
 
-    const { accessToken, statusCode, message, data } = backendResponse.data;
+    const backendResponse = await backend.post(
+      "/Authentication/appLogin",
+      {
+        userid: body.userid,
+        password: body.password,
+        loginOTP: body.loginOTP,
+      },
+    );
 
+    const { accessToken, statusCode, message, data } =
+      backendResponse.data;
+
+    // Response JSON mein accessToken nahi bhejna
     const response = NextResponse.json({
       statusCode,
       message,
-      accessToken,
       data,
-
     });
 
-    // Store both token and userData in the cookie
+    // Token aur user data HttpOnly cookie mein store karna
     const sessionData = JSON.stringify({
       accessToken,
       userData: data,
-
     });
 
     response.cookies.set(SESSION_COOKIE_NAME, sessionData, {
@@ -44,24 +47,33 @@ export async function POST(request: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
+      maxAge: 60 * 60,
     });
+
     return response;
   } catch (error) {
     console.error("Login error:", error);
+
     if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message || "Authentication failed";
-      // Suppress the specific 401 error message about incorrect credentials
-      if (errorMessage === "Details are incorrect, please enter correct credentials.") {
+      const errorMessage =
+        error.response?.data?.message || "Authentication failed";
+
+      if (
+        errorMessage ===
+        "Details are incorrect, please enter correct credentials."
+      ) {
         return NextResponse.json(
           { success: false, message: "Invalid userid or password" },
           { status: 401 },
         );
       }
+
       return NextResponse.json(
         { success: false, message: errorMessage },
         { status: error.response?.status || 401 },
       );
     }
+
     return NextResponse.json(
       { success: false, message: "Authentication failed" },
       { status: 401 },

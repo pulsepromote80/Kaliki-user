@@ -12,7 +12,7 @@ export function GlobalInfrastructure() {
     { name: "Trading Package", key: "TradingPackage" },
     { name: "Legacy Reborn", key: "RebornPacakge" },
     { name: "Legacy Reborn 2.0", key: "Reborn2Pacakge" },
-    { name: "BoosterPackage", key: "BoosterPackage" },
+    { name: "Booster Package", key: "BoosterPackage" },
     { name: "Withdrwal Booster", key: "LevelBoosterPackage" },
   ] as const;
 
@@ -38,8 +38,10 @@ export function GlobalInfrastructure() {
         </div>
 
         {programs.map((program) => {
-          const amount = dashboardData?.[program.key] ?? 0;
-          const isActive = amount > 0;
+          const value = dashboardData?.[program.key] ?? 0;
+          const isStringActive = typeof value === "string" && value === "Active";
+          const numericAmount = typeof value === "number" ? value : 0;
+          const isActive = isStringActive || numericAmount > 0;
 
           return (
             <div
@@ -55,7 +57,9 @@ export function GlobalInfrastructure() {
                   {isActive ? "✓" : "✕"}
                 </span>
               </div>
-              <div className="text-right font-bold ">{formatCurrency(amount)}</div>
+              <div className="text-right font-bold ">
+                {isStringActive ? "Active" : formatCurrency(numericAmount)}
+              </div>
             </div>
           );
         })}

@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/constants";
+import Link from "next/link";
 
 type Status = string;
 type FundDirectorRecord = {
@@ -2387,9 +2388,9 @@ export default function FundDirectorPage() {
                           {profileWalletAddressError}
                         </span>
                       ) : !profileWalletAddress ? (
-                        <span className="block text-xs text-amber-700 dark:text-amber-300">
+                        <Link href="/profile" className="block text-xs text-amber-700 dark:text-amber-300">
                           No BEP20 address is saved in your profile.
-                        </span>
+                        </Link>
                       ) : null}
                     </label>
                   </div>
