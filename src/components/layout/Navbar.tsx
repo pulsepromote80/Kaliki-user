@@ -278,7 +278,7 @@ export function Navbar() {
     {
       id: 'deposit',
       name: 'Deposit Wallet',
-      balance: walletData?.DepositWalletBal ? `$${Number(walletData.DepositWalletBal).toFixed(4)}` : '$0.0000',
+      balance: walletData?.DepositWallet ? `$${Number(walletData.DepositWallet).toFixed(4)}` : '$0.0000',
       icon: Briefcase,
       color: '#0ea5e9',
       bg: '#e0f2fe'
@@ -286,7 +286,7 @@ export function Navbar() {
     {
       id: 'performance',
       name: 'Working Wallet',
-      balance: walletData?.IncomeWalletbal ? `$${Number(walletData.IncomeWalletbal).toFixed(4)}` : '$0.0000',
+      balance: walletData?.WorkingWallet ? `$${Number(walletData.WorkingWallet).toFixed(4)}` : '$0.0000',
       icon: TrendingUp,
       color: '#8b5cf6',
       bg: '#ede9fe'
@@ -294,7 +294,7 @@ export function Navbar() {
     {
       id: 'yield',
       name: 'ROI Wallet',
-      balance: walletData?.RentWalletBal ? `$${Number(walletData.RentWalletBal).toFixed(4)}` : '$0.0000',
+      balance: walletData?.ROIWallet ? `$${Number(walletData.ROIWallet).toFixed(4)}` : '$0.0000',
       icon: BarChart3,
       color: '#10b981',
       bg: '#d1fae5'

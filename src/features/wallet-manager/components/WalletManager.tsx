@@ -263,15 +263,15 @@ export function WalletManager() {
   const walletBalanceFields: Partial<Record<ReportTab, { label: string; value: number }>> = {
     deposit: {
       label: "Deposit Wallet Balance",
-      value: Number(summary?.DepositWalletBal ?? summary?.DepositWallet ?? 0),
+      value: Number(summary?.DepositWallet ?? summary?.DepositWallet ?? 0),
     },
     performance: {
-      label: "Performance Wallet Balance",
-      value: Number(summary?.IncomeWalletbal ?? summary?.PerformanceWallet ?? 0),
+      label: "Working Wallet Balance",
+      value: Number(summary?.WorkingWallet ?? summary?.PerformanceWallet ?? 0),
     },
     yield: {
-      label: "Yield Wallet Balance",
-      value: Number(summary?.YieldWallet ?? summary?.RentWalletBal ?? 0),
+      label: "ROI Wallet Balance",
+      value: Number(summary?.YieldWallet ?? summary?.ROIWallet ?? 0),
     },
     legacy: {
       label: "Legacy Wallet Balance",
