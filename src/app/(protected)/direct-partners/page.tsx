@@ -306,10 +306,6 @@ export default function DirectPartners() {
 
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Team Business
-                          </th>
-
-                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Urank
                           </th>
 
@@ -387,7 +383,7 @@ export default function DirectPartners() {
 
                                   <td className="px-4 py-3 text-sm whitespace-nowrap">
                                     <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 rounded-full border border-indigo-200 dark:border-indigo-700/50">
-                                      ${member.Package || "0"}
+                                      ${member.SubscriptionAmount || "0"}
                                     </div>
                                   </td>
 
@@ -398,11 +394,6 @@ export default function DirectPartners() {
                                   </td>
 
 
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/40 rounded-full border border-rose-200 dark:border-rose-700/50">
-                                    ${member.TeamBusiness || "0"}
-                                  </div>
-                                </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/40 rounded-full border border-amber-200 dark:border-amber-700/50">
