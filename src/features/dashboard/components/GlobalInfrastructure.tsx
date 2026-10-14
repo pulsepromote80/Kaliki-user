@@ -12,8 +12,8 @@ export function GlobalInfrastructure() {
     { name: "Trading Package", key: "TradingPackage" },
     { name: "Legacy Reborn", key: "RebornPacakge" },
     { name: "Legacy Reborn 2.0", key: "Reborn2Pacakge" },
-    { name: "Booster Package", key: "BoosterPackage" },
-    { name: "Withdrwal Booster", key: "LevelBoosterPackage" },
+    { name: "Withdrwal Booster", key: "BoosterPackage" },
+    { name: "Level Booster", key: "LevelBoosterPackage" },
   ] as const;
 
   return (
