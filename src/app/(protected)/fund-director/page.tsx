@@ -798,6 +798,7 @@ export default function FundDirectorPage() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [profileWalletAddress, setProfileWalletAddress] = useState("");
   const [profileWalletAddressError, setProfileWalletAddressError] = useState("");
+  const [profileWalletAddressLoading, setProfileWalletAddressLoading] = useState(true);
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [withdrawalEmailOtp, setWithdrawalEmailOtp] = useState("");
   const [withdrawalEmailOtpSent, setWithdrawalEmailOtpSent] = useState(false);
@@ -851,6 +852,8 @@ export default function FundDirectorPage() {
         setProfileWalletAddressError(
           error instanceof Error ? error.message : "Could not load your profile wallet address.",
         );
+      } finally {
+        setProfileWalletAddressLoading(false);
       }
     };
 
@@ -1007,56 +1010,56 @@ export default function FundDirectorPage() {
       ]);
 
       if (usdtResult.status === "fulfilled") {
-      const usdtPayload = usdtResult.value;
-      const depositAddress = getNestedValue(
-        usdtPayload,
-        "WalletAddress",
-        "walletAddress",
-        "walletBep20",
-        "usdtWalletAddress",
-      );
-      setWalletAddress(typeof depositAddress === "string" ? depositAddress.trim() : "");
-      setSelfBalances((current) => ({
-        ...current,
-        usdt: Number(getNestedValue(usdtPayload, "USDTBalance", "usdtBalance")) || 0,
-      }));
+        const usdtPayload = usdtResult.value;
+        const depositAddress = getNestedValue(
+          usdtPayload,
+          "WalletAddress",
+          "walletAddress",
+          "walletBep20",
+          "usdtWalletAddress",
+        );
+        setWalletAddress(typeof depositAddress === "string" ? depositAddress.trim() : "");
+        setSelfBalances((current) => ({
+          ...current,
+          usdt: Number(getNestedValue(usdtPayload, "USDTBalance", "usdtBalance")) || 0,
+        }));
       } else {
-      console.error("Could not load USDT self deposit details:", usdtResult.reason);
-      toast.error(
-        usdtResult.reason instanceof Error
-          ? usdtResult.reason.message
-          : "Could not load USDT deposit wallet details.",
-      );
+        console.error("Could not load USDT self deposit details:", usdtResult.reason);
+        toast.error(
+          usdtResult.reason instanceof Error
+            ? usdtResult.reason.message
+            : "Could not load USDT deposit wallet details.",
+        );
       }
 
       if (veltResult.status === "fulfilled") {
-      setSelfBalances((current) => ({
-        ...current,
-        velt: Number(getNestedValue(veltResult.value, "VELTBalance", "velttBalance")) || 0,
-      }));
+        setSelfBalances((current) => ({
+          ...current,
+          velt: Number(getNestedValue(veltResult.value, "VELTBalance", "velttBalance")) || 0,
+        }));
       } else {
-      console.error("Could not load VELT self deposit balance:", veltResult.reason);
+        console.error("Could not load VELT self deposit balance:", veltResult.reason);
       }
 
       if (historyResult.status === "fulfilled") {
-      try {
-        const rows = getFundRequestRows(historyResult.value);
-        const history = rows.map((item, index) => ({
-          id: String(getFirstValue(item, "Id", "id") || `self-deposit-${index + 1}`),
-          date: String(getFirstValue(item, "creadtedDate", "CreatedDate", "date")),
-          type: "Self deposit",
-          amount: Number(getFirstValue(item, "usdAmount", "UsdAmount", "amount")) || 0,
-          status: String(getFirstValue(item, "status", "Status") || "Pending"),
-          reference: String(getFirstValue(item, "transHash", "TransHash", "hash")),
-          note: "—",
-          currency: "USD",
-        }));
-        setRecords((current) => ({ ...current, deposit: history }));
-      } catch (error) {
-        console.error("Could not parse self deposit history:", error);
-      }
+        try {
+          const rows = getFundRequestRows(historyResult.value);
+          const history = rows.map((item, index) => ({
+            id: String(getFirstValue(item, "Id", "id") || `self-deposit-${index + 1}`),
+            date: String(getFirstValue(item, "creadtedDate", "CreatedDate", "date")),
+            type: "Self deposit",
+            amount: Number(getFirstValue(item, "usdAmount", "UsdAmount", "amount")) || 0,
+            status: String(getFirstValue(item, "status", "Status") || "Pending"),
+            reference: String(getFirstValue(item, "transHash", "TransHash", "hash")),
+            note: "—",
+            currency: "USD",
+          }));
+          setRecords((current) => ({ ...current, deposit: history }));
+        } catch (error) {
+          console.error("Could not parse self deposit history:", error);
+        }
       } else {
-      console.error("Could not load self deposit history:", historyResult.reason);
+        console.error("Could not load self deposit history:", historyResult.reason);
       }
     } finally {
       setSelfDepositLoading(false);
@@ -1746,49 +1749,49 @@ export default function FundDirectorPage() {
                     <Loader2 className="h-10 w-10 animate-spin text-[#F5C451]" aria-label="Loading self deposit data" />
                   </div>
                 ) : (
-                <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-                  <div className="flex flex-col items-center rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-950/40 sm:p-6">
-                    <div className="grid aspect-square w-full max-w-[272px] place-items-center rounded-2xl border border-amber-200 bg-white p-3 shadow-md ring-4 ring-amber-50 dark:border-slate-600 dark:bg-white dark:ring-amber-950/40">
-                      {walletAddress ? (
-                        <QRCodeSVG
-                          value={walletAddress}
-                          size={240}
-                          level="M"
-                          includeMargin
-                          fgColor="#0f172a"
-                          bgColor="#ffffff"
-                          title="BEP20 deposit wallet QR code"
-                          className="h-full w-full"
-                        />
-                      ) : (
-                        <div className="text-center text-slate-500">
-                          <QrCode className="mx-auto mb-2 h-8 w-8" />
-                          <span className="text-xs">
-                            Deposit wallet address is not available yet.
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-                      Scan with your wallet app to deposit using the BEP20 network.
-                    </p>
-
-                    <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-                      <div className="min-w-0 flex-none rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">USDT Balance</p>
-                        <p className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
-                          {money(selfBalances.usdt)}
-                        </p>
+                  <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+                    <div className="flex flex-col items-center rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-950/40 sm:p-6">
+                      <div className="grid aspect-square w-full max-w-[272px] place-items-center rounded-2xl border border-amber-200 bg-white p-3 shadow-md ring-4 ring-amber-50 dark:border-slate-600 dark:bg-white dark:ring-amber-950/40">
+                        {walletAddress ? (
+                          <QRCodeSVG
+                            value={walletAddress}
+                            size={240}
+                            level="M"
+                            includeMargin
+                            fgColor="#0f172a"
+                            bgColor="#ffffff"
+                            title="BEP20 deposit wallet QR code"
+                            className="h-full w-full"
+                          />
+                        ) : (
+                          <div className="text-center text-slate-500">
+                            <QrCode className="mx-auto mb-2 h-8 w-8" />
+                            <span className="text-xs">
+                              Deposit wallet address is not available yet.
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <PrimaryButton
-                        type="button"
-                        disabled={isSubmittingSelfDeposit}
-                        onClick={() => void submitSelfDeposit("USDT")}
-                      >
-                        <ArrowDownLeft className="h-4 w-4" />
-                        {isSubmittingSelfDeposit ? "Processing..." : "USDT Deposit"}
-                      </PrimaryButton>
-                      {/* <button
+                      <p className="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
+                        Scan with your wallet app to deposit using the BEP20 network.
+                      </p>
+
+                      <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+                        <div className="min-w-0 flex-none rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">USDT Balance</p>
+                          <p className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
+                            {money(selfBalances.usdt)}
+                          </p>
+                        </div>
+                        <PrimaryButton
+                          type="button"
+                          disabled={isSubmittingSelfDeposit}
+                          onClick={() => void submitSelfDeposit("USDT")}
+                        >
+                          <ArrowDownLeft className="h-4 w-4" />
+                          {isSubmittingSelfDeposit ? "Processing..." : "USDT Deposit"}
+                        </PrimaryButton>
+                        {/* <button
                         type="button"
                         disabled={isSubmittingSelfDeposit}
                         onClick={() => void submitSelfDeposit("VELT")}
@@ -1797,53 +1800,53 @@ export default function FundDirectorPage() {
                         <ArrowDownLeft className="h-4 w-4" />
                         {isSubmittingSelfDeposit ? "Processing..." : "VELT Deposit"}
                       </button> */}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-5">
-                    <div>
-                      <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
-                        Network
-                      </label>
-                      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                        Binance Smart Chain (BEP20)
                       </div>
                     </div>
 
-                    <div>
-                      <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
-                        Wallet Address
-                      </label>
-                      <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
-                        <code className="min-w-0 flex-1 break-all text-xs text-slate-700 dark:text-slate-300">
-                          {walletAddress || "Wallet address unavailable"}
-                        </code>
-                        <button
-                          type="button"
-                          onClick={copyAddress}
-                          disabled={!walletAddress}
-                          aria-label="Copy wallet address"
-                          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-300 dark:hover:bg-amber-900/30"
-                        >
-                          <Copy className="h-4 w-4" />
-                          Copy
-                        </button>
+                    <div className="flex flex-col gap-5">
+                      <div>
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                          Network
+                        </label>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                          Binance Smart Chain (BEP20)
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                          Wallet Address
+                        </label>
+                        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
+                          <code className="min-w-0 flex-1 break-all text-xs text-slate-700 dark:text-slate-300">
+                            {walletAddress || "Wallet address unavailable"}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={copyAddress}
+                            disabled={!walletAddress}
+                            aria-label="Copy wallet address"
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-300 dark:hover:bg-amber-900/30"
+                          >
+                            <Copy className="h-4 w-4" />
+                            Copy
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/20 dark:bg-amber-400/5">
+                        <p className="font-semibold text-amber-900 dark:text-amber-200">
+                          Important Notes:
+                        </p>
+                        <ul className="mt-2 list-inside list-disc space-y-1.5 text-sm text-amber-800 dark:text-amber-100/80">
+                          <li>Only send supported assets to this wallet.</li>
+                          <li>Make sure you are using the correct network: BEP20.</li>
+                          <li>Minimum deposit: 10 USDT equivalent.</li>
+                          <li>Deposit requests remain pending until confirmed.</li>
+                        </ul>
                       </div>
                     </div>
-
-                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/20 dark:bg-amber-400/5">
-                      <p className="font-semibold text-amber-900 dark:text-amber-200">
-                        Important Notes:
-                      </p>
-                      <ul className="mt-2 list-inside list-disc space-y-1.5 text-sm text-amber-800 dark:text-amber-100/80">
-                        <li>Only send supported assets to this wallet.</li>
-                        <li>Make sure you are using the correct network: BEP20.</li>
-                        <li>Minimum deposit: 10 USDT equivalent.</li>
-                        <li>Deposit requests remain pending until confirmed.</li>
-                      </ul>
-                    </div>
                   </div>
-                </div>
                 )}
               </Surface>
               {!selfDepositLoading && (
@@ -2387,10 +2390,16 @@ export default function FundDirectorPage() {
                         >
                           {profileWalletAddressError}
                         </span>
-                      ) : !profileWalletAddress ? (
-                        <Link href="/profile" className="block text-xs text-amber-700 dark:text-amber-300">
-                          No BEP20 address is saved in your profile.
-                        </Link>
+                      ) : !profileWalletAddressLoading && !profileWalletAddress ? (
+                        <span className="block text-xs text-amber-700 dark:text-amber-300">
+                          No BEP20 address is saved.{" "}
+                          <Link
+                            href="/profile"
+                            className="font-semibold underline underline-offset-2 hover:text-amber-800 dark:hover:text-amber-200"
+                          >
+                            Add one in your profile.
+                          </Link>
+                        </span>
                       ) : null}
                     </label>
                   </div>
