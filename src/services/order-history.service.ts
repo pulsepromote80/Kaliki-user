@@ -26,11 +26,11 @@ export interface BoosterOrderHistoryItem {
 export const orderHistoryService = {
   list: (type?: string) =>
     apiClient.get<{ statusCode: number; message: string; data: OrderHistoryItem[] }>(
-      "/FundManager/getUserRechargeDetails",
+      "/FundManager/recharge-details",
       { params: type ? { Type: type } : undefined }
     ),
   getBoosterOrderHistory: () =>
     apiClient.get<{ statusCode: number; message: string; data: BoosterOrderHistoryItem[] }>(
-      "/FundManager/getBoosterOrderHistory"
+      "/FundManager/booster-history"
     ),
 };

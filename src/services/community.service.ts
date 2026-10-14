@@ -33,9 +33,9 @@ export interface DirectMemberResponse {
 
 export const communityService = {
   getDirectMember: (body: { urid?: string; statusId?: string; loginid?: string }) =>
-    apiClient.post<DirectMemberResponse>("/Community/getDirectMember", body),
+    apiClient.post<DirectMemberResponse>("/Community/direct-network", body),
   getPersonalTeam: (body: { uRank?: string; lvl?: string; statusId?: string }) =>
-    apiClient.post<DirectMemberResponse>("/Community/getPersonalTeam", body),
+    apiClient.post<DirectMemberResponse>("/Community/personal-team", body),
   getRank: () =>
-    apiClient.get<any>("/Community/getRank"),
+    apiClient.get<any>("/Community/rank"),
 };

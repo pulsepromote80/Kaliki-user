@@ -11,14 +11,10 @@ export function useRegistration() {
   return useMutation({
     mutationFn: (payload: RegistrationPayload) => authService.register(payload),
     onSuccess: (response, variables) => {
-      console.log("Registration response:", response);
-
-      // Check for success based on different possible response formats
       const isSuccess = response.statusCode === 200;
 
       if (isSuccess) {
         toast.success(response.message || "Account created successfully!");
-        console.log("Redirecting to welcome-letter...");
 
         // Pass registration data via query params
         const params = new URLSearchParams();

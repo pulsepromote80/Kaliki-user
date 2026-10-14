@@ -47,8 +47,6 @@ export default function TransactionData({ transType }: { transType: string }) {
         transaction.message?.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
-    console.log("transactionhistorydata:", transactionhistorydata);
-    console.log("filteredTransactions:", filteredTransactions);
 
     // Calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
