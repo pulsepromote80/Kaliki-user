@@ -58,6 +58,7 @@ export const primaryNav: NavItem[] = [
     dropdownItems: [
       { label: "Income Report", href: "/income-reports" },
       { label: "Wallet Manager", href: "/reports" },
+      { label: "Rank", href: "/rank" },
     ],
   },
 ];

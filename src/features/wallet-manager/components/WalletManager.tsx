@@ -1,36 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Award, Clock3, Loader2, RefreshCw, Search, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { Clock3, Loader2, RefreshCw, Search, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { useDashboardSummary } from "@/features/dashboard/hooks/useDashboardSummary";
 
-type ReportTab = "rank" | "deposit" | "performance" | "yield" | "legacy";
+type ReportTab = "deposit" | "performance" | "yield";
 type ReportRow = Record<string, unknown>;
 
 const tabs: { id: ReportTab; label: string }[] = [
-  { id: "rank", label: "Rank Rewards" },
   { id: "deposit", label: "Deposit Wallet" },
   { id: "performance", label: "Working Rewards Wallet" },
   { id: "yield", label: "ROI Wallet" },
 ];
 
-const reportColumns: Record<Exclude<ReportTab, "rank">, string[]> = {
+const reportColumns: Record<ReportTab, string[]> = {
   deposit: ["Transaction Type", "Date", "Credit", "Debit", "Remark"],
   performance: ["Transaction Type", "Date", "Credit", "Debit", "Remark"],
   yield: ["Transaction Type", "Date", "Credit", "Debit", "Remark"],
-  legacy: ["Transaction Type", "Date", "Credit", "Debit", "Remark"],
 };
-
-const rankColumns = [
-  "Rank",
-  "Required Business",
-  "Reward Amount",
-  "Left Business",
-  "Right Business",
-  "Pending Left",
-  "Pending Right",
-  "Status",
-];
 
 const fieldAliases: Record<string, string[]> = {
   "Transaction Type": ["transType", "TransType", "TransactionType"],
@@ -38,14 +25,6 @@ const fieldAliases: Record<string, string[]> = {
   Credit: ["credit", "Credit"],
   Debit: ["debit", "Debit"],
   Remark: ["Remark", "remark", "Description"],
-  Rank: ["RewardTitle", "rRank", "Rank", "YourRank"],
-  "Required Business": ["RequiredBusiness"],
-  "Reward Amount": ["Amount", "RewardAmount", "rewardAmount"],
-  "Left Business": ["LeftBuss"],
-  "Right Business": ["RightBuss"],
-  "Pending Left": ["PendingLeft"],
-  "Pending Right": ["PendingRight"],
-  Status: ["Statusx", "Status", "status"],
 };
 
 function isRecord(value: unknown): value is ReportRow {
@@ -157,22 +136,6 @@ function formatMoney(value: unknown): string {
   }).format(amountValue(value));
 }
 
-function formatBusinessVolume(value: unknown): string {
-  // Handle values with commas like "1,000"
-  if (typeof value === "string") {
-    const cleaned = value.replace(/,/g, "");
-    const num = Number(cleaned);
-    if (!Number.isNaN(num)) {
-      return new Intl.NumberFormat("en-US").format(num);
-    }
-  }
-  const num = Number(value);
-  if (Number.isFinite(num)) {
-    return new Intl.NumberFormat("en-US").format(num);
-  }
-  return displayValue(value);
-}
-
 export function WalletManager() {
   const [activeTab, setActiveTab] = useState<ReportTab>("deposit");
   const [reports, setReports] = useState<Partial<Record<ReportTab, ReportRow[]>>>({});
@@ -191,12 +154,11 @@ export function WalletManager() {
       setLoading(true);
       setError("");
       try {
-        const isRank = tab === "rank";
         const response = await fetch(`/api/wallet-manager/${tab}`, {
-          method: isRank ? "GET" : "POST",
+          method: "POST",
           cache: "no-store",
-          headers: isRank ? {} : { "Content-Type": "application/json" },
-          body: isRank ? undefined : JSON.stringify({ transtype: "" }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ transtype: "" }),
         });
         const payload: unknown = await response.json();
         if (!response.ok) {
@@ -273,13 +235,9 @@ export function WalletManager() {
       label: "ROI Wallet Balance",
       value: Number(summary?.YieldWallet ?? summary?.ROIWallet ?? 0),
     },
-    legacy: {
-      label: "Legacy Wallet Balance",
-      value: Number(summary?.LegacyWallet ?? 0),
-    },
   };
   const balance = walletBalanceFields[activeTab];
-  const columns = activeTab === "rank" ? rankColumns : reportColumns[activeTab];
+  const columns = reportColumns[activeTab];
 
   return (
     <div className="space-y-5">
@@ -302,7 +260,6 @@ export function WalletManager() {
         >
           <div className="flex w-max min-w-full gap-2">
             {tabs.map((tab) => {
-              const Icon = tab.id === "rank" ? Award : Wallet;
               const isActive = activeTab === tab.id;
               return (
                 <button
@@ -315,7 +272,7 @@ export function WalletManager() {
                       : "text-slate-700 hover:bg-[#e98d09]/10 hover:text-[#c57600] dark:text-slate-200 dark:hover:bg-[#e98d09]/15 dark:hover:text-[#f3a526]"
                     }`}
                 >
-                  <Icon className="h-4 w-4" aria-hidden />
+                  <Wallet className="h-4 w-4" aria-hidden />
                   {tab.label}
                 </button>
               );
@@ -343,16 +300,14 @@ export function WalletManager() {
         <div className="flex flex-col gap-4 border-b border-slate-200 p-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <h2 className="font-bold text-slate-900 dark:text-white">
-              {activeTab === "rank"
-                ? "Rank Rewards Progression"
-                : `${tabs.find((tab) => tab.id === activeTab)?.label} Records`}
+              {`${tabs.find((tab) => tab.id === activeTab)?.label} Records`}
             </h2>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               {visibleRows.length} record{visibleRows.length === 1 ? "" : "s"}
             </p>
           </div>
           <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
-            {activeTab !== "rank" && availableTypes.length > 0 && (
+            {availableTypes.length > 0 && (
               <select
                 value={transactionType}
                 onChange={(event) => {
@@ -497,39 +452,6 @@ export function WalletManager() {
                               </span>
                             </td>
                           );
-                        }
-                        // Handle rank-specific columns with special formatting
-                        if (activeTab === "rank") {
-                          if (column === "Reward Amount") {
-                            return (
-                              <td key={column} className="whitespace-nowrap px-4 py-3">
-                                {formatMoney(value)}
-                              </td>
-                            );
-                          }
-                          if (["Required Business", "Left Business", "Right Business", "Pending Left", "Pending Right"].includes(column)) {
-                            return (
-                              <td key={column} className="whitespace-nowrap px-4 py-3">
-                                {formatBusinessVolume(value)}
-                              </td>
-                            );
-                          }
-                          if (column === "Status") {
-                            const status = String(value ?? "").toLowerCase();
-                            const isQualified = status === "qualified" || status === "qualify";
-                            return (
-                              <td key={column} className="whitespace-nowrap px-4 py-3">
-                                <span
-                                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${isQualified
-                                      ? "border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300"
-                                      : "border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-700/50 dark:bg-amber-900/30 dark:text-amber-300"
-                                    }`}
-                                >
-                                  {displayValue(value)}
-                                </span>
-                              </td>
-                            );
-                          }
                         }
                         return (
                           <td key={column} className="max-w-xs px-4 py-3">
