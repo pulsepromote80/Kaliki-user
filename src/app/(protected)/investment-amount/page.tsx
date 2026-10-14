@@ -445,6 +445,7 @@ export default function PricingPage() {
               subtitle: "Perfect for New Investors",
               icon: "🚀",
               investmentRange: "$100+",
+              isPopular: true,
               features: [
                 { text: "ROI 8% on 90%" },
                 { text: "10% for Direct Rewards" },
@@ -470,7 +471,7 @@ export default function PricingPage() {
               subtitle: "For Consistent Growth",
               icon: "📊",
               investmentRange: "$3,000+",
-              isPopular: true,
+              
               features: [
                 { text: "ROI 12%" },
                 { text: "Investor Limit 2.5X" },
