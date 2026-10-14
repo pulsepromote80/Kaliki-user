@@ -30,6 +30,16 @@ import { ArrowRight, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+type RegistrationCountry = {
+  Country_Id?: string | number;
+  country_Id?: string | number;
+  Country_Name?: string;
+  country_Name?: string;
+  CountryFlag?: string;
+  countryFlag?: string;
+  phonecode?: string;
+};
+
 export function RegistrationForm() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
@@ -111,8 +121,27 @@ export function RegistrationForm() {
     });
   };
 
-  const countries = countriesData?.data|| [];
-  console.log("YTYTTY",countries)
+  const countries = (countriesData?.data || []) as RegistrationCountry[];
+  const getCountryId = (country: RegistrationCountry) =>
+    country.Country_Id ?? country.country_Id;
+  const getCountryName = (country: RegistrationCountry) =>
+    country.Country_Name ?? country.country_Name ?? "";
+  const selectedCountry = countries.find(
+    (country) => String(getCountryId(country)) === form.watch("countryId"),
+  );
+
+  useEffect(() => {
+    if (!countries.length || form.getValues("countryId")) return;
+
+    const india = countries.find(
+      (country) => getCountryName(country).toLowerCase() === "india",
+    );
+    const indiaId = india && getCountryId(india);
+    if (!india || indiaId === undefined) return;
+
+    form.setValue("countryId", String(indiaId));
+    form.setValue("countryCode", india.phonecode ? `+${india.phonecode}` : "");
+  }, [countries, form]);
 
   const passwordValue = form.watch("password") || "";
   const passwordStrengthChecks = [
@@ -482,22 +511,32 @@ export function RegistrationForm() {
                           Country <span className="text-[#f5c451]">*</span>
                         </label>
                         <div className="relative">
-                          <FaGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm z-10" />
+                          {selectedCountry?.CountryFlag || selectedCountry?.countryFlag ? (
+                            <img
+                              src={selectedCountry.CountryFlag ?? selectedCountry.countryFlag}
+                              alt={`${getCountryName(selectedCountry)} flag`}
+                              className="absolute left-4 top-1/2 z-10 h-4 w-6 -translate-y-1/2 rounded-sm object-cover"
+                            />
+                          ) : (
+                            <FaGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm z-10" />
+                          )}
                           {countriesLoading && (
                             <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-[#F5C451]" aria-label="Loading countries" />
                           )}
                           <select
                             {...form.register("countryId")}
                             onChange={(e) => {
-                              form.setValue("countryId", e.target.value);
+                              form.setValue("countryId", e.target.value, {
+                                shouldValidate: true,
+                              });
                               const country = countries.find(
-                                (c: any) =>
-                                  c.Country_Id === parseInt(e.target.value)
+                                (candidate) =>
+                                  String(getCountryId(candidate)) === e.target.value,
                               );
                               if (country)
                                 form.setValue(
                                   "countryCode",
-                                  `+${country.phonecode}`
+                                  country.phonecode ? `+${country.phonecode}` : "",
                                 );
                             }}
                             className={cn(
@@ -512,12 +551,12 @@ export function RegistrationForm() {
                             <option value="">
                               Select Country
                             </option>
-                            {countries.map((country: any) => (
+                            {countries.map((country, index) => (
                               <option
-                                key={country.Country_Id}
-                                value={country.Country_Id}
+                                key={getCountryId(country) ?? index}
+                                value={getCountryId(country)}
                               >
-                                {country.Country_Name}
+                                {getCountryName(country)}
                               </option>
                             ))}
                           </select>

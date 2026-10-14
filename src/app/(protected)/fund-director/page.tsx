@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import {
   ArrowDownLeft,
@@ -797,6 +798,7 @@ export default function FundDirectorPage() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [profileWalletAddress, setProfileWalletAddress] = useState("");
   const [profileWalletAddressError, setProfileWalletAddressError] = useState("");
+  const [profileWalletAddressLoading, setProfileWalletAddressLoading] = useState(true);
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [withdrawalEmailOtp, setWithdrawalEmailOtp] = useState("");
   const [withdrawalEmailOtpSent, setWithdrawalEmailOtpSent] = useState(false);
@@ -850,6 +852,8 @@ export default function FundDirectorPage() {
         setProfileWalletAddressError(
           error instanceof Error ? error.message : "Could not load your profile wallet address.",
         );
+      } finally {
+        setProfileWalletAddressLoading(false);
       }
     };
 
@@ -2435,9 +2439,15 @@ export default function FundDirectorPage() {
                         >
                           {profileWalletAddressError}
                         </span>
-                      ) : !profileWalletAddress ? (
+                      ) : !profileWalletAddressLoading && !profileWalletAddress ? (
                         <span className="block text-xs text-amber-700 dark:text-amber-300">
-                          No BEP20 address is saved in your profile.
+                          No BEP20 address is saved.{" "}
+                          <Link
+                            href="/profile"
+                            className="font-semibold underline underline-offset-2 hover:text-amber-800 dark:hover:text-amber-200"
+                          >
+                            Add one in your profile.
+                          </Link>
                         </span>
                       ) : null}
                     </label>
