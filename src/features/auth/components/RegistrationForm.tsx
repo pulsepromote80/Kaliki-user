@@ -112,7 +112,6 @@ export function RegistrationForm() {
   };
 
   const countries = countriesData?.data|| [];
-  console.log("YTYTTY",countries)
 
   const passwordValue = form.watch("password") || "";
   const passwordStrengthChecks = [

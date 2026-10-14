@@ -125,10 +125,9 @@ export default function AIBUSINESSHUB() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch('/api/Authentication/userAffiliateDashboard');
+        const response = await fetch('/api/Authentication/affiliate-network');
 
         const data = await response.json();
-        console.log("IUYYUI",data)
         if (data.statusCode === 200 && data.data && data.data.length > 0) {
           setAffiliate(data.data[0]);
         }

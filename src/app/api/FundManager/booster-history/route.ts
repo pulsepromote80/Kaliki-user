@@ -5,10 +5,10 @@ import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
 /**
- * POST /api/Community/getDirectMember
- * Fetches the user's direct member data from the backend
+ * GET /api/FundManager/booster-history
+ * Alias for getBoosterOrderHistory - Fetches the user's booster order history from the backend
  */
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
@@ -34,15 +34,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get request body
-    const body = await request.json();
-
-    // Fetch direct member data from backend
+    // Fetch booster order history from backend
     const backend = createBackendClient(token);
-    const { data } = await backend.post("/Community/getDirectMember", body);
+    const { data } = await backend.get("/FundManager/getBoosterOrderHistory");
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Direct member error:", error);
+    console.error("Booster history error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -54,7 +51,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch direct member data",
+        message: "Failed to fetch booster order history",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

@@ -25,8 +25,6 @@ async function getBackend(request: NextRequest) {
         ? session.accessToken
         : undefined;
 
-    // console.log("Token retrieved from session cookie:", token);
-
     if (typeof token !== "string" || !token || isTokenExpired(token)) {
       return {
         response: unauthorizedSessionResponse(

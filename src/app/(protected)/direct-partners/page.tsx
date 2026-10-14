@@ -415,13 +415,13 @@ export default function DirectPartners() {
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-violet-700 dark:text-violet-300 bg-violet-100 dark:bg-violet-900/40 rounded-full border border-violet-200 dark:border-violet-700/50">
-                                    ${member.BinaryTotTeam || "0"}
+                                    {member.BinaryTotTeam || "0"}
                                   </div>
                                 </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-fuchsia-700 dark:text-fuchsia-300 bg-fuchsia-100 dark:bg-fuchsia-900/40 rounded-full border border-fuchsia-200 dark:border-fuchsia-700/50">
-                                    ${member.BinaryActiveTeam || "0"}
+                                    {member.BinaryActiveTeam || "0"}
                                   </div>
                                 </td>
                               </tr>

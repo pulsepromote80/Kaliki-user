@@ -5,8 +5,8 @@ import { isTokenExpired } from "@/lib/jwt";
 import axios from "axios";
 
 /**
- * GET /api/Authentication/userAffiliateDashboard
- * Fetches the user's affiliate dashboard data from the backend
+ * GET /api/dashboard/summary
+ * Alias for /dashboard - Fetches the user's dashboard summary from the backend
  */
 export async function GET(request: NextRequest) {
   const { SESSION_COOKIE_NAME } = getServerEnv();
@@ -34,12 +34,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch affiliate dashboard data from backend
+    // Fetch dashboard summary from backend
     const backend = createBackendClient(token);
-    const { data } = await backend.get("/Authentication/userAffiliateDashboard");
+    const { data } = await backend.get("/Authentication/getProfileDetails");
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Affiliate dashboard error:", error);
+    console.error("Dashboard summary error:", error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return NextResponse.json(
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch affiliate dashboard data",
+        message: "Failed to fetch dashboard summary",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },
