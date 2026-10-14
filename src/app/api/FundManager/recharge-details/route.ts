@@ -36,7 +36,11 @@ export async function GET(request: NextRequest) {
 
     // Fetch recharge details from backend
     const backend = createBackendClient(token);
-    const { data } = await backend.get("/FundManager/getUserRechargeDetails");
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get("Type");
+    const { data } = await backend.get("/FundManager/getUserRechargeDetails", {
+      params: type ? { Type: type } : undefined,
+    });
     return NextResponse.json(data);
   } catch (error) {
     console.error("Recharge details error:", error);
