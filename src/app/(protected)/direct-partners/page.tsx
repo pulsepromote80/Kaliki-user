@@ -271,9 +271,7 @@ export default function DirectPartners() {
                             Sr No
                           </th>
 
-                          <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Status
-                          </th>
+                       
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Name
@@ -302,11 +300,10 @@ export default function DirectPartners() {
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Package
                           </th>
-
-
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
-                            Team Business
+                            Activation Date
                           </th>
+
 
                           <th className="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-600 uppercase whitespace-nowrap dark:text-gray-300">
                             Urank
@@ -346,12 +343,7 @@ export default function DirectPartners() {
                                     1}
                                 </td>
 
-                                <td className="px-4 py-3 text-sm font-medium whitespace-nowrap">
-                                  <div className="inline-block px-3 py-1 text-xs font-bold text-blue-700 bg-blue-100 border border-blue-200 rounded-full dark:text-blue-300 dark:bg-blue-900/40 dark:border-blue-700/50">
-                                    {member.TopupStatus ||
-                                      ""}
-                                  </div>
-                                </td>
+                              
 
                                 <td className="px-4 py-3 text-sm font-medium whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/40 rounded-full border border-emerald-200 dark:border-emerald-700/50">
@@ -389,18 +381,19 @@ export default function DirectPartners() {
                                   </div>
                                 </td>
 
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 rounded-full border border-indigo-200 dark:border-indigo-700/50">
-                                    ${member.Package || "0"}
-                                  </div>
-                                </td>
+                                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                    <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 rounded-full border border-indigo-200 dark:border-indigo-700/50">
+                                      ${member.SubscriptionAmount || "0"}
+                                    </div>
+                                  </td>
+
+                                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                    <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 rounded-full border border-green-200 dark:border-green-700/50">
+                                      {member.SubscribeDate || ""}
+                                    </div>
+                                  </td>
 
 
-                                <td className="px-4 py-3 text-sm whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/40 rounded-full border border-rose-200 dark:border-rose-700/50">
-                                    ${member.TeamBusiness || "0"}
-                                  </div>
-                                </td>
 
                                 <td className="px-4 py-3 text-sm whitespace-nowrap">
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/40 rounded-full border border-amber-200 dark:border-amber-700/50">

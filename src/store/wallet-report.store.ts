@@ -1,8 +1,11 @@
 import { create } from "zustand";
 
 export interface TransactionHistory {
+  ID?: number;
   CreatedDate?: string;
-  credit?: string;
+  credit?: number;
+  debit?: number;
+  transType?: string;
   Remark?: string;
   message?: string;
 }

@@ -8,3 +8,10 @@ export function useOrderHistory(type?: string) {
     queryFn: () => orderHistoryService.list(type),
   });
 }
+
+export function useBoosterOrderHistory() {
+  return useQuery({
+    queryKey: QUERY_KEYS.orderHistory.booster,
+    queryFn: () => orderHistoryService.getBoosterOrderHistory(),
+  });
+}

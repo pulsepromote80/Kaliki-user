@@ -126,9 +126,11 @@ export default function AIBUSINESSHUB() {
     const fetchDashboardData = async () => {
       try {
         const response = await fetch('/api/Authentication/userAffiliateDashboard');
+
         const data = await response.json();
-        if (data.success) {
-          setAffiliate(data.data);
+        console.log("IUYYUI",data)
+        if (data.statusCode === 200 && data.data && data.data.length > 0) {
+          setAffiliate(data.data[0]);
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -166,35 +168,35 @@ export default function AIBUSINESSHUB() {
   }, [affiliate?.BoosterRemDateTime]);
 
   // Animated values
-  const countedTotalInvestment = useCountUp(affiliate?.TotalInvestment || 0);
-  const countedTotalEarning = useCountUp(affiliate?.TotalEarning || 0);
-  const countedEarningLimit = useCountUp(affiliate?.EarningLimit || 0);
-  const countedRemainingLimit = useCountUp(affiliate?.RemainingLimit || 0);
-  const countedActiveDirectMembers = useCountUp(affiliate?.ActiveDirectMembers || 0);
-  const countedDirectBusiness = useCountUp(affiliate?.DirectBusiness || 0);
-  const countedTeamDownline = useCountUp(affiliate?.TeamDownline || 0);
-  const countedTeamBusiness = useCountUp(affiliate?.TeamBusiness || 0);
+  const countedTotalInvestment = affiliate?.TotalInvestment || 0;
+  const countedTotalEarning = affiliate?.TotalEarning || 0;
+  const countedEarningLimit = affiliate?.EarningLimit || 0;
+  const countedRemainingLimit = affiliate?.RemainingLimit || 0;
+  const countedActiveDirectMembers = affiliate?.ActiveDirectMembers || 0;
+  const countedDirectBusiness = affiliate?.DirectBusiness || 0;
+  const countedTeamDownline = affiliate?.Subscription || 0;
+  const countedTeamBusiness = affiliate?.ROIAmt || 0;
 
-  const countedDirectBonus = useCountUp(affiliate?.DirectBonus || 0);
-  const countedCommunityBuildingBonus = useCountUp(affiliate?.CommunityBuildingBonus || 0);
-  const countedRewardBonus = useCountUp(affiliate?.RewardBonus || 0);
-  const countedRankBonus = useCountUp(affiliate?.RankBonus || 0);
-  const countedRoyaltyBonus = useCountUp(affiliate?.RoyaltyBonus || 0);
-  const countedYieldIncome = useCountUp(affiliate?.YieldIncome || 0);
-  const countedLevelIncome = useCountUp(affiliate?.LevelIncome || 0);
-  const CreditRevenueShare  = useCountUp(affiliate?.CreditRevenueShare || 0);
+  const countedDirectBonus = affiliate?.DirectBonus || 0;
+  const countedCommunityBuildingBonus = affiliate?.MatchingIncome || 0;
+  const countedRewardBonus = affiliate?.RewardBonus || 0;
+  const countedRankBonus = affiliate?.RankBonus || 0;
+  const countedRoyaltyBonus = affiliate?.LevelIncome || 0;
+  const countedYieldIncome = affiliate?.YieldIncome || 0;
+  const countedLevelIncome = affiliate?.LevelIncome || 0;
+  const CreditRevenueShare  = useCountUp(affiliate?.MatchingIncome || 0);
 
   const countedPerformanceWithdrawal = useCountUp(affiliate?.PerformanceWithdrawal || 0);
-  const countedYieldWithdrawal = useCountUp(affiliate?.YieldWithdrawal || 0);
+  const countedYieldWithdrawal = affiliate?.YieldWithdrawal || 0;
 
-  const countedOtherLegBus = useCountUp(affiliate?.OtherLegBus || 0);
-  const countedStrongLegBus = useCountUp(affiliate?.StrongLegBus || 0);
-  const countedLeftBusvolume = useCountUp(affiliate?.LeftBusvolume || 0);
-  const countedRightBusvolume = useCountUp(affiliate?.RightBusvolume || 0);
+  const countedOtherLegBus = affiliate?.TradingPackage || 0;
+  const countedStrongLegBus = affiliate?.RebornPacakge || 0;
+  const countedLeftBusvolume = affiliate?.LeftBusvolume || 0;
+  const countedRightBusvolume = affiliate?.RightBusvolume || 0;
 
-  const countedStrongLegID = useCountUpAny(affiliate?.StrongLegID);
-  const countedLeadershipRank = useCountUpAny(affiliate?.LeadershipRank);
-  const countedRankPercentage = useCountUpAny(affiliate?.RankPercentage);
+  const countedStrongLegID = affiliate?.Reborn2Pacakge || 0;
+  const countedLeadershipRank = affiliate?.LeadershipRank || "N/A";
+  const countedRankPercentage = affiliate?.Levelopen || 0;
 
   if (loading) {
     return (
@@ -228,7 +230,7 @@ export default function AIBUSINESSHUB() {
           <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-8 items-start lg:items-center p-6 sm:p-8 sm:px-9">
             <div>
               <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#F5C451] mb-2">
-                Total Agent Deployed
+                Total Investment
               </div>
               <div className="text-[38px] sm:text-[52px] font-black text-white tracking-[-1.5px] leading-none break-all">
                 <span className="text-[#F5C451]">${countedTotalInvestment.toFixed(2)}</span>
@@ -254,36 +256,124 @@ export default function AIBUSINESSHUB() {
             <div className="flex flex-row gap-3 lg:flex-col lg:items-end">
               <div className="flex-1 lg:flex-none bg-amber-300/[0.06] border border-amber-300/20 rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
                 <div className="text-[10px] uppercase tracking-[0.07em] text-white/70 mb-1">
-                  Active Direct Members
+                  Subscription
                 </div>
                 <div className="text-[18px] sm:text-[20px] font-extrabold text-white">
-                  {Math.round(countedActiveDirectMembers)}
+                  ${(countedTeamDownline)}
                 </div>
                 <div className="text-[#F5C451] font-semibold mt-[3px]">
-                  Business:{" "}
-                  <span className="font-semibold text-[#F5C451]">
-                    ${countedDirectBusiness.toFixed(2)}
-                  </span>
+                 (10%)
                 </div>
               </div>
               <div className="flex-1 lg:flex-none bg-amber-300/[0.06] border border-amber-300/20 rounded-xl p-2 text-right backdrop-blur-sm lg:min-w-[180px]">
                 <div className="text-[10px] uppercase tracking-[0.07em] text-white/70 mb-1">
-                  Total Downline
+                  Trade Fund
                 </div>
                 <div className="text-[18px] sm:text-[20px] font-extrabold text-white">
-                  {Math.round(countedTeamDownline)}
+                  ${(countedTeamBusiness)}
                 </div>
                 <div className="text-[#F5C451] font-semibold mt-[3px]">
-                  Business:{" "}
-                  <span className="font-semibold text-[#F5C451]">
-                    ${countedTeamBusiness.toFixed(2)}
-                  </span>
+                  (90%)
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+ <div className="p-4 transition-colors bg-white border rounded-lg shadow-lg dark:bg-gray-800 dark:shadow-gray-900/30 dark:border-gray-700 sm:p-6">
+          <div className="flex items-center mb-4 space-x-3 sm:mb-6">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-blue-600">
+              <RiBriefcaseLine className="text-lg text-white sm:text-xl" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 sm:text-md lg:text-md geidt-font">
+                Packages
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 geidt-font">
+                Your Package Information
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 mb-4 sm:gap-4 sm:mb-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Trading Package */}
+            <div className="relative p-3 overflow-hidden transition-colors border border-teal-200 rounded-lg sm:p-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-teal-50 dark:from-teal-900/30 dark:via-cyan-900/30 dark:to-teal-900/30 text-slate-800 dark:text-slate-200 dark:border-teal-800">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">Trading Package</h4>
+                  <p className="text-sm font-bold text-teal-900 dark:text-teal-200">${countedOtherLegBus.toFixed(2)}</p>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-teal-200/70 dark:bg-teal-700/50">
+                  <RiBarChartLine className="text-lg text-teal-600 dark:text-teal-300" />
+                </div>
+              </div>
+              <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-teal-300/30 dark:bg-teal-500/20"></div>
+              <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-cyan-300/20 dark:bg-cyan-500/10"></div>
+            </div>
+
+            {/* Reborn Package */}
+            <div className="relative p-3 overflow-hidden transition-colors border border-indigo-200 rounded-lg sm:p-4 bg-gradient-to-r from-indigo-50 via-blue-50 to-indigo-50 dark:from-indigo-900/30 dark:via-blue-900/30 dark:to-indigo-900/30 text-slate-800 dark:text-slate-200 dark:border-indigo-800">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="mb-1 text-xs font-medium text-indigo-700 sm:text-sm dark:text-indigo-300 geidt-font">Reborn Package</h4>
+                  <p className="text-sm font-bold text-purple-900 dark:text-purple-200">${countedStrongLegBus.toFixed(2)}</p>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-indigo-200/70 dark:bg-indigo-700/50">
+                  <RiFlowChart className="text-lg text-indigo-600 dark:text-indigo-300" />
+                </div>
+              </div>
+              <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-indigo-300/30 dark:bg-indigo-500/20"></div>
+              <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-blue-300/20 dark:bg-blue-500/10"></div>
+            </div>
+
+            {/* Reborn 2.0 Package */}
+            <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50 dark:from-emerald-900/30 dark:via-green-900/30 dark:to-emerald-900/30 text-slate-800 dark:text-slate-200 border-emerald-200 dark:border-emerald-800">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-emerald-700 dark:text-emerald-300 geidt-font">Reborn 2.0 Package</h4>
+                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-200">${countedStrongLegID.toFixed(2)}</p>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-emerald-200/70 dark:bg-emerald-700/50">
+                  <RiKeyLine className="text-lg text-emerald-600 dark:text-emerald-300" />
+                </div>
+              </div>
+              <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-emerald-300/30 dark:bg-emerald-500/20"></div>
+              <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-green-300/20 dark:bg-green-500/10"></div>
+            </div>
+
+            {/* Booster Package */}
+            <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-rose-50 via-red-50 to-rose-50 dark:from-rose-900/30 dark:via-red-900/30 dark:to-rose-900/30 text-slate-800 dark:text-slate-200 border-rose-200 dark:border-rose-800">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-rose-700 dark:text-rose-300 geidt-font">Withdrawal Booster Package</h4>
+                  <p className="text-sm font-bold text-rose-900 dark:text-rose-200">{affiliate?.BoosterPackage || "N/A"}</p>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-rose-200/70 dark:bg-rose-700/50">
+                  <RiRocketLine className="text-lg text-rose-600 dark:text-rose-300" />
+                </div>
+              </div>
+              <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-rose-300/30 dark:bg-rose-500/20"></div>
+              <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-red-300/20 dark:bg-red-500/10"></div>
+            </div>
+
+            {/* Level Booster Package */}
+            <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-900/30 dark:via-yellow-900/30 dark:to-amber-900/30 text-slate-800 dark:text-slate-200 border-amber-200 dark:border-amber-800">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-amber-700 dark:text-amber-300 geidt-font">Level Booster Package</h4>
+                  <p className="text-sm font-bold text-amber-900 dark:text-amber-200">{affiliate?.LevelBoosterPackage || "N/A"}</p>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-amber-200/70 dark:bg-amber-700/50">
+                  <RiAwardLine className="text-lg text-amber-600 dark:text-amber-300" />
+                </div>
+              </div>
+              <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-amber-300/30 dark:bg-amber-500/20"></div>
+              <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-yellow-300/20 dark:bg-yellow-500/10"></div>
+            </div>
+          </div>
+
+         
+        </div>
         {/* Incomes & Withdrawals */}
         <div className="p-4 mb-6 transition-colors bg-white border rounded-lg shadow-lg dark:bg-gray-800 dark:shadow-gray-900/30 dark:border-gray-700 sm:p-6 sm:mb-8">
           <h3 className="flex items-center p-3 mb-3 font-semibold text-gray-700 dark:text-gray-200 sm:text-md lg:text-md geidt-font">
@@ -297,7 +387,7 @@ export default function AIBUSINESSHUB() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-blue-700 sm:text-sm dark:text-blue-300 geidt-font">
-                    Direct Bonus
+                    Direct Income
                   </h4>
                   <p className="text-lg font-bold text-blue-900 sm:text-xl dark:text-blue-200">
                     ${countedDirectBonus.toFixed(2)}
@@ -313,7 +403,7 @@ export default function AIBUSINESSHUB() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-purple-700 sm:text-sm dark:text-purple-300 geidt-font">
-                    Credit Revenue Share
+                   Binary Income
                   </h4>
                   <p className="text-lg font-bold text-purple-900 sm:text-xl dark:text-purple-200">
                     ${CreditRevenueShare.toFixed(2)}
@@ -325,15 +415,15 @@ export default function AIBUSINESSHUB() {
               </div>
             </div>
 
-            {/* Community Building Bonus */}
+            {/* Matching Income */}
             <div className="relative p-3 overflow-hidden transition-colors border border-green-200 rounded-lg sm:p-4 bg-green-50 dark:bg-green-900/20 dark:border-green-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-green-700 sm:text-sm dark:text-green-300 geidt-font">
-                    Community Building Bonus
+                    Rank & Reward 
                   </h4>
                   <p className="text-lg font-bold text-green-900 sm:text-xl dark:text-green-200">
-                    ${countedCommunityBuildingBonus.toFixed(2)}
+                    ${countedRewardBonus.toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full sm:w-10 sm:h-10 dark:bg-green-800/50">
@@ -347,10 +437,10 @@ export default function AIBUSINESSHUB() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-blue-700 sm:text-sm dark:text-blue-300 geidt-font">
-                    Reward Bonus
+                    ROI Income
                   </h4>
                   <p className="text-lg font-bold text-blue-900 sm:text-xl dark:text-blue-200">
-                    ${countedRewardBonus.toFixed(2)}
+                    ${countedYieldIncome.toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full sm:w-10 sm:h-10 dark:bg-blue-800/50">
@@ -359,29 +449,14 @@ export default function AIBUSINESSHUB() {
               </div>
             </div>
 
-            {/* Rank Bonus */}
-            <div className="relative p-3 overflow-hidden transition-colors border border-teal-100 rounded-lg sm:p-4 bg-teal-50 dark:bg-teal-900/20 dark:border-teal-800">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">
-                    Rank Bonus
-                  </h4>
-                  <p className="text-lg font-bold text-teal-900 sm:text-xl dark:text-teal-200">
-                    ${countedRankBonus.toFixed(2)}
-                  </p>
-                </div>
-                <div className="flex items-center justify-center w-8 h-8 bg-teal-100 rounded-full sm:w-10 sm:h-10 dark:bg-teal-800/50">
-                  <RiShareLine className="text-teal-600 dark:text-teal-300 sm:text-lg" />
-                </div>
-              </div>
-            </div>
+           
 
             {/* Royalty Bonus */}
             <div className="relative p-3 overflow-hidden transition-colors border border-yellow-300 rounded-lg sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <h4 className="mb-1 text-xs font-medium text-yellow-700 sm:text-sm dark:text-yellow-300">
-                    Leadership Bonus
+                    Level Income
                   </h4>
                   <p className="text-lg font-bold text-yellow-900 sm:text-xl dark:text-yellow-200">
                     ${countedRoyaltyBonus.toFixed(2)}
@@ -393,39 +468,7 @@ export default function AIBUSINESSHUB() {
               </div>
             </div>
 
-            {/* Yield Income */}
-            <div className="relative p-3 overflow-hidden transition-colors border border-pink-100 rounded-lg sm:p-4 bg-pink-50 dark:bg-pink-900/20 dark:border-pink-800">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-pink-700 sm:text-sm dark:text-pink-300 geidt-font">
-                    Yield Income
-                  </h4>
-                  <p className="text-lg font-bold text-pink-900 sm:text-xl dark:text-pink-200">
-                    ${countedYieldIncome.toFixed(2)}
-                  </p>
-                </div>
-                <div className="flex items-center justify-center w-8 h-8 bg-pink-100 rounded-full sm:w-10 sm:h-10 dark:bg-pink-800/50">
-                  <RiGroupLine className="text-pink-600 dark:text-pink-300 sm:text-lg" />
-                </div>
-              </div>
-            </div>
-
-            {/* Level Income */}
-            <div className="relative p-3 overflow-hidden transition-colors border border-blue-100 rounded-lg sm:p-4 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-blue-700 sm:text-sm dark:text-blue-300 geidt-font">
-                    Level Income
-                  </h4>
-                  <p className="text-lg font-bold text-blue-900 sm:text-xl dark:text-blue-200">
-                    ${countedLevelIncome.toFixed(2)}
-                  </p>
-                </div>
-                <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full sm:w-10 sm:h-10 dark:bg-blue-800/50">
-                  <RiLineChartLine className="text-blue-600 dark:text-blue-300 sm:text-lg" />
-                </div>
-              </div>
-            </div>
+           
           </div>
 
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700 sm:pt-6">
@@ -439,7 +482,7 @@ export default function AIBUSINESSHUB() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="mb-1 text-xs font-medium sm:text-sm text-slate-600 dark:text-slate-300 geidt-font">
-                      Performance Withdrawal
+                      Working Withdrawal
                     </h4>
                     <p className="text-lg font-bold sm:text-xl text-slate-900 dark:text-white">
                       ${countedPerformanceWithdrawal.toFixed(2)}
@@ -459,7 +502,7 @@ export default function AIBUSINESSHUB() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="mb-1 text-xs font-medium sm:text-sm text-slate-600 dark:text-slate-300 geidt-font">
-                      Yield Withdrawal
+                      ROI Withdrawal
                     </h4>
                     <p className="text-lg font-bold sm:text-xl text-slate-900 dark:text-white">
                       ${countedYieldWithdrawal.toFixed(2)}
@@ -493,12 +536,12 @@ export default function AIBUSINESSHUB() {
           </div>
 
           <div className="grid grid-cols-1 gap-3 mb-4 sm:gap-4 sm:mb-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Weaker Team Volume */}
+            {/* Left Business */}
             <div className="relative p-3 overflow-hidden transition-colors border border-teal-200 rounded-lg sm:p-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-teal-50 dark:from-teal-900/30 dark:via-cyan-900/30 dark:to-teal-900/30 text-slate-800 dark:text-slate-200 dark:border-teal-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">Weaker Team Volume</h4>
-                  <p className="text-sm font-bold text-teal-900 dark:text-teal-200">${countedOtherLegBus.toFixed(2)}</p>
+                  <h4 className="mb-1 text-xs font-medium text-teal-700 sm:text-sm dark:text-teal-300 geidt-font">Left Business</h4>
+                  <p className="text-sm font-bold text-teal-900 dark:text-teal-200">${countedLeftBusvolume.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-teal-200/70 dark:bg-teal-700/50">
                   <RiBarChartLine className="text-lg text-teal-600 dark:text-teal-300" />
@@ -508,12 +551,12 @@ export default function AIBUSINESSHUB() {
               <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-cyan-300/20 dark:bg-cyan-500/10"></div>
             </div>
 
-            {/* Strong Team Volume */}
+            {/* Right Business */}
             <div className="relative p-3 overflow-hidden transition-colors border border-indigo-200 rounded-lg sm:p-4 bg-gradient-to-r from-indigo-50 via-blue-50 to-indigo-50 dark:from-indigo-900/30 dark:via-blue-900/30 dark:to-indigo-900/30 text-slate-800 dark:text-slate-200 dark:border-indigo-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium text-indigo-700 sm:text-sm dark:text-indigo-300 geidt-font">Strong Team Volume</h4>
-                  <p className="text-sm font-bold text-purple-900 dark:text-purple-200">${countedStrongLegBus.toFixed(2)}</p>
+                  <h4 className="mb-1 text-xs font-medium text-indigo-700 sm:text-sm dark:text-indigo-300 geidt-font">Right Business</h4>
+                  <p className="text-sm font-bold text-purple-900 dark:text-purple-200">${countedRightBusvolume.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-indigo-200/70 dark:bg-indigo-700/50">
                   <RiFlowChart className="text-lg text-indigo-600 dark:text-indigo-300" />
@@ -523,12 +566,12 @@ export default function AIBUSINESSHUB() {
               <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-blue-300/20 dark:bg-blue-500/10"></div>
             </div>
 
-            {/* Strong Team ID */}
+            {/* Direct Business */}
             <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50 dark:from-emerald-900/30 dark:via-green-900/30 dark:to-emerald-900/30 text-slate-800 dark:text-slate-200 border-emerald-200 dark:border-emerald-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-emerald-700 dark:text-emerald-300 geidt-font">Strong Team ID</h4>
-                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-200">{countedStrongLegID}</p>
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-emerald-700 dark:text-emerald-300 geidt-font">Direct Business</h4>
+                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-200">${countedDirectBusiness.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-emerald-200/70 dark:bg-emerald-700/50">
                   <RiKeyLine className="text-lg text-emerald-600 dark:text-emerald-300" />
@@ -538,30 +581,30 @@ export default function AIBUSINESSHUB() {
               <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-green-300/20 dark:bg-green-500/10"></div>
             </div>
 
-            {/* Left Community Volume */}
+            {/* Left Team Members */}
             <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-rose-50 via-red-50 to-rose-50 dark:from-rose-900/30 dark:via-red-900/30 dark:to-rose-900/30 text-slate-800 dark:text-slate-200 border-rose-200 dark:border-rose-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-rose-700 dark:text-rose-300 geidt-font">Left Community Volume</h4>
-                  <p className="text-sm font-bold text-rose-900 dark:text-rose-200">${countedLeftBusvolume.toFixed(2)}</p>
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-rose-700 dark:text-rose-300 geidt-font">Left Team Members</h4>
+                  <p className="text-sm font-bold text-rose-900 dark:text-rose-200">{countedTeamDownline}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-rose-200/70 dark:bg-rose-700/50">
-                  <RiFlowChart className="text-lg text-rose-600 dark:text-rose-300" />
+                  <RiGroupLine className="text-lg text-rose-600 dark:text-rose-300" />
                 </div>
               </div>
               <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-rose-300/30 dark:bg-rose-500/20"></div>
               <div className="absolute w-16 h-16 rounded-full sm:w-20 sm:h-20 -right-3 sm:-right-4 -bottom-3 sm:-bottom-4 bg-red-300/20 dark:bg-red-500/10"></div>
             </div>
 
-            {/* Right Community Volume */}
+            {/* Right Team Members */}
             <div className="relative p-3 overflow-hidden transition-colors border rounded-lg sm:p-4 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-900/30 dark:via-yellow-900/30 dark:to-amber-900/30 text-slate-800 dark:text-slate-200 border-amber-200 dark:border-amber-800">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-amber-700 dark:text-amber-300 geidt-font">Right Community Volume</h4>
-                  <p className="text-sm font-bold text-amber-900 dark:text-amber-200">${countedRightBusvolume.toFixed(2)}</p>
+                  <h4 className="mb-1 text-xs font-medium sm:text-sm text-amber-700 dark:text-amber-300 geidt-font">Right Team Members</h4>
+                  <p className="text-sm font-bold text-amber-900 dark:text-amber-200">{countedTeamBusiness}</p>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-amber-200/70 dark:bg-amber-700/50">
-                  <RiBarChartLine className="text-lg text-amber-600 dark:text-amber-300" />
+                  <RiTeamLine className="text-lg text-amber-600 dark:text-amber-300" />
                 </div>
               </div>
               <div className="absolute w-12 h-12 rounded-full sm:w-16 sm:h-16 -right-1 sm:-right-2 -top-1 sm:-top-2 bg-amber-300/30 dark:bg-amber-500/20"></div>
@@ -583,12 +626,12 @@ export default function AIBUSINESSHUB() {
               </div>
             </div>
 
-            {/* Rank Progress */}
+            {/* Level Open */}
             <div className="p-4 transition-colors border-l-4 border-teal-500 rounded-lg sm:p-6 bg-gradient-to-r from-teal-50 via-cyan-50 to-teal-50 dark:from-teal-900/30 dark:via-cyan-900/30 dark:to-teal-900/30">
               <div className="flex items-center mb-3 space-x-3">
                 <RiAwardLine className="text-lg text-teal-600 dark:text-teal-400 sm:text-xl" />
                 <h4 className="text-base font-semibold text-teal-900 dark:text-teal-200 sm:text-lg">
-                  Rank Progress
+                  Level Open
                 </h4>
               </div>
               <div className="mt-2 text-xl font-semibold text-teal-900 dark:text-teal-200 sm:text-2xl">

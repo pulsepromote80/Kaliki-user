@@ -16,33 +16,27 @@ import {
 } from "react-icons/fa";
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState("Direct Bonus");
+  const [activeTab, setActiveTab] = useState("Direct Income");
   const pathname = usePathname();
   const pageName = getPageName(pathname);
 
   const getTransactionType = (tabName: string) => {
     const map: Record<string, string> = {
-      "Direct Bonus": "Direct Bonus",
-      "Community Building Bonus": "Community Building Bonus",
-      "Reward Bonus": "Reward Bonus",
-      "Rank Bonus": "Rank Bonus",
-      "Royalty Bonus": "Royalty Bonus",
-      "Yield Income": "Yield Income",
+      "Direct Income": "Direct Income",
+      "Binary Income": "Binary Income",
+      "Reward Income": "Reward Income",
+      "ROI Income": "ROI Income",
       "Level Income": "Level Income",
-      "Credit Revenue Share": "Credit Revenue Share",
 
     };
     return map[tabName] || "ALL";
   };
 
   const tabs = [
-    { id: "Direct Bonus", label: "Direct Bonus", icon: FaUserPlus },
-    { id: "Credit Revenue Share", label: "Credit Revenue Share", icon: FaMoneyBillWave },
-    { id: "Community Building Bonus", label: "Community Building Bonus", icon: FaUsers },
-    { id: "Reward Bonus", label: "Reward Bonus", icon: FaGift },
-    { id: "Rank Bonus", label: "Rank Bonus", icon: FaMedal },
-    { id: "Royalty Bonus", label: "Leadership Bonus", icon: FaCrown },
-    { id: "Yield Income", label: "Yield Income", icon: FaSeedling },
+    { id: "Direct Income", label: "Direct Income", icon: FaUserPlus },
+    { id: "Binary Income", label: "Binary Income", icon: FaMoneyBillWave },
+    { id: "Reward Income", label: "Rank & Reward", icon: FaGift },
+    { id: "ROI Income", label: "ROI Income", icon: FaSeedling },
     { id: "Level Income", label: "Level Income", icon: FaLayerGroup },
   ];
 

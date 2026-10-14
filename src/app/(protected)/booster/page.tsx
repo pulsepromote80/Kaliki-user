@@ -37,8 +37,9 @@ interface ActivateBoosterModalProps {
   isOpen: boolean;
   onClose: () => void;
   booster: Booster | null;
-  userId?: string;
+  userId?: string;  
 }
+
 
 const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
   isOpen,
@@ -119,6 +120,7 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
     if (!booster) return;
 
     const boosterPrice = booster.Rkprice;
+   
 
     if (boosterPrice > walletBalance) {
       setActivationError("Insufficient balance");
@@ -136,9 +138,8 @@ const ActivateBoosterModal: React.FC<ActivateBoosterModalProps> = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: booster.ProductId,
           BoosterValue: boosterPrice,
-          BoosterPackage: booster.BoosterPackage,
+          BoosterType: booster.BoosterPackage,
         }),
       });
 

@@ -10,9 +10,8 @@ type ReportRow = Record<string, unknown>;
 const tabs: { id: ReportTab; label: string }[] = [
   { id: "rank", label: "Rank Rewards" },
   { id: "deposit", label: "Deposit Wallet" },
-  { id: "performance", label: "Performance Rewards Wallet" },
-  { id: "yield", label: "Yield Wallet" },
-  { id: "legacy", label: "Legacy Wallet" },
+  { id: "performance", label: "Working Rewards Wallet" },
+  { id: "yield", label: "ROI Wallet" },
 ];
 
 const reportColumns: Record<Exclude<ReportTab, "rank">, string[]> = {
@@ -24,13 +23,13 @@ const reportColumns: Record<Exclude<ReportTab, "rank">, string[]> = {
 
 const rankColumns = [
   "Rank",
-  "Business Volume",
+  "Required Business",
   "Reward Amount",
-  "Pending Other Leg Business",
-  "Pending Strong Leg Business",
-  "CC Revenue Share (%)",
+  "Left Business",
+  "Right Business",
+  "Pending Left",
+  "Pending Right",
   "Status",
-  "Rank Percentage",
 ];
 
 const fieldAliases: Record<string, string[]> = {
@@ -39,14 +38,14 @@ const fieldAliases: Record<string, string[]> = {
   Credit: ["credit", "Credit"],
   Debit: ["debit", "Debit"],
   Remark: ["Remark", "remark", "Description"],
-  Rank: ["rRank", "Rank", "YourRank"],
-  "Business Volume": ["BusinessVolume", "businessVolume"],
-  "Reward Amount": ["RewardAmount", "rewardAmount"],
-  "Pending Other Leg Business": ["PendingOtherLegBus"],
-  "Pending Strong Leg Business": ["PendingStrongLegBus"],
-  "CC Revenue Share (%)": ["CCreditPer"],
+  Rank: ["RewardTitle", "rRank", "Rank", "YourRank"],
+  "Required Business": ["RequiredBusiness"],
+  "Reward Amount": ["Amount", "RewardAmount", "rewardAmount"],
+  "Left Business": ["LeftBuss"],
+  "Right Business": ["RightBuss"],
+  "Pending Left": ["PendingLeft"],
+  "Pending Right": ["PendingRight"],
   Status: ["Statusx", "Status", "status"],
-  "Rank Percentage": ["RankPercentage"],
 };
 
 function isRecord(value: unknown): value is ReportRow {
@@ -93,6 +92,13 @@ function getRows(payload: unknown): ReportRow[] {
   }
   if (Array.isArray(payload)) return payload.filter(isRecord);
 
+  // Handle new API structure: { statusCode: 200, data: [...] }
+  if (isRecord(payload) && typeof payload.statusCode === "number" && payload.statusCode === 200) {
+    if (Array.isArray(payload.data)) {
+      return payload.data.filter(isRecord);
+    }
+  }
+
   const pending: unknown[] = [payload];
   const visited = new Set<object>();
   for (let depth = 0; depth < 7 && pending.length > 0; depth += 1) {
@@ -131,11 +137,40 @@ function amountValue(value: unknown): number {
 }
 
 function formatMoney(value: unknown): string {
+  // Handle values that already have currency symbols or commas
+  if (typeof value === "string") {
+    // Remove $ and commas, then format
+    const cleaned = value.replace(/[$,]/g, "");
+    const num = Number(cleaned);
+    if (!Number.isNaN(num)) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+      }).format(num);
+    }
+  }
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 2,
   }).format(amountValue(value));
+}
+
+function formatBusinessVolume(value: unknown): string {
+  // Handle values with commas like "1,000"
+  if (typeof value === "string") {
+    const cleaned = value.replace(/,/g, "");
+    const num = Number(cleaned);
+    if (!Number.isNaN(num)) {
+      return new Intl.NumberFormat("en-US").format(num);
+    }
+  }
+  const num = Number(value);
+  if (Number.isFinite(num)) {
+    return new Intl.NumberFormat("en-US").format(num);
+  }
+  return displayValue(value);
 }
 
 export function WalletManager() {
@@ -156,11 +191,12 @@ export function WalletManager() {
       setLoading(true);
       setError("");
       try {
+        const isRank = tab === "rank";
         const response = await fetch(`/api/wallet-manager/${tab}`, {
-          method: "POST",
+          method: isRank ? "GET" : "POST",
           cache: "no-store",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ transtype: "" }),
+          headers: isRank ? {} : { "Content-Type": "application/json" },
+          body: isRank ? undefined : JSON.stringify({ transtype: "" }),
         });
         const payload: unknown = await response.json();
         if (!response.ok) {
@@ -227,15 +263,15 @@ export function WalletManager() {
   const walletBalanceFields: Partial<Record<ReportTab, { label: string; value: number }>> = {
     deposit: {
       label: "Deposit Wallet Balance",
-      value: Number(summary?.DepositWalletBal ?? summary?.DepositWallet ?? 0),
+      value: Number(summary?.DepositWallet ?? summary?.DepositWallet ?? 0),
     },
     performance: {
-      label: "Performance Wallet Balance",
-      value: Number(summary?.IncomeWalletbal ?? summary?.PerformanceWallet ?? 0),
+      label: "Working Wallet Balance",
+      value: Number(summary?.WorkingWallet ?? summary?.PerformanceWallet ?? 0),
     },
     yield: {
-      label: "Yield Wallet Balance",
-      value: Number(summary?.YieldWallet ?? summary?.RentWalletBal ?? 0),
+      label: "ROI Wallet Balance",
+      value: Number(summary?.YieldWallet ?? summary?.ROIWallet ?? 0),
     },
     legacy: {
       label: "Legacy Wallet Balance",
@@ -461,6 +497,39 @@ export function WalletManager() {
                               </span>
                             </td>
                           );
+                        }
+                        // Handle rank-specific columns with special formatting
+                        if (activeTab === "rank") {
+                          if (column === "Reward Amount") {
+                            return (
+                              <td key={column} className="whitespace-nowrap px-4 py-3">
+                                {formatMoney(value)}
+                              </td>
+                            );
+                          }
+                          if (["Required Business", "Left Business", "Right Business", "Pending Left", "Pending Right"].includes(column)) {
+                            return (
+                              <td key={column} className="whitespace-nowrap px-4 py-3">
+                                {formatBusinessVolume(value)}
+                              </td>
+                            );
+                          }
+                          if (column === "Status") {
+                            const status = String(value ?? "").toLowerCase();
+                            const isQualified = status === "qualified" || status === "qualify";
+                            return (
+                              <td key={column} className="whitespace-nowrap px-4 py-3">
+                                <span
+                                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${isQualified
+                                      ? "border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                      : "border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-700/50 dark:bg-amber-900/30 dark:text-amber-300"
+                                    }`}
+                                >
+                                  {displayValue(value)}
+                                </span>
+                              </td>
+                            );
+                          }
                         }
                         return (
                           <td key={column} className="max-w-xs px-4 py-3">

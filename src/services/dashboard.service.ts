@@ -7,7 +7,6 @@ export interface DashboardData {
   DirectIds: number;
   FullName: string;
   AuthLogin: string;
-  DepositWallet: number;
   PerformanceWallet: number;
   YieldWallet: number;
   LegacyWallet: number;
@@ -25,9 +24,9 @@ export interface DashboardData {
   RankIcon: string;
   WalletAdd: string;
   ActiveLicensee: number;
-  IncomeWalletbal: number;
-  DepositWalletBal: number;
-  RentWalletBal: number;
+  WorkingWallet: number;
+  DepositWallet: number;
+  ROIWallet: number;
   TradingPackage?: number;
   RebornPacakge?: number;
   Reborn2Pacakge?: number;

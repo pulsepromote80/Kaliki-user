@@ -16,10 +16,21 @@ export interface OrderHistoryItem {
   Active: boolean;
 }
 
+export interface BoosterOrderHistoryItem {
+  ActivationDate: string;
+  BoosterValue: number;
+  BoosterStatus: string;
+  Btype: string;
+}
+
 export const orderHistoryService = {
   list: (type?: string) =>
     apiClient.get<{ statusCode: number; message: string; data: OrderHistoryItem[] }>(
       "/FundManager/getUserRechargeDetails",
       { params: type ? { Type: type } : undefined }
+    ),
+  getBoosterOrderHistory: () =>
+    apiClient.get<{ statusCode: number; message: string; data: BoosterOrderHistoryItem[] }>(
+      "/FundManager/getBoosterOrderHistory"
     ),
 };
