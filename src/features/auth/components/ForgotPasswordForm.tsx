@@ -23,9 +23,10 @@ export function ForgotPasswordForm() {
 
   const forgotPassword = useForgotPassword();
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    await forgotPassword.mutateAsync(values);
-    setIsSubmitted(true);
+  const onSubmit = form.handleSubmit((values) => {
+    forgotPassword.mutate(values, {
+      onSuccess: () => setIsSubmitted(true),
+    });
   });
 
   // Shared input styles
