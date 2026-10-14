@@ -47,7 +47,7 @@ const boosterColumns: TableColumn<BoosterOrderHistoryItem>[] = [
 type FilterType = "1" | "2" | "3" | null;
 
 const FILTER_OPTIONS: { value: string; label: string }[] = [
-  { value: "1", label: "Trading Fund" },
+  { value: "1", label: "Trading" },
   { value: "2", label: "Legacy Reborn" },
   { value: "3", label: "Legacy Reborn 2.0" },
 ];
