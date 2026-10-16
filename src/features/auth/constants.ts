@@ -1,4 +1,4 @@
 export const AUTH_FEATURE = {
-  sessionCookieName: "session_token",
+  sessionCookieName: "user_session_token",
   minPasswordLength: 8,
 } as const;

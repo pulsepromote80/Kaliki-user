@@ -79,7 +79,7 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 
 const SESSION_COOKIE_NAME =
-  process.env.SESSION_COOKIE_NAME ?? "session_token";
+  process.env.SESSION_COOKIE_NAME ?? "user_session_token";
 
 const PROTECTED_PATHS = [
   "/dashboard",
