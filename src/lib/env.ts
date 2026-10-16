@@ -10,7 +10,7 @@ import { z } from "zod";
 const serverEnvSchema = z.object({
   BACKEND_API_URL: z.string().url(),
   AUTH_SECRET: z.string().min(1),
-  SESSION_COOKIE_NAME: z.string().min(1).default("session_token"),
+  SESSION_COOKIE_NAME: z.string().min(1).default("user_session_token"),
   FUND_DIRECTOR_INCOME_AUTH_CODE: z.string().optional(),
   FUND_DIRECTOR_P2P_AUTH_CODE: z.string().optional(),
   FUND_DIRECTOR_WITHDRAWAL_SECURE_CODE: z.string().optional(),
